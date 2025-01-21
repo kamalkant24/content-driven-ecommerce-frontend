@@ -1,0 +1,32 @@
+.emoji-picker-container {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  z-index: 1000;
+}
+
+.file-previews {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.file-preview {
+  margin: 5px;
+  position: relative;
+}
+
+.preview-image {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.remove-file-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
