@@ -168,8 +168,8 @@ const InitialStepper = (props: any) => {
   };
 
   return (
-    <div className="grid row h-full w-full ">
-      <div className="col-3  h-full w-full bg-blue-500 flex justify-center pt-20">
+    <div className="flex h-full w-full ">
+      <div className="h-full w-[30%] bg-blue-500 flex justify-center pt-20">
         <div>
           {MyCompanyLogo}{" "}
           <Stepper

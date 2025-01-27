@@ -22,14 +22,33 @@ const register = async (data: any) => {
     const response = await axiosAPI.post("/user/register", data);
     if (response?.data?.code === 200) {
       getToast("success", response?.data?.message);
+    } else {
+      getToast("error", response?.data?.message);
     }
     return response;
-  } catch (err) {
+  } catch (err: any) {
+    getToast("error", err?.response?.data?.error);
     return err;
   }
 };
 
-const allUser = async ({page,pageSize,search}:object) => {
+const verify = async (id: any) => {
+  try {
+    const response = await axiosAPI.get(`/user/verify/${id}`);    
+    if (response?.data?.code === 200) {
+      getToast("success", response?.data?.message);
+    } else {
+      getToast("error", response?.data?.message);
+    }
+    return response;
+  } catch (err: any) {
+    console.log(err);
+    getToast("error", err?.message);
+    return err;
+  }
+};
+
+const allUser = async ({ page, pageSize, search }: object) => {
 
   try {
     const response = await axiosAPI.get(`/user/all?page=${page}&pageSize=${pageSize}&search=${search}`);
@@ -42,6 +61,6 @@ const allUser = async ({page,pageSize,search}:object) => {
   }
 };
 
-const loginService = { login, register, allUser };
+const loginService = { login, register, verify, allUser };
 
 export default loginService;
