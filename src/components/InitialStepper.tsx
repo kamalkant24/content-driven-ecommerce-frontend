@@ -20,6 +20,14 @@ import {
   TestingAcc,
 } from "../assets/image";
 import { toast } from "react-toastify";
+import { capitalize } from "@mui/material";
+
+interface Organization {
+  org_Name: string;
+  industry: string;
+  org_Size: string;
+  profile_img: string;
+}
 
 // const steps = [
 //   "Select campaign settings",
@@ -51,7 +59,8 @@ const InitialStepper = (props: any) => {
   const [skipped, setSkipped] = React.useState(new Set<number>());
   const [previewImage, setPreviewImage] = React.useState("");
   const [activeAccount, setActiveAccount] = React.useState(0);
-  const [organization, setOrganization] = React.useState({
+  const [isErrorPresent, setIsErrorPresent] = React.useState<boolean>(true);
+  const [organization, setOrganization] = React.useState<Organization>({
     org_Name: "",
     industry: "",
     org_Size: "",
@@ -79,14 +88,42 @@ const InitialStepper = (props: any) => {
     return skipped.has(step);
   };
 
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+  const validate = () => {
+    const fieldMessageName: Organization = {
+      org_Name: "Organization Name",
+      industry: "Industry",
+      org_Size: "Organization Size",
+      profile_img: "Avatar",
+    };
+    for (const field in organization) {
+      if (!organization[field]) {
+        toast.warning(`${capitalize(fieldMessageName[field])} is Required.`);
+        return;
+      }
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+    setIsErrorPresent(false);
+  };
+
+  const handleNext = () => {
+    //handling main form data sumbission
+    if (activeStep === 2) {
+      console.log("validate main form");
+      console.log(organization);
+      setIsErrorPresent(true);
+      validate();
+      if (!isErrorPresent) {
+        console.log("sumbit extra details");
+        handleConfirmation();
+      }
+    } else {
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+    }
   };
 
   const handleBack = () => {
@@ -100,9 +137,11 @@ const InitialStepper = (props: any) => {
     formData.append("org_Size", organization.org_Size);
     formData.append("profile_img", organization?.profile_img);
 
-    await dispatch(confirmation(formData));
-    dispatch(getProfile({}));
-    onClose();
+    const res = await dispatch(confirmation(formData));
+    console.log(res);
+
+    // dispatch(getProfile({}));
+    // onClose();
   };
 
   React.useEffect(() => {
@@ -342,6 +381,7 @@ const InitialStepper = (props: any) => {
                             placeholder="Organization Name"
                             onChange={handleOrganization}
                             name="org_Name"
+                            showValue={organization?.org_Name}
                             className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
                           />
                         </div>
@@ -353,6 +393,7 @@ const InitialStepper = (props: any) => {
                             id="industry"
                             name="industry"
                             onChange={handleOrganization}
+                            value={organization?.industry}
                             className="bg-slate-100  w-full h-12"
                           >
                             <option className="h-8" value="" disabled selected>
@@ -377,6 +418,7 @@ const InitialStepper = (props: any) => {
                             id="org_Size"
                             name="org_Size"
                             onChange={handleOrganization}
+                            value={organization?.org_Size}
                             className="bg-slate-100  w-full h-12"
                           >
                             <option className="h-8" value="" disabled selected>

@@ -22,8 +22,7 @@ export default function Login() {
     email: '',
     password: ''
   })
-  // const [username, setUsername] = useState<string>("");
-  // const [password, setPassword] = useState<string>("");
+
   const [isErrorPresent, setIsErrorPresent] = useState<boolean>(true);
 
 
@@ -60,7 +59,6 @@ export default function Login() {
         navigate("/home");
       }
     }
-
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

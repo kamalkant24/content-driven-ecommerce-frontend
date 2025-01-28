@@ -47,8 +47,8 @@ export const getToken = () => {
  * A universal function to verify access to protected routes on the Routes page.
  */
 export const ProtectedRouteCheck = () => {
-  // const isAuth = useAuth();
-  const isAuth = true
+  const isAuth = useAuth();
+  // const isAuth = true
   // return isAuth ? <Navigate to="sideBar/Personal-Info" /> : children;
   return isAuth && <Navigate to="sideBar/home" />;
 };
