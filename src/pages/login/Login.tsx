@@ -65,7 +65,6 @@ export default function Login() {
     const fieldName = e.target.name;
     const value = e.target.value;
     setFormData((prev: FormData) => ({ ...prev, [fieldName]: value }))
-    console.log({ fieldName, value });
   };
 
   const token = localStorage.getItem("access_token");

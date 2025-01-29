@@ -42,7 +42,6 @@ const verify = async (id: any) => {
     }
     return response;
   } catch (err: any) {
-    console.log(err);
     getToast("error", err?.message);
     return err;
   }

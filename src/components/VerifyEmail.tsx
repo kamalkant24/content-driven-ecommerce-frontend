@@ -30,7 +30,6 @@ const VerifyEmail = () => {
           navigate("/");
         }}
       >
-        {" "}
         Back to login page
       </Button>
     </div>

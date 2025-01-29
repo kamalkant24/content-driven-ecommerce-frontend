@@ -2,7 +2,7 @@
 const ProductView = () => {
   return (
     <div>
-      
+      Products view
     </div>
   )
 }
