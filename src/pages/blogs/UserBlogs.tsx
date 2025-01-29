@@ -1,8 +1,8 @@
 
 const UserBlogs = () => {
   return (
-    <div>
-      
+    <div className="m-4 font-bold">
+      BLOGS
     </div>
   )
 }

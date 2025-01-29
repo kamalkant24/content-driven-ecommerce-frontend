@@ -27,12 +27,15 @@ export const cartImg = [
 
 ]
 
-export const MyCompanyLogo=[
-	<svg xmlns="http://www.w3.org/2000/svg" fill="#ffff" width="150px" height="150px" viewBox="-1 0 19 19" className="cf-icon-svg"><path d="M16.417 9.583A7.917 7.917 0 1 1 8.5 1.666a7.917 7.917 0 0 1 7.917 7.917zm-2.526 3.104a.318.318 0 0 0-.317-.316h-.372v-.384a.318.318 0 0 0-.316-.316h-.55V7.214h.866a.396.396 0 0 0 .158-.76L8.658 4.416a.396.396 0 0 0-.315 0L3.64 6.454a.396.396 0 0 0 .158.76h.865v4.457h-.549a.318.318 0 0 0-.316.316v.384h-.372a.318.318 0 0 0-.317.316v.383h10.782zM5.455 7.954h1.502v3.717H5.455zm5.839-1.532H5.706L8.5 5.212zM7.749 7.954h1.502v3.717H7.75zm2.294 0h1.502v3.717h-1.502z"/></svg>
+export const MyCompanyLogo = [
+	<svg xmlns="http://www.w3.org/2000/svg" fill="#ffff" style={{
+		width: window.innerWidth <= 480 ? '50px' : window.innerWidth <= 768 ? '100px' : '150px',
+		height: window.innerWidth <= 480 ? '50px' : window.innerWidth <= 768 ? '100px' : '150px',
+	}} viewBox="-1 0 19 19" className="cf-icon-svg"><path d="M16.417 9.583A7.917 7.917 0 1 1 8.5 1.666a7.917 7.917 0 0 1 7.917 7.917zm-2.526 3.104a.318.318 0 0 0-.317-.316h-.372v-.384a.318.318 0 0 0-.316-.316h-.55V7.214h.866a.396.396 0 0 0 .158-.76L8.658 4.416a.396.396 0 0 0-.315 0L3.64 6.454a.396.396 0 0 0 .158.76h.865v4.457h-.549a.318.318 0 0 0-.316.316v.384h-.372a.318.318 0 0 0-.317.316v.383h10.782zM5.455 7.954h1.502v3.717H5.455zm5.839-1.532H5.706L8.5 5.212zM7.749 7.954h1.502v3.717H7.75zm2.294 0h1.502v3.717h-1.502z" /></svg>
 ]
 
 export const CompanyAcc = [
-	<svg xmlns="http://www.w3.org/2000/svg"  version="1.0" id="Layer_1" width="50px" height="30px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" >
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.0" id="Layer_1" width="50px" height="30px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" >
 		<path fill="#231F20" d="M60,56h-8V28h8c1.738,0,3.277-1.125,3.809-2.777c0.531-1.656-0.07-3.469-1.484-4.477l-28-20  c-1.391-0.992-3.258-0.992-4.648,0l-28,20c-1.414,1.008-2.016,2.82-1.484,4.477C0.723,26.875,2.262,28,4,28h8v28H4  c-2.211,0-4,1.789-4,4v4h64v-4C64,57.789,62.211,56,60,56z M28,56h-8V28h8V56z M44,56h-8V28h8V56z" />
 	</svg>
 ]

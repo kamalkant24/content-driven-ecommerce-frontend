@@ -12,13 +12,14 @@ import ProductView from "../pages/products/ProductView";
 import Setting from "../pages/settingPage/Setting";
 // import TextEditor from "../components/TextEditor";
 import TextEditor from "../components/NewTextEditor";
+import { Chat } from "../pages/chat/Chat";
 
 export default function RouteFile() {
   return (
     <>
       <Routes>
         <Route path="/" element={<ProtectedRoute />}>
-          <Route path="/home" element={<AllUsers />} />
+          <Route path="/home" element={<h1 className="m-4">HOME PAGE</h1>} />
           <Route path="/products" element={<Products />} />
           <Route path="/carts" element={<Cart />} />
           <Route path="/blogs" element={<UserBlogs />} />
@@ -27,6 +28,7 @@ export default function RouteFile() {
           <Route path="/product-view" element={<ProductView />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/pricing" element={<TextEditor />} />
+          <Route path="/chat" element={<Chat />} />
         </Route>
       </Routes>
     </>

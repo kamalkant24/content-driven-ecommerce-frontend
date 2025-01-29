@@ -13,6 +13,7 @@ import CardContent from "@mui/material/CardContent";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import UserInput from "./UserInput";
+import logo from "../assets/online-store.png";
 import {
   CompanyAcc,
   DeveloperAcc,
@@ -104,25 +105,27 @@ const InitialStepper = (props: any) => {
     setIsErrorPresent(false);
   };
 
-  const handleNext = () => {
-    //handling main form data sumbission
+  const handleNext = async (e) => {
+    e.preventDefault();
     if (activeStep === 2) {
-      console.log("validate main form");
-      console.log(organization);
       setIsErrorPresent(true);
       validate();
       if (!isErrorPresent) {
-        console.log("sumbit extra details");
-        handleConfirmation();
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+    } else if (activeStep === steps.length - 1) {
+      const res = await handleConfirmation();
+      if (res.payload.code === 200) {
+
       }
     } else {
-      let newSkipped = skipped;
-      if (isStepSkipped(activeStep)) {
-        newSkipped = new Set(newSkipped.values());
-        newSkipped.delete(activeStep);
-      }
+      // let newSkipped = skipped;
+      // if (isStepSkipped(activeStep)) {
+      //   newSkipped = new Set(newSkipped.values());
+      //   newSkipped.delete(activeStep);
+      // }
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setSkipped(newSkipped);
+      // setSkipped(newSkipped);
     }
   };
 
@@ -138,23 +141,22 @@ const InitialStepper = (props: any) => {
     formData.append("profile_img", organization?.profile_img);
 
     const res = await dispatch(confirmation(formData));
-    console.log(res);
-
-    // dispatch(getProfile({}));
-    // onClose();
+    dispatch(getProfile({}));
+    onClose();
+    return res
   };
 
-  React.useEffect(() => {
-    if (
-      activeStep === steps.length - 0 &&
-      organization.org_Name &&
-      organization.industry &&
-      organization.org_Size &&
-      organization?.profile_img
-    ) {
-      handleConfirmation();
-    }
-  }, [activeStep, steps, organization]);
+  // React.useEffect(() => {
+  //   if (
+  //     activeStep === steps.length - 0 &&
+  //     organization.org_Name &&
+  //     organization.industry &&
+  //     organization.org_Size &&
+  //     organization?.profile_img
+  //   ) {
+  //     handleConfirmation();
+  //   }
+  // }, [activeStep, steps, organization]);
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
@@ -207,14 +209,15 @@ const InitialStepper = (props: any) => {
   };
 
   return (
-    <div className="flex h-full w-full ">
-      <div className="h-full w-[30%] bg-blue-500 flex justify-center pt-20">
-        <div>
-          {MyCompanyLogo}{" "}
+    <div className="flex h-full w-full flex-col md:flex-row">
+      <div className="h-full w-[30%] min-w-[25rem] bg-blue-500 flex justify-center md:pt-20">
+        <div className="py-4">
+          {/* {MyCompanyLogo} */}
+          <img src={logo} width="50" height="50" />
           <Stepper
             activeStep={activeStep}
             orientation="vertical"
-            className="!block pt-10 w-[300px] text-white"
+            className="!block pt-0 md:pt-10 w-[300px] text-white"
           >
             {steps?.map((label, index) => {
               const stepProps: { completed?: boolean } = {};
@@ -230,7 +233,13 @@ const InitialStepper = (props: any) => {
                   <Typography
                     {...labelProps}
                     className=" text-white "
-                    fontSize="22px"
+                    sx={{
+                      fontSize: {
+                        xs: '16px',
+                        sm: '18px',
+                        md: '22px',
+                      },
+                    }}
                   >
                     {label.description}
                   </Typography>
@@ -240,7 +249,7 @@ const InitialStepper = (props: any) => {
           </Stepper>
         </div>
       </div>
-      <div className="col p-8">
+      <div className="col w-[70%]">
         {activeStep === steps.length ? (
           <React.Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
@@ -255,9 +264,8 @@ const InitialStepper = (props: any) => {
           <React.Fragment>
             <Typography
               sx={{
-                mt: 5,
-                fontSize: "30px",
-                m: 10,
+                fontSize: "25px",
+                m: 5,
                 textAlign: "center",
                 height: "600px",
               }}
@@ -273,22 +281,22 @@ const InitialStepper = (props: any) => {
                     </p>
                   </div>
 
-                  <div className="flex  gap-4 my-5 ">
+                  <div className="flex  gap-8 my-5 flex-wrap">
                     {AccountTypes?.map((item, index) => {
                       return (
                         <Card
                           sx={{ maxWidth: 345 }}
                           className={
                             activeAccount === index
-                              ? "border-dashed border-2 border-blue-500 p-4"
-                              : " p-4"
+                              ? "border-dashed border-2 border-blue-500 p-2"
+                              : " p-2"
                           }
                           onClick={() => {
                             setActiveAccount(index);
                           }}
                         >
                           <div className="flex justify-center items-center">
-                            <div className="ps-4">{item.logo}</div>
+                            <div className="ps-2">{item.logo}</div>
                             <CardContent>
                               <Typography
                                 gutterBottom
@@ -312,38 +320,38 @@ const InitialStepper = (props: any) => {
                   </div>
                 </div>
               ) : activeStep == 1 ? (
-                <div className="text-left ">
+                <div className="text-left flex flex-col gap-4">
                   <h4>Account Info</h4>
                   <p className="text-sm">
                     if you need more info,pleae check out{" "}
-                    <span className="text-primary">Help Page?</span>
+                    <span className="text-primary text-[#3b82f6] cursor-pointer">Help Page?</span>
                   </p>
 
-                  <h5>Specific team size !</h5>
+                  {/* <h5>Specific team size !</h5>
                   <div className="grid grid-col-4 grid-flow-col gap-4 text-center">
                     <div className="card w-32">1-1</div>
                     <div className="card w-32">2-10</div>
                     <div className="card w-32">10-50</div>
                     <div className="card w-32">50+</div>
-                  </div>
-                  <p className="text-sm">
+                  </div> */}
+                  <p className="text-base mt-5">
                     Customer will see the shorter version of your statement
-                    discriptor
+                    description below
                   </p>
 
-                  <div className="my-5">
-                    <UserInput className="bg-slate-100  w-full" />
+                  <div>
+                    <UserInput placeholder="Description" className="border border-black rounded-sm h-12 text-base px-4  w-full" />
                   </div>
 
                   <div>
                     <h5>Select Account Plan !</h5>
                     {AccountPlan?.map((item) => {
                       return (
-                        <div className="flex my-1 items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                          <div className="w-full py-2 flex items-center">
+                        <div className="flex my-4 items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                          <div className="w-full py-2 flex items-center mr-2">
                             <div className="me-2">{item.icon}</div>
                             <div>
-                              <label className="text-sm font-medium text-gray-900 dark:text-gray-300">
+                              <label for="bordered-radio" className="text-sm font-medium text-gray-900">
                                 {item.title}
                               </label>
                               <h6 className="text-xs font-normal">
@@ -351,13 +359,14 @@ const InitialStepper = (props: any) => {
                               </h6>
                             </div>
                           </div>
-
                           <input
                             type="radio"
                             value=""
                             name="bordered-radio"
                             className="me-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          />
+                          >
+
+                          </input>
                         </div>
                       );
                     })}
@@ -428,13 +437,13 @@ const InitialStepper = (props: any) => {
                               0 to 100
                             </option>
                             <option className="h-8" value="200">
-                              0 to 200
+                              100 to 200
                             </option>
                             <option className="h-8" value="300">
-                              0 to 300
+                              200 to 300
                             </option>
                             <option className="h-8" value="500">
-                              0 to 500
+                              300 to 500
                             </option>
                           </select>
                         </div>
@@ -462,7 +471,7 @@ const InitialStepper = (props: any) => {
               ) : (
                 <div className="text-left">
                   <h5 className="py-2">You are Done</h5>
-                  <p className="text-sm py-3">
+                  {/* <p className="text-sm py-3">
                     If you need more info,please
                     <span className="text-primary">Sign In?</span>
                   </p>
@@ -470,7 +479,7 @@ const InitialStepper = (props: any) => {
                     Writing headlines for blog posts is as much an art as it is
                     a science and probably warrants its own post,but for all
                     advise is with what works for your great & amazing audience
-                  </p>
+                  </p> */}
                 </div>
               )}
             </Typography>

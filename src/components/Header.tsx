@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import logo from "../assets/bank_14277894.png";
+import logo from "../assets/online-store.png";
 import { useAuth } from "../routes/ProtectedRoute";
 import { Link, useNavigate } from "react-router-dom";
 import UserButton from "./UserButton";
@@ -22,7 +22,7 @@ import { getAllCart } from "../store/cartSlice/cartsSlice";
 import { Badge, Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
-const pages = ["Products", "Pricing", "Blogs"];
+const pages = ["Products", "Blogs", "Chat"];
 const settings = ["Profile", "Setting", "Logout"];
 
 function Header() {
@@ -85,7 +85,7 @@ function Header() {
   let auth = useAuth();
 
   return (
-    <AppBar position="static" className="text-blue-500 bg-white">
+    <AppBar position="static" classes="text-blue-500 bg-transparent" color="transparent">
       <Modal
         open={open}
         // onClose={}
@@ -101,7 +101,7 @@ function Header() {
           />
         </Box>
       </Modal>
-      <Container maxWidth="xl">
+      <Container maxWidth="xxl">
         <Toolbar disableGutters>
           {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
@@ -119,10 +119,13 @@ function Header() {
               textDecoration: "none",
             }}
           >
-            <img src={logo} width="50" height="50" />
+            <img src={logo} width="45" height="45" />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <div className="flex justify-center items-center">
+              <img src={logo} width="35" height="35" />
+            </div>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -132,7 +135,9 @@ function Header() {
               color="inherit"
             >
               <MenuIcon />
+
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -158,7 +163,7 @@ function Header() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -175,7 +180,6 @@ function Header() {
               textDecoration: "none",
             }}
           >
-            LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages?.map((page) => (
@@ -183,7 +187,7 @@ function Header() {
                 key={page}
                 id={page}
                 onClick={(e: any) => {
-                  navigate(`${e?.target?.id.toLowerCase()}`);
+                  navigate(`/${e?.target?.id.toLowerCase()}`);
                 }}
                 sx={{ my: 2, color: "text-blue-500", display: "block" }}
               >
@@ -193,7 +197,7 @@ function Header() {
           </Box>
           {!auth ? (
             <Box sx={{ flexGrow: 0 }}>
-              <div className="">
+              <div className="flex gap-4">
                 <Link to="/">
                   <Button variant="contained">Login</Button>
                 </Link>
@@ -206,28 +210,28 @@ function Header() {
             </Box>
           ) : (
             <div className="flex ">
-              <Box sx={{ flexGrow: 0 }} className="me-8">
+              {/* <Box sx={{ flexGrow: 0 }} className="flex">
                 <UserButton
+                  styleClass="text-blue-500 "
                   name="Cart"
                   setIcon={
                     <Badge
                       badgeContent={allCarts?.data?.length}
-                      color="primary"
-                      className="p-1"
+                      color="warning"
+                      className="p-1 text-blue-500"
                     >
-                      {" "}
-                      <ShoppingCartIcon />{" "}
+                      <ShoppingCartIcon />
                     </Badge>
                   }
                   action={() => {
                     navigate("/carts");
                   }}
                 />
-              </Box>
+              </Box> */}
 
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 2 }}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="Remy Sharp" src={userProfile?.profile_img} />
                   </IconButton>
                 </Tooltip>
