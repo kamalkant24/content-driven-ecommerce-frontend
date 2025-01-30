@@ -6,15 +6,12 @@ const Constant = () => {
   return (
     <div>
         <Header/>
-        <section className="container ">
+        <section className="container max-w-[100vw]">
             <RouteFile/>
         </section>
         <footer>
             <Footer/>
- 
         </footer>
-
-      
     </div>
   )
 }

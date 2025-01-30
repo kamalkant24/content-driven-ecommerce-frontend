@@ -23,7 +23,7 @@ const Setting = () => {
   //   return datetime
   // }
   return (
-    <div className="container my-4">
+    <div className="container max-w-[100vw] my-4">
       <h5 className="font-bold mx-4">Account & Settings</h5>
       {/* <p className="text-sm text-gray-500">{getCurrentDateAndTime()}</p> */}
 
