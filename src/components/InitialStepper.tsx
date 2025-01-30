@@ -28,13 +28,11 @@ interface Organization {
   industry: string;
   org_Size: string;
   profile_img: string;
+  org_Banner: string;
+  org_Phone: string;
+  org_Address: string;
+  org_Description: string
 }
-
-// const steps = [
-//   "Select campaign settings",
-//   "Create an ad group",
-//   "Create an ad",
-// ];
 
 const steps = [
   {
@@ -59,13 +57,18 @@ const InitialStepper = (props: any) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
   const [previewImage, setPreviewImage] = React.useState("");
+  const [previewBanner, setPreviewBanner] = React.useState("");
   const [activeAccount, setActiveAccount] = React.useState(0);
   const [isErrorPresent, setIsErrorPresent] = React.useState<boolean>(true);
   const [organization, setOrganization] = React.useState<Organization>({
     org_Name: "",
+    org_Phone: "",
     industry: "",
     org_Size: "",
     profile_img: "",
+    org_Banner: "",
+    org_Address: "",
+    org_Description: ""
   });
 
   const handleOrganization = (e: any) => {
@@ -73,6 +76,9 @@ const InitialStepper = (props: any) => {
     if (name == "profile_img") {
       setOrganization({ ...organization, [name]: e.target.files[0] });
       setPreviewImage(URL.createObjectURL(e.target.files[0]));
+    } else if (name == "org_Banner") {
+      setOrganization({ ...organization, [name]: e.target.files[0] });
+      setPreviewBanner(URL.createObjectURL(e.target.files[0]));
     } else {
       setOrganization({ ...organization, [name]: value });
     }
@@ -81,9 +87,9 @@ const InitialStepper = (props: any) => {
   const dispatch = useDispatch();
   const { onClose } = props || {};
 
-  const isStepOptional = (step: number) => {
-    return step === 1;
-  };
+  // const isStepOptional = (step: number) => {
+  //   return step === 1;
+  // };
 
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
@@ -95,10 +101,14 @@ const InitialStepper = (props: any) => {
       industry: "Industry",
       org_Size: "Organization Size",
       profile_img: "Avatar",
+      org_Banner: 'Banner',
+      org_Address: 'Address',
+      org_Description: 'Description',
+      org_Phone: 'Phone Number'
     };
     for (const field in organization) {
       if (!organization[field]) {
-        toast.warning(`${capitalize(fieldMessageName[field])} is Required.`);
+        toast.warning(`${fieldMessageName[field]} is Required.`);
         return;
       }
     }
@@ -139,6 +149,7 @@ const InitialStepper = (props: any) => {
     formData.append("industry", organization.industry);
     formData.append("org_Size", organization.org_Size);
     formData.append("profile_img", organization?.profile_img);
+    formData.append("org_Banner", organization?.org_Banner);
 
     const res = await dispatch(confirmation(formData));
     dispatch(getProfile({}));
@@ -158,20 +169,20 @@ const InitialStepper = (props: any) => {
   //   }
   // }, [activeStep, steps, organization]);
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
+  // const handleSkip = () => {
+  //   if (!isStepOptional(activeStep)) {
+  //     // You probably want to guard against something like this,
+  //     // it should never occur unless someone's actively trying to break something.
+  //     throw new Error("You can't skip a step that isn't optional.");
+  //   }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  //   setSkipped((prevSkipped) => {
+  //     const newSkipped = new Set(prevSkipped.values());
+  //     newSkipped.add(activeStep);
+  //     return newSkipped;
+  //   });
+  // };
 
   const AccountTypes = [
     {
@@ -189,19 +200,19 @@ const InitialStepper = (props: any) => {
   const AccountPlan = [
     {
       title: "Company Account",
-      description: "Use images to enhance your post flow",
+      description: "You can post products and blogs and costumers can buy your products, like and comment on your blogs.",
       icon: CompanyAcc,
     },
-    {
-      title: "Developer Account",
-      description: "Use images to your past time",
-      icon: DeveloperAcc,
-    },
-    {
-      title: "Testing Account",
-      description: "Use images to enhance time travel rivers",
-      icon: TestingAcc,
-    },
+    // {
+    //   title: "Developer Account",
+    //   description: "Use images to your past time",
+    //   icon: DeveloperAcc,
+    // },
+    // {
+    //   title: "Testing Account",
+    //   description: "Use images to enhance time travel rivers",
+    //   icon: TestingAcc,
+    // },
   ];
 
   const handleReset = () => {
@@ -210,10 +221,10 @@ const InitialStepper = (props: any) => {
 
   return (
     <div className="flex h-full w-full flex-col md:flex-row">
-      <div className="h-full w-[30%] min-w-[25rem] bg-blue-500 flex justify-center md:pt-20">
+      <div className="md:h-full md:w-[30%] min-w-[25rem] bg-blue-500 flex justify-start pl-[40px] md:pl-0 md:justify-center md:pt-20 ">
         <div className="py-4">
           {/* {MyCompanyLogo} */}
-          <img src={logo} width="50" height="50" />
+          {/* <img src={logo} width="50" height="50" /> */}
           <Stepper
             activeStep={activeStep}
             orientation="vertical"
@@ -249,13 +260,15 @@ const InitialStepper = (props: any) => {
           </Stepper>
         </div>
       </div>
-      <div className="col w-[70%]">
+      <div className="col md:w-[70%] overflow-scroll">
         {activeStep === steps.length ? (
           <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
+            <Typography sx={{
+              mt: 2, mb: 1, height: "auto",
+            }}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2, height: 'auto' }}>
               <Box sx={{ flex: "1 1 auto" }} />
               <Button onClick={handleReset}>Reset</Button>
             </Box>
@@ -265,23 +278,18 @@ const InitialStepper = (props: any) => {
             <Typography
               sx={{
                 fontSize: "25px",
-                m: 5,
+                m: { xs: '16px', md: '32px' },
                 textAlign: "center",
-                height: "600px",
+                height: "auto",
               }}
               className="flex"
             >
               {activeStep == 0 ? (
                 <div>
                   <div className="text-left">
-                    <p className="my-4 font-medium"> Choose Account Type</p>
-                    <p className="text-sm">
-                      if you need more info,pleae check out{" "}
-                      <span className="text-primary">Help Page?</span>
-                    </p>
+                    <p className="my-4 text-base md:text-xl font-bold">Choose Account Type</p>
                   </div>
-
-                  <div className="flex  gap-8 my-5 flex-wrap">
+                  <div className="flex  gap-8 my-5 flex-wrap overflow-auto">
                     {AccountTypes?.map((item, index) => {
                       return (
                         <Card
@@ -302,12 +310,18 @@ const InitialStepper = (props: any) => {
                                 gutterBottom
                                 variant="h5"
                                 component="div"
+                                sx={{
+                                  fontSize: { xs: '1rem', sm: '1.25rem' }, // Smaller font on mobile (xs), larger on tablets and up (sm)
+                                }}
                               >
                                 {item.title}
                               </Typography>
                               <Typography
                                 variant="body2"
                                 color="text.secondary"
+                                sx={{
+                                  fontSize: { xs: '0.75rem', sm: '1rem' }, // Smaller font for mobile
+                                }}
                               >
                                 {item.description}
                               </Typography>
@@ -322,10 +336,6 @@ const InitialStepper = (props: any) => {
               ) : activeStep == 1 ? (
                 <div className="text-left flex flex-col gap-4">
                   <h4>Account Info</h4>
-                  <p className="text-sm">
-                    if you need more info,pleae check out{" "}
-                    <span className="text-primary text-[#3b82f6] cursor-pointer">Help Page?</span>
-                  </p>
 
                   {/* <h5>Specific team size !</h5>
                   <div className="grid grid-col-4 grid-flow-col gap-4 text-center">
@@ -334,21 +344,21 @@ const InitialStepper = (props: any) => {
                     <div className="card w-32">10-50</div>
                     <div className="card w-32">50+</div>
                   </div> */}
-                  <p className="text-base mt-5">
+                  {/* <p className="text-base mt-5">
                     Customer will see the shorter version of your statement
                     description below
                   </p>
 
                   <div>
                     <UserInput placeholder="Description" className="border border-black rounded-sm h-12 text-base px-4  w-full" />
-                  </div>
+                  </div> */}
 
-                  <div>
-                    <h5>Select Account Plan !</h5>
+                  <div className="w-[80%]">
+                    <h5>Your Account Plan !</h5>
                     {AccountPlan?.map((item) => {
                       return (
                         <div className="flex my-4 items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
-                          <div className="w-full py-2 flex items-center mr-2">
+                          <div className="w-full py-4 flex items-center mr-2">
                             <div className="me-2">{item.icon}</div>
                             <div>
                               <label for="bordered-radio" className="text-sm font-medium text-gray-900">
@@ -359,29 +369,25 @@ const InitialStepper = (props: any) => {
                               </h6>
                             </div>
                           </div>
-                          <input
-                            type="radio"
-                            value=""
-                            name="bordered-radio"
-                            className="me-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                          >
-
-                          </input>
                         </div>
                       );
                     })}
                   </div>
+                  <p className="text-sm">
+                    if you need more info,pleae check out{" "}
+                    <span className="text-primary text-[#3b82f6] cursor-pointer">Help Page?</span>
+                  </p>
                 </div>
               ) : activeStep == 2 ? (
-                <div className="flex  w-full ">
+                <div className="flex w-full ">
                   <div className="w-full">
                     <div className="mx-auto bg-white rounded-md  text-left w-full">
                       <h2 className="text-2xl font-semibold mb-4">
                         Organization Details
                       </h2>
-                      <form className="grid text-sm w-full">
-                        <div className="my-4 w-full">
-                          <label className="block text-gray-700 font-medium">
+                      <form className="flex flex-wrap justify-between text-sm ">
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
                             Organization Name
                           </label>
                           <UserInput
@@ -394,8 +400,22 @@ const InitialStepper = (props: any) => {
                             className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
                           />
                         </div>
-                        <div className="my-4 ">
-                          <label className="block text-gray-700 font-medium">
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
+                            Phone Number
+                          </label>
+                          <UserInput
+                            type="number"
+                            id="org_Phone"
+                            placeholder="Phone Number"
+                            onChange={handleOrganization}
+                            name="org_Phone"
+                            showValue={organization?.org_Phone}
+                            className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
+                          />
+                        </div>
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
                             Choose Your Industry
                           </label>
                           <select
@@ -403,7 +423,7 @@ const InitialStepper = (props: any) => {
                             name="industry"
                             onChange={handleOrganization}
                             value={organization?.industry}
-                            className="bg-slate-100  w-full h-12"
+                            className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
                           >
                             <option className="h-8" value="" disabled selected>
                               Select Industry
@@ -419,8 +439,8 @@ const InitialStepper = (props: any) => {
                             </option>
                           </select>
                         </div>
-                        <div className="my-4">
-                          <label className="block text-gray-700 font-medium">
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
                             Organization Size
                           </label>
                           <select
@@ -428,7 +448,7 @@ const InitialStepper = (props: any) => {
                             name="org_Size"
                             onChange={handleOrganization}
                             value={organization?.org_Size}
-                            className="bg-slate-100  w-full h-12"
+                            className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
                           >
                             <option className="h-8" value="" disabled selected>
                               Organization size
@@ -447,21 +467,66 @@ const InitialStepper = (props: any) => {
                             </option>
                           </select>
                         </div>
-                        <div className="my-3">
-                          <label className="block text-gray-700 font-medium">
-                            {previewImage ? (
-                              <img src={previewImage} height="50" width="50" />
-                            ) : (
-                              ""
-                            )}{" "}
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
                             Add Your Logo/Avatar
                           </label>
-                          <input
-                            type="file"
-                            id="profile_img"
-                            name="profile_img"
+                          <div className="flex gap-2">
+                            <input
+                              type="file"
+                              id="profile_img"
+                              name="profile_img"
+                              onChange={handleOrganization}
+                              className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 py-3"
+                            />
+                            {previewImage &&
+                              <img src={previewImage} height="50" width="50" />
+                            }
+                          </div>
+                        </div>
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
+                            Organization Banner
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="file"
+                              id="org_Banner"
+                              name="org_Banner"
+                              onChange={handleOrganization}
+                              className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 py-3"
+                            />
+                            {previewBanner &&
+                              <img src={previewBanner} height="50" width="50" />
+                            }
+                          </div>
+                        </div>
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
+                            Address
+                          </label>
+                          <UserInput
+                            type="text"
+                            id="org_Address"
+                            placeholder="Address"
                             onChange={handleOrganization}
-                            className="bg-slate-100  w-full h-12"
+                            name="org_Address"
+                            showValue={organization?.org_Address}
+                            className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
+                          />
+                        </div>
+                        <div className="my-4 w-full lg:w-[47.5%]">
+                          <label className="block text-gray-700 font-medium mb-2">
+                            Description
+                          </label>
+                          <UserInput
+                            type="text"
+                            id="org_Description"
+                            placeholder="Company's Short Description"
+                            onChange={handleOrganization}
+                            name="org_Description"
+                            showValue={organization?.org_Description}
+                            className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
                           />
                         </div>
                       </form>
@@ -471,11 +536,10 @@ const InitialStepper = (props: any) => {
               ) : (
                 <div className="text-left">
                   <h5 className="py-2">You are Done</h5>
-                  {/* <p className="text-sm py-3">
-                    If you need more info,please
-                    <span className="text-primary">Sign In?</span>
+                  <p className="text-sm py-3">
+                    Your Account will be under review and you will be notified once it gets reviewed.
                   </p>
-                  <p>
+                  {/* <p>
                     Writing headlines for blog posts is as much an art as it is
                     a science and probably warrants its own post,but for all
                     advise is with what works for your great & amazing audience
@@ -483,24 +547,25 @@ const InitialStepper = (props: any) => {
                 </div>
               )}
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", px: 8.5 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", px: 8.5, height:'max-content' }}>
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
                 onClick={handleBack}
-                sx={{ mr: 1 }}
+                sx={{ mr: 1, m: { xs: 0, md: 2 } }}
               >
                 Back
               </Button>
               <Box sx={{ flex: "1 1 auto" }} />
-              {isStepOptional(activeStep) && (
+              {/* {isStepOptional(activeStep) && (
                 <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                   Skip
                 </Button>
-              )}
+              )} */}
               <Button onClick={handleNext}>
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>
+
             </Box>
           </React.Fragment>
         )}

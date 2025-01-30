@@ -2,6 +2,9 @@ import { useSelector } from "react-redux";
 import { MdEdit } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { capitalize } from "@mui/material";
+import { emailRegex } from "../../constants";
 
 const UserProfile = () => {
     const { userProfile } = useSelector((state: any) => state.profile);
@@ -28,7 +31,9 @@ const UserProfile = () => {
         })
     }, [editMode]);
 
-    const [editProfileInput, setEditProfileInput] = useState(false)
+    const [editProfileInput, setEditProfileInput] = useState(false);
+    const [newImageFile, setNewImageFile] = useState<string>('');
+    const [isErrorPresent, setIsErrorPresent] = useState<boolean>(true);
     const handleEditProfile = () => {
         setEditMode(!editMode)
     }
@@ -37,6 +42,7 @@ const UserProfile = () => {
 
     const handleprofilePicUpload = (e: any) => {
         const imageFile = e.target.files[0];
+        setNewImageFile(imageFile);
         const url = URL.createObjectURL(imageFile);
         setEditDetails({ ...editDetails, profile_img: url })
         setEditProfileInput(false);
@@ -46,13 +52,44 @@ const UserProfile = () => {
         const value = e.target.value;
         setEditDetails({ ...editDetails, [field]: value });
     }
-    const editProfile = () => {
-        console.log({editDetails});
-    }
+    const validate = () => {
+        console.log(editDetails);
 
-    // useEffect(() => {
-    //     console.log(editDetails);
-    // }, [editDetails])
+        for (const field in editDetails) {
+            if (!editDetails[field]) {
+                toast.warning(`${capitalize(field)} is Required.`);
+                return
+            }
+            if (field === 'email') {
+                if (!emailRegex.test(editDetails[field])) {
+                    toast.warning(`Invalid Email`);
+                    return
+                }
+            }
+        }
+        setIsErrorPresent(false)
+    }
+    const editProfile = () => {
+        setIsErrorPresent(true)
+        validate();
+        if (!isErrorPresent) {
+            const updatedDetails = {}
+            for (const field in editDetails) {
+                if (editDetails[field] !== userProfile[field]) {
+                    updatedDetails[field] = editDetails[field]
+                }
+            }
+            if (updatedDetails?.profile_img) {
+                console.log('image updated successfully', newImageFile);
+                updatedDetails.profile_img = newImageFile
+            }
+            if (Object.keys(updatedDetails).length > 0) {
+                console.log(`Edit Details: `, updatedDetails);
+            } else {
+                setEditMode(false);
+            }
+        }
+    }
     return (
         <div className="w-full p-4 md:mt-12 md:w-max mx-auto text-slate-500">
             {!editMode && <div className="relative flex flex-col border-0 shadow-blur rounded-2xl bg-white/80 mb-4">
@@ -95,7 +132,7 @@ const UserProfile = () => {
                                                 className="w-full shadow-soft-sm rounded-xl"
                                             />
                                         </div>
-                                            <RxCross1 onClick={() => setEditProfileInput(true)} className="cursor-pointer" /></>}
+                                            <RxCross1 onClick={() => { setEditProfileInput(true); setEditDetails({ ...editDetails, profile_img: '' }) }} className="cursor-pointer" /></>}
 
                                     </li>}
                                 <li className="block px-4 py-1 text-base flex gap-4 text-sm md:text-base">
@@ -117,7 +154,6 @@ const UserProfile = () => {
                                 <li className="block px-4 py-1 text-base flex gap-4 text-sm md:text-base">
                                     <span className="text-slate-700 w-[5rem] md:w-[11rem] font-bold">Organization Name</span>
                                     {editMode ? <input value={editDetails?.org_Name} className="border border-black rounded-md py-1 px-2" name="org_Name" onChange={handleEditInputChange} /> : <span className="capitalize">{userProfile?.org_Name}</span>}
-
                                 </li>
                                 <li className="block px-4 py-1 text-base flex gap-4 text-sm md:text-base">
                                     <span className="text-slate-700 w-[5rem] md:w-[11rem] font-bold">Industry</span>

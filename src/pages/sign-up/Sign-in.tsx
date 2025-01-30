@@ -20,7 +20,7 @@ import { emailRegex } from "../../constants";
 interface user {
   name: any;
   email: any;
-  phone: any;
+  // phone: any;
   password: any;
   cPassword: any;
 }
@@ -28,7 +28,7 @@ export default function SignIn() {
   const obj: user = {
     name: "",
     email: "",
-    phone: "",
+    // phone: "",
     password: "",
     cPassword: "",
   };
@@ -47,7 +47,7 @@ export default function SignIn() {
     navigate("/");
   };
 
-  const validate = () => {
+  const validate = () => {    
     for (const field in formData) {
       if (!formData[field]) {
         toast.warning(`${capitalize(field)} is Required.`);
@@ -73,9 +73,8 @@ export default function SignIn() {
     setIsErrorPresent(true)
     validate();
     if (!isErrorPresent) {
-      const response: any = dispatch(registerAsync(formData));
+      const response: any = await dispatch(registerAsync(formData));      
       if (response?.payload?.code == 200) {
-        toast.success(response?.payload?.message);
         navigate("/");
       }
     }
@@ -125,7 +124,7 @@ export default function SignIn() {
                   name="email"
                   onChange={handleChange}
                 />
-                <UserInput
+                {/* <UserInput
                   labelname="Phone"
                   type="number"
                   labelClass="capitalize font-bold tracking-wider"
@@ -134,7 +133,7 @@ export default function SignIn() {
                   showValue={formData?.phone}
                   name="phone"
                   onChange={handleChange}
-                />
+                /> */}
                 <UserInput
                   labelname="Password"
                   type="password"
@@ -155,7 +154,7 @@ export default function SignIn() {
                   name="cPassword"
                   onChange={handleChange}
                 />
-                <UserInput
+                {/* <UserInput
                   labelname="Password"
                   type="password"
                   name="password"
@@ -164,7 +163,7 @@ export default function SignIn() {
                   labelClass="capitalize font-bold tracking-wider"
                   placeholder="Password"
                   className="h-[42px] md:h-[48px] bg-[#0000000d] w-full px-[20px]"
-                />
+                /> */}
               </div>
               {/* <div className="text-sm">
                 <FormControlLabel

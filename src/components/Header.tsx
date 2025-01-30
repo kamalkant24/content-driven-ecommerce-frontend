@@ -52,9 +52,11 @@ function Header() {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    if (userProfile?.isReadDocumentation == false) {
+    console.log(userProfile);
+
+    // if (userProfile?.isReadDocumentation == false) {
       setOpen(true);
-    }
+    // }
   }, [userProfile]);
 
   const handleInitialApis = async () => {
