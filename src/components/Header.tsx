@@ -22,6 +22,7 @@ import { getAllCart } from "../store/cartSlice/cartsSlice";
 import { Badge, Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
+import { logout } from "../utils/helpers";
 const pages = ["Products", "Blogs", "Chat"];
 const settings = ["Profile", "Setting", "Logout"];
 
@@ -50,13 +51,10 @@ function Header() {
   const dispatch = useDispatch();
   const token = localStorage.getItem("access_token");
   const [open, setOpen] = React.useState(false);
-
   React.useEffect(() => {
-    console.log(userProfile);
-
-    // if (userProfile?.isReadDocumentation == false) {
+    if (userProfile?.isReadDocumentation == false) {
       setOpen(true);
-    // }
+    }
   }, [userProfile]);
 
   const handleInitialApis = async () => {
@@ -231,50 +229,70 @@ function Header() {
                 />
               </Box> */}
 
-              <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={userProfile?.profile_img} />
+                    <Avatar sx={{ width: '5rem', height: '5rem' }} alt="Remy Sharp" src={userProfile?.profile_img} />
                   </IconButton>
                 </Tooltip>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography
-                        textAlign="center"
-                        id={setting}
-                        onClick={(e: any) => {
-                          if (e.target.id == "Logout") {
-                            localStorage.removeItem("access_token");
-                            navigate("/");
-                          } else if (e.target.id == "Profile") {
-                            navigate("/profile");
-                          } else if (e.target.id == "Setting") {
-                            navigate("/setting");
-                          }
-                        }}
-                      >
-                        {setting}
-                      </Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
               </Box>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                slotProps={{
+                  paper: {
+                    elevation: 0,
+                    sx: {
+                      overflow: 'visible',
+                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                      mt: 1.5,
+                      '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      '&::before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                      },
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography
+                      textAlign="center"
+                      id={setting}
+                      onClick={(e: any) => {
+                        if (e.target.id == "Logout") {
+                          logout();
+                          navigate('/')
+                        } else if (e.target.id == "Profile") {
+                          navigate("/profile");
+                        } else if (e.target.id == "Setting") {
+                          navigate("/setting");
+                        }
+                      }}
+                    >
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
             </div>
           )}
         </Toolbar>
