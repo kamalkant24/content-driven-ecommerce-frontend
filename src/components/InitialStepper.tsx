@@ -22,6 +22,7 @@ import {
 } from "../assets/image";
 import { toast } from "react-toastify";
 import { capitalize } from "@mui/material";
+import { logout } from "../utils/helpers";
 
 interface Organization {
   org_Name: string;
@@ -126,7 +127,6 @@ const InitialStepper = (props: any) => {
     } else if (activeStep === steps.length - 1) {
       const res = await handleConfirmation();
       if (res.payload.code === 200) {
-
       }
     } else {
       // let newSkipped = skipped;
@@ -149,7 +149,7 @@ const InitialStepper = (props: any) => {
     formData.append("industry", organization.industry);
     formData.append("org_Size", organization.org_Size);
     formData.append("profile_img", organization?.profile_img);
-    formData.append("org_Banner", organization?.org_Banner);
+    // formData.append("org_Banner", organization?.org_Banner);
 
     const res = await dispatch(confirmation(formData));
     dispatch(getProfile({}));
@@ -221,8 +221,8 @@ const InitialStepper = (props: any) => {
 
   return (
     <div className="flex h-full w-full flex-col md:flex-row">
-      <div className="md:h-full md:w-[30%] min-w-[25rem] bg-blue-500 flex justify-start pl-[40px] md:pl-0 md:justify-center md:pt-20 ">
-        <div className="py-4">
+      <div className="md:h-full md:w-[30vw] min-w-[25rem] bg-blue-500 flex justify-start pl-[40px] md:pl-0 md:justify-center md:pt-20 hidden md:block">
+        <div className="py-4 w-fit m-auto">
           {/* {MyCompanyLogo} */}
           {/* <img src={logo} width="50" height="50" /> */}
           <Stepper
@@ -260,7 +260,10 @@ const InitialStepper = (props: any) => {
           </Stepper>
         </div>
       </div>
-      <div className="col md:w-[70%] overflow-scroll">
+      <div className="col md:w-[70vw] overflow-auto max-w-[30rem] lg:max-w-[65rem] mx-auto mb-10">
+        <div className="flex justify-end m-4">
+          <Button variant="contained" className="bg-blue-500" onClick={logout} href="/">LOGOUT</Button>
+        </div>
         {activeStep === steps.length ? (
           <React.Fragment>
             <Typography sx={{
@@ -281,6 +284,7 @@ const InitialStepper = (props: any) => {
                 m: { xs: '16px', md: '32px' },
                 textAlign: "center",
                 height: "auto",
+                // minHeight: { sm: '70vh' }
               }}
               className="flex"
             >
@@ -379,7 +383,7 @@ const InitialStepper = (props: any) => {
                   </p>
                 </div>
               ) : activeStep == 2 ? (
-                <div className="flex w-full ">
+                <div className="flex w-full">
                   <div className="w-full">
                     <div className="mx-auto bg-white rounded-md  text-left w-full">
                       <h2 className="text-2xl font-semibold mb-4">
@@ -547,7 +551,18 @@ const InitialStepper = (props: any) => {
                 </div>
               )}
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row", px: 8.5, height:'max-content' }}>
+            <Box sx={{
+              flexDirection: "row",
+              position: { xs: "fixed" }, 
+              bottom: 0,  
+              padding: "8px",     
+              backgroundColor: "white", 
+              zIndex: 1000,    
+              right:0,
+              left:0,
+              background:'#00000029',
+              display: { xs: 'flex' }, 
+            }}>
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
@@ -565,7 +580,6 @@ const InitialStepper = (props: any) => {
               <Button onClick={handleNext}>
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
               </Button>
-
             </Box>
           </React.Fragment>
         )}
