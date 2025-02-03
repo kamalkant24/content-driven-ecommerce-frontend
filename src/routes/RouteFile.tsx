@@ -1,4 +1,3 @@
-// Importing necessary modules and components from React and React Router
 import { Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -10,9 +9,9 @@ import TestPage from "../pages/cart/TestPage";
 import UserProfile from "../pages/profile/UserProfile";
 import ProductView from "../pages/products/ProductView";
 import Setting from "../pages/settingPage/Setting";
-// import TextEditor from "../components/TextEditor";
 import TextEditor from "../components/NewTextEditor";
 import { Chat } from "../pages/chat/Chat";
+import { AddProduct } from "../pages/addProduct/AddProduct";
 
 export default function RouteFile() {
   return (
@@ -29,6 +28,7 @@ export default function RouteFile() {
           <Route path="/setting" element={<Setting />} />
           <Route path="/pricing" element={<TextEditor />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/products/add" element={<AddProduct />} />
         </Route>
       </Routes>
     </>
