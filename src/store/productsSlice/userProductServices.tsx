@@ -13,6 +13,15 @@ const getAllProducts = async ({ page, pageSize, search }: any | object) => {
   }
 };
 
+const getProduct = async (id: string) => {
+  try {
+    const response = await axiosAPI.get(`/user/get-product/${id}`);
+    return response;
+  } catch (err) {
+    return err;
+  }
+};
+
 const addProduct = async (product: Product) => {
   try {
     console.log(product);
@@ -28,7 +37,7 @@ const addProduct = async (product: Product) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });    
+    });
     if (response.status === 200) {
       getToast("success", response?.data?.message);
     }
@@ -40,5 +49,17 @@ const addProduct = async (product: Product) => {
   }
 };
 
-const productService = { getAllProducts, addProduct };
+const deleteProduct = async (id: string) => {
+  try {
+    const response = await axiosAPI.delete(`/user/delete-product/${id}`);
+    if (response.status === 200) {
+      getToast("success", response?.data?.message);
+    }    
+    return id
+  } catch (err) {
+    return err;
+  }
+};
+
+const productService = { getAllProducts, getProduct, addProduct, deleteProduct };
 export default productService;

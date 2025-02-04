@@ -1,23 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, Button, Typography, Box, InputAdornment, Stack, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Product } from '../../interface';
-import { addProduct } from '../../store/productsSlice/userProductSlice';
-import { useNavigate } from 'react-router-dom';
+import { addProductSlice, getProductSlice } from '../../store/productsSlice/userProductSlice';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getFullProductUrl } from '../../utils/helpers';
 
 export const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<Product>({
-        title: 'Test Title',
-        description: 'Test Description',
-        price: '150',
-        quantity: '15',
+        title: '',
+        description: '',
+        price: '',
+        quantity: '',
         images: [],
     });
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { id } = useParams();
+    const { allProducts } = useSelector((state: any) => state.products);
+    const [productDetails, setProductDetails] = useState(null)
+
+    useEffect(() => {
+        if (!allProducts) {
+            const fetchData = async () => {
+                const res = await dispatch(
+                    getProductSlice(id)
+                );
+                const product = res?.payload;
+                setProductDetails(product);
+            };
+            fetchData();
+        } else {
+            const product = allProducts.data.find((product: any) => product?._id === id);
+            setProductDetails(product);
+        }
+    }, [id, allProducts]);
+
+    useEffect(() => {
+        if (id && productDetails?.title) {
+            const { title, description, price, quantity, image } = productDetails;
+            setProduct({
+                title,
+                description,
+                price,
+                quantity,
+                images: image
+            })
+        }
+    }, [productDetails, productDetails])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -52,17 +85,20 @@ export const AddProduct: React.FC = () => {
             toast.warning('At least one image is required.');
             return;
         }
-
-        const res = await dispatch(addProduct(product));
-        if (res.meta.requestStatus === 'fulfilled') {
-            navigate('/products')
+        if (id) {
+            console.log('Edit Product: ', product);
+        } else {
+            const res = await dispatch(addProductSlice(product));
+            if (res.meta.requestStatus === 'fulfilled') {
+                navigate('/products')
+            }
         }
     };
 
     return (
         <Box sx={{ maxWidth: 600, margin: 'auto', padding: 2 }}>
-            <Typography variant="h4" gutterBottom>
-                Add Product
+            <Typography variant="h4" paddingY={4}>
+                {id ? 'Edit' : 'Add'} Product
             </Typography>
             <form onSubmit={handleSubmit}>
                 <Stack spacing={2}>
@@ -123,7 +159,7 @@ export const AddProduct: React.FC = () => {
                                     {product.images.map((image, index) => (
                                         <Box key={index} sx={{ position: 'relative', width: 100, height: 100, overflow: 'hidden', borderRadius: 1 }}>
                                             <img
-                                                src={URL.createObjectURL(image)}
+                                                src={typeof image === 'string' ? getFullProductUrl(image) : URL.createObjectURL(image)}
                                                 alt={`image-${index}`}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
@@ -170,7 +206,7 @@ export const AddProduct: React.FC = () => {
                             color="primary"
                             sx={{ width: '100%' }}
                         >
-                            Add Product
+                            {id ? 'Edit' : 'Add'} Product
                         </Button>
                     </Stack>
                 </Stack>

@@ -103,7 +103,6 @@ function Header() {
       </Modal>
       <Container maxWidth="xxl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -235,7 +234,7 @@ function Header() {
               <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar sx={{ width: '5rem', height: '5rem' }} alt="Remy Sharp" src={userProfile?.profile_img} />
+                    <Avatar className={'border-2 border-gray-200'} sx={{ width: '3rem', height: '3rem' }} alt="Remy Sharp" src={userProfile?.profile_img} />
                   </IconButton>
                 </Tooltip>
               </Box>
