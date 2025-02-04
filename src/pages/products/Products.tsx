@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -11,11 +12,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
+import { deleteProductSlice, getAllProductSlice } from "../../store/productsSlice/userProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactElement, Key, useEffect, useState } from "react";
 import { addToCart, getAllCart } from "../../store/cartSlice/cartsSlice";
 import { useNavigate } from "react-router-dom";
+import { getFullProductUrl } from "../../utils/helpers";
 
 
 
@@ -46,15 +48,14 @@ const Products = () => {
     setPage(page);
   };
 
-  console.log(allProducts);
-  
-
   const handleCart = async (id: string) => {
     await dispatch(addToCart({ productId: id }));
     dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
   };
 
-  const getFullProductUrl = (str: string) => `http://192.168.31.57:8080/image/${str}`;
+  const deleteProduct = async (id: string) => {
+    await dispatch(deleteProductSlice(id))
+  }
 
   return (
     <Container maxWidth="lg">
@@ -94,8 +95,8 @@ const Products = () => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center gap-8 my-8">
-          {allProducts?.data?.map((item: any | ReactElement) => (
+        <div className="flex flex-wrap justify-center gap-8 my-8" >
+          {allProducts?.total === 0 ? <Box height={200}><Typography variant="h5" component={'h5'}>No Products</Typography></Box> : allProducts?.data?.map((item: any | ReactElement) => (
             <Card
               sx={{
                 borderRadius: 2,
@@ -108,13 +109,15 @@ const Products = () => {
                 width: '18rem'
               }}
               key={item?._id}
+              onClick={() => navigate(`/products/${item?._id}`)}
             >
               <CardMedia
                 component="img"
                 alt="product_image"
                 height="200"
                 image={getFullProductUrl(item?.image[0])}
-                sx={{ height: '200px' }}
+                sx={{ height: '200px', objectFit: 'contain' }}
+                className="bg-gray-200"
               />
               <CardContent sx={{ paddingBottom: 2 }}>
                 <Typography
@@ -125,9 +128,9 @@ const Products = () => {
                 >
                   {item?.title}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                {/* <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                   {item.description}
-                </Typography>
+                </Typography> */}
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: 'bold', color: 'primary.main', mb: 1 }}
@@ -148,22 +151,31 @@ const Products = () => {
                 <Button
                   size="small"
                   variant="outlined"
+                  color="success"
                   sx={{
                     width: '48%',
                     '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
                   }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/products/edit/${item?._id}`)
+                  }}
                 >
-                  Add To Cart
+                  Edit
                 </Button>
                 <Button
                   size="small"
-                  variant="contained"
+                  variant="outlined"
                   sx={{
                     width: '48%',
-                    '&:hover': { backgroundColor: 'primary.dark' },
+                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
                   }}
-                >
-                  Buy Now
+                  color="error"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteProduct(item?._id)
+                  }}                >
+                  Delete
                 </Button>
               </CardActions>
             </Card>

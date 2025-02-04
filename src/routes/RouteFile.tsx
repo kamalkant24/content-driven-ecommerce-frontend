@@ -12,6 +12,7 @@ import Setting from "../pages/settingPage/Setting";
 import TextEditor from "../components/NewTextEditor";
 import { Chat } from "../pages/chat/Chat";
 import { AddProduct } from "../pages/addProduct/AddProduct";
+import { ProductDetails } from "../pages/productDetails/ProductDetails";
 
 export default function RouteFile() {
   return (
@@ -29,6 +30,8 @@ export default function RouteFile() {
           <Route path="/pricing" element={<TextEditor />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/products/add" element={<AddProduct />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/products/edit/:id" element={<AddProduct />} />
         </Route>
       </Routes>
     </>
