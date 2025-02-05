@@ -55,6 +55,18 @@ export const addProductSlice: any | object | string = createAsyncThunk(
   }
 )
 
+export const editProductSlice: any | object | string = createAsyncThunk(
+  "get/editProduct",
+  async (data: Product) => {
+    try {
+      const response: any = await productService.editProduct(data)
+      return response.data
+    } catch (err) {
+      return err
+    }
+  }
+)
+
 export const deleteProductSlice: any | object | string = createAsyncThunk(
   "get/deleteProduct",
   async (id: string) => {
@@ -116,6 +128,19 @@ export const productReducer = createSlice({
         state.status = '500'
         state.error = "some thing went wrong"
       })
+      .addCase(editProductSlice.pending, (state) => {
+        state.productLoading = "pending";
+        state.status = 'idle'
+      })
+      .addCase(editProductSlice.fulfilled, (state, action) => {
+        state.productLoading = "succeeded";
+        state.status = '200';
+      })
+      .addCase(editProductSlice.rejected, (state) => {
+        state.productLoading = "failed";
+        state.status = '500'
+        state.error = "some thing went wrong"
+      })
       .addCase(deleteProductSlice.pending, (state) => {
         state.productLoading = "pending";
         state.status = 'idle'
@@ -123,8 +148,8 @@ export const productReducer = createSlice({
       .addCase(deleteProductSlice.fulfilled, (state, action) => {
         state.productLoading = "succeeded";
         state.status = '200';
-        console.log({id:action.payload, prods: state.allProducts.data});
-        
+        console.log({ id: action.payload, prods: state.allProducts.data });
+
         const updatedProducts = state.allProducts.data.filter((product) => product?._id !== action?.payload);
         state.allProducts.data = updatedProducts;
       })
