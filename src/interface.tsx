@@ -4,4 +4,7 @@ export interface Product {
     price: string;
     quantity: string;
     images: File[];
+    category: string,
+    availability:boolean
+    _id?:string
 }

@@ -34,7 +34,7 @@ const register = async (data: any) => {
 
 const verify = async (id: any) => {
   try {
-    const response = await axiosAPI.get(`/user/verify/${id}`);    
+    const response = await axiosAPI.get(`/user/verify/${id}`);        
     if (response?.data?.code === 200) {
       getToast("success", response?.data?.message);
     } else {
@@ -42,7 +42,8 @@ const verify = async (id: any) => {
     }
     return response;
   } catch (err: any) {
-    getToast("error", err?.message);
+    console.log(err);
+    getToast("error", err?.response.data.message);
     return err;
   }
 };

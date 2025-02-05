@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Card, CardContent, Typography, Box, Rating, Accordion, AccordionSummary, AccordionDetails, Container } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { Card, CardContent, Typography, Box, Rating, Accordion, AccordionSummary, AccordionDetails, Container, CardActions, Button } from "@mui/material";
 import { Carousal } from "../../components/Carousal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductSlice } from "../../store/productsSlice/userProductSlice";
+import { deleteProductSlice, getProductSlice } from "../../store/productsSlice/userProductSlice";
 
 export const ProductDetails: React.FC = () => {
     const { id } = useParams();
@@ -12,6 +12,7 @@ export const ProductDetails: React.FC = () => {
     const [productDetails, setProductDetails] = useState<any>(null);
     const [expanded, setExpanded] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!allProducts) {
@@ -30,7 +31,7 @@ export const ProductDetails: React.FC = () => {
     }, [id, allProducts]);
 
     if (!productDetails) {
-        return <div className="p-4 font-bold text-2xl">Loading..</div>;
+        return <div className="p-4 font-bold text-2xl">Loading...</div>;
     }
 
     const reviews = [
@@ -48,8 +49,13 @@ export const ProductDetails: React.FC = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const deleteProduct = async (id: string) => {
+        await dispatch(deleteProductSlice(id));
+        navigate("/products");
+    }
+
     return (
-        <Container className="p-2 w-[80%] mt-6">
+        <Container maxWidth="lg" className="p-2 mt-6">
             <Card className="flex flex-col items-center gap-4">
                 <Carousal images={productDetails?.image} />
                 <CardContent className="p-2 text-left w-[95%] sm:w-[80%] flex gap-4 flex-col">
@@ -137,6 +143,32 @@ export const ProductDetails: React.FC = () => {
                         </Box>
                     </Box>
                 </CardContent>
+                <CardActions
+                    className="flex justify-start w-[95%] sm:w-[80%] mb-4"
+                    sx={{padding: 0, paddingLeft: 2}}
+                >
+                    <Button
+                        variant="contained"
+                        color="success"
+                        className="w-[6.25rem]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/products/edit/${productDetails?._id}`)
+                        }}
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className="w-[6.25rem]"
+                        color="error"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            deleteProduct(productDetails?._id)
+                        }}                >
+                        Delete
+                    </Button>
+                </CardActions>
             </Card>
         </Container>
     );

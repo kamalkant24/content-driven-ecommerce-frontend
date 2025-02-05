@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, Box, InputAdornment, Stack, IconButton } from '@mui/material';
+import { TextField, Button, Typography, Box, InputAdornment, Stack, IconButton, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormControlLabel, Switch } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { Product } from '../../interface';
-import { addProductSlice, getProductSlice } from '../../store/productsSlice/userProductSlice';
+import { addProductSlice, editProductSlice, getProductSlice } from '../../store/productsSlice/userProductSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFullProductUrl } from '../../utils/helpers';
 
 export const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<Product>({
-        title: '',
-        description: '',
-        price: '',
-        quantity: '',
+        title: 'Test Title',
+        description: 'Test Description',
+        category: 'Clothing & Accessories',
+        price: '99',
+        quantity: '22',
         images: [],
+        availability: true,
     });
 
     const dispatch = useDispatch();
@@ -24,36 +26,44 @@ export const AddProduct: React.FC = () => {
     const [productDetails, setProductDetails] = useState(null)
 
     useEffect(() => {
-        if (!allProducts) {
-            const fetchData = async () => {
-                const res = await dispatch(
-                    getProductSlice(id)
-                );
-                const product = res?.payload;
+        if (id) {
+            if (!allProducts) {
+                const fetchData = async () => {
+                    const res = await dispatch(
+                        getProductSlice(id)
+                    );
+                    const product = res?.payload;
+                    setProductDetails(product);
+                };
+                fetchData();
+            } else {
+                const product = allProducts.data.find((product: any) => product?._id === id);
                 setProductDetails(product);
-            };
-            fetchData();
-        } else {
-            const product = allProducts.data.find((product: any) => product?._id === id);
-            setProductDetails(product);
+            }
         }
+
     }, [id, allProducts]);
 
     useEffect(() => {
-        if (id && productDetails?.title) {
+        if (id && productDetails) {
             const { title, description, price, quantity, image } = productDetails;
             setProduct({
                 title,
                 description,
                 price,
                 quantity,
-                images: image
+                images: image,
+                category: 'Clothing & Accessories',
+                availability: true
             })
         }
     }, [productDetails, productDetails])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent) => {
+        let { name, value } = e.target;
+        if (name === 'availability') {
+            value = e.target.checked
+        }
         setProduct((prevState) => ({
             ...prevState,
             [name]: value,
@@ -86,7 +96,10 @@ export const AddProduct: React.FC = () => {
             return;
         }
         if (id) {
-            console.log('Edit Product: ', product);
+            const res = await dispatch(editProductSlice({ ...product, _id: id }));
+            if (res.meta.requestStatus === 'fulfilled') {
+                navigate('/products')
+            }
         } else {
             const res = await dispatch(addProductSlice(product));
             if (res.meta.requestStatus === 'fulfilled') {
@@ -123,7 +136,6 @@ export const AddProduct: React.FC = () => {
                         onChange={handleChange}
                         required
                     />
-
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
                         <TextField
                             label="Price"
@@ -148,6 +160,28 @@ export const AddProduct: React.FC = () => {
                             onChange={handleChange}
                             required
                         />
+                    </Stack>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
+                        <FormControl fullWidth sx={{ flex: 1 }}>
+                            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                name='category'
+                                value={product?.category}
+                                label="Category"
+                                onChange={handleChange}
+                                required
+                            >
+                                <MenuItem value={'Electronics'}>Electronics</MenuItem>
+                                <MenuItem value={'Clothing & Accessories'}>Clothing & Accessories</MenuItem>
+                                <MenuItem value={'Home & Living'}>Home & Living</MenuItem>
+                                <MenuItem value={'Beauty & Health'}>Beauty & Health</MenuItem>
+                                <MenuItem value={'Sports & Outdoors'}>Sports & Outdoors</MenuItem>
+
+                            </Select>
+                        </FormControl>
+                        <FormControlLabel sx={{ flex: 1 }} control={<Switch name='availability' checked={product?.availability} onChange={handleChange} />} label={product?.availability ? 'Available' : 'Out of Stock'} />
                     </Stack>
                     <Stack spacing={1}>
                         {product.images.length > 0 && (
@@ -184,7 +218,6 @@ export const AddProduct: React.FC = () => {
                             </Box>
                         )}
                     </Stack>
-
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
                         <Button
                             variant="contained"
