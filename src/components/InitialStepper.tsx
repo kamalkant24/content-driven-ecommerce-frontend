@@ -60,7 +60,6 @@ const InitialStepper = (props: any) => {
   const [previewImage, setPreviewImage] = React.useState("");
   const [previewBanner, setPreviewBanner] = React.useState("");
   const [activeAccount, setActiveAccount] = React.useState(0);
-  const [isErrorPresent, setIsErrorPresent] = React.useState<boolean>(true);
   const [organization, setOrganization] = React.useState<Organization>({
     org_Name: "",
     org_Phone: "",
@@ -110,18 +109,17 @@ const InitialStepper = (props: any) => {
     for (const field in organization) {
       if (!organization[field]) {
         toast.warning(`${fieldMessageName[field]} is Required.`);
-        return;
+        return false;
       }
     }
-    setIsErrorPresent(false);
+    return true;
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
     if (activeStep === 2) {
-      setIsErrorPresent(true);
-      validate();
-      if (!isErrorPresent) {
+      const isValidateSuccess = validate();
+      if (isValidateSuccess) {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
     } else if (activeStep === steps.length - 1) {
@@ -315,7 +313,7 @@ const InitialStepper = (props: any) => {
                                 variant="h5"
                                 component="div"
                                 sx={{
-                                  fontSize: { xs: '1rem', sm: '1.25rem' }, // Smaller font on mobile (xs), larger on tablets and up (sm)
+                                  fontSize: { xs: '1rem', sm: '1.25rem' }, 
                                 }}
                               >
                                 {item.title}
@@ -324,7 +322,7 @@ const InitialStepper = (props: any) => {
                                 variant="body2"
                                 color="text.secondary"
                                 sx={{
-                                  fontSize: { xs: '0.75rem', sm: '1rem' }, // Smaller font for mobile
+                                  fontSize: { xs: '0.75rem', sm: '1rem' },
                                 }}
                               >
                                 {item.description}
@@ -432,14 +430,20 @@ const InitialStepper = (props: any) => {
                             <option className="h-8" value="" disabled selected>
                               Select Industry
                             </option>
-                            <option className="h-8" value="technology">
-                              Technology
+                            <option className="h-8" value="Technology & Electronics">
+                              Technology & Electronics
                             </option>
-                            <option className="h-8" value="finance">
-                              Finance
+                            <option className="h-8" value="Fashion & Apparel">
+                              Fashion & Apparel
                             </option>
-                            <option className="h-8" value="healthcare">
-                              Healthcare
+                            <option className="h-8" value="Home & Living">
+                              Home & Living
+                            </option>
+                            <option className="h-8" value="Health & Wellness">
+                              Health & Wellness
+                            </option>
+                            <option className="h-8" value="Sports & Recreation">
+                              Sports & Recreation
                             </option>
                           </select>
                         </div>
@@ -475,16 +479,16 @@ const InitialStepper = (props: any) => {
                           <label className="block text-gray-700 font-medium mb-2">
                             Add Your Logo/Avatar
                           </label>
-                          <div className="flex gap-2">
+                          <div>
                             <input
                               type="file"
                               id="profile_img"
                               name="profile_img"
                               onChange={handleOrganization}
-                              className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 py-3"
+                              className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 py-3 mb-4"
                             />
                             {previewImage &&
-                              <img src={previewImage} height="50" width="50" />
+                              <img src={previewImage} className="contain h-[4rem]" />
                             }
                           </div>
                         </div>
@@ -492,16 +496,16 @@ const InitialStepper = (props: any) => {
                           <label className="block text-gray-700 font-medium mb-2">
                             Organization Banner
                           </label>
-                          <div className="flex gap-2">
+                          <div>
                             <input
                               type="file"
                               id="org_Banner"
                               name="org_Banner"
                               onChange={handleOrganization}
-                              className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 py-3"
+                              className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 py-3 mb-4"
                             />
                             {previewBanner &&
-                              <img src={previewBanner} height="50" width="50" />
+                              <img src={previewBanner} className="contain h-[4rem]" />
                             }
                           </div>
                         </div>
@@ -543,31 +547,26 @@ const InitialStepper = (props: any) => {
                   <p className="text-sm py-3">
                     Your Account will be under review and you will be notified once it gets reviewed.
                   </p>
-                  {/* <p>
-                    Writing headlines for blog posts is as much an art as it is
-                    a science and probably warrants its own post,but for all
-                    advise is with what works for your great & amazing audience
-                  </p> */}
                 </div>
               )}
             </Typography>
             <Box sx={{
               flexDirection: "row",
-              position: { xs: "fixed" }, 
-              bottom: 0,  
-              padding: "8px",     
-              backgroundColor: "white", 
-              zIndex: 1000,    
-              right:0,
-              left:0,
-              background:'#00000029',
-              display: { xs: 'flex' }, 
+              position: { xs: "fixed" },
+              bottom: 0,
+              padding: "8px",
+              backgroundColor: "white",
+              zIndex: 1000,
+              right: 0,
+              left: 0,
+              background: '#00000029',
+              display: { xs: 'flex' },
             }}>
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
                 onClick={handleBack}
-                sx={{ mr: 1, m: { xs: 0, md: 2 } }}
+                sx={{ mr: 1, m: { xs: 0, md: 1 } }}
               >
                 Back
               </Button>
