@@ -1,4 +1,4 @@
-import { Button, Container, Typography, CircularProgress, Box } from "@mui/material";
+import { Button, Container, Typography, CircularProgress, Box, P, Paper } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,7 +14,7 @@ const VerifyEmail = () => {
 
   const verifyUser = async () => {
     setLoading(true);
-    setError(false); 
+    setError(false);
     try {
       const response: any = await dispatch(verifyAsync(id));
       console.log({ response });
@@ -34,7 +34,7 @@ const VerifyEmail = () => {
 
   return (
     <Container maxWidth="sm" className="mt-8 text-center">
-      <Box>
+      <Paper className="p-3" elevation={3}>
         <Typography variant="h4" gutterBottom>
           Email Verification
         </Typography>
@@ -63,17 +63,23 @@ const VerifyEmail = () => {
             </Button>
           </>
         ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={verifyUser}
-            sx={{ mt: 3 }}
-          >
-            Verify Email
-          </Button>
+          <Box>
+            <Typography variant="body1" gutterBottom>
+              Click the button below to verify your email.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={verifyUser}
+              sx={{ mt: 3 }}
+            >
+              Verify Email
+            </Button>
+          </Box>
+
         )}
-      </Box>
+      </Paper>
     </Container>
   );
 };
