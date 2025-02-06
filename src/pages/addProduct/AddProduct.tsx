@@ -10,11 +10,11 @@ import { getFullProductUrl } from '../../utils/helpers';
 
 export const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<Product>({
-        title: 'Test Title',
-        description: 'Test Description',
-        category: 'Clothing & Accessories',
-        price: '99',
-        quantity: '22',
+        title: '',
+        description: '',
+        category: '',
+        price: '',
+        quantity: '',
         images: [],
         availability: true,
     });
@@ -41,7 +41,6 @@ export const AddProduct: React.FC = () => {
                 setProductDetails(product);
             }
         }
-
     }, [id, allProducts]);
 
     useEffect(() => {

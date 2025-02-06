@@ -6,7 +6,11 @@ import {
   CardContent,
   CardMedia,
   Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Pagination,
+  Select,
   Skeleton,
   Stack,
   TextField,
@@ -30,6 +34,7 @@ const Products = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(9);
   const [search, setSearch] = useState<string>("");
+  const [sortbyPrice, setSortbyPrice] = useState<string>("");
 
   const dispatch = useDispatch();
 
@@ -59,7 +64,7 @@ const Products = () => {
 
   return (
     <Container maxWidth="lg">
-      <div className="flex justify-between flex-wrap my-6 gap-4">
+      <Box className="flex justify-between sm:justify-center flex-wrap my-6 gap-4 md:gap-8">
         <TextField
           label="Search Product"
           variant="outlined"
@@ -68,7 +73,7 @@ const Products = () => {
           }}
           sx={{
             height: '40px',
-            width: { xs: '8rem', sm: 'auto' },
+            width: { xs: '8rem', sm: '12rem' },
             fontSize: {
               xs: '0.875rem',
               sm: '1rem',
@@ -82,11 +87,38 @@ const Products = () => {
             },
           }}
         />
+        <FormControl sx={{
+          height: '40px',
+          width: { xs: '8rem', sm: '12rem' },
+          fontSize: {
+            xs: '0.875rem',
+            sm: '1rem',
+          },
+          '& .MuiInputBase-root': {
+            height: '100%',
+            padding: '0 10px',
+          },
+          '& .MuiFormLabel-root': {
+            top: '-6px',
+          },
+        }}>
+          <InputLabel id="demo-simple-select-label">Price</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={sortbyPrice}
+            label="Age"
+            onChange={(e) => setSortbyPrice(e.target.value as string)}
+          >
+            <MenuItem value={'low to high'}>Low to High</MenuItem>
+            <MenuItem value={'high to low'}>High to Low</MenuItem>
+          </Select>
+        </FormControl>
         <Button variant="contained" onClick={(e) => {
           e.preventDefault();
           navigate('/products/add')
         }}>Add Product</Button>
-      </div>
+      </Box>
 
       {productLoading === "pending" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

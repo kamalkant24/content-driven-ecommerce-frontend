@@ -23,9 +23,6 @@ export default function Login() {
     password: ''
   })
 
-  const [isErrorPresent, setIsErrorPresent] = useState<boolean>(true);
-
-
   const handleNext = () => {
     navigate("/sign-in");
   };
@@ -34,24 +31,23 @@ export default function Login() {
     for (const field in formData) {
       if (!formData[field]) {
         toast.warning(`${capitalize(field)} is Required.`);
-        return
+        return false
       }
       if (field === 'email') {
         if (!emailRegex.test(formData[field])) {
           toast.warning(`Invalid Email`);
-          return
+          return false
         }
       }
     }
-    setIsErrorPresent(false)
+    return true
   }
 
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
-    setIsErrorPresent(true)
-    validate();
-    if (!isErrorPresent) {
+    const isValidSuccess = validate();
+    if (isValidSuccess) {
       const response: object = await dispatch(
         loginAsync(formData)
       );
@@ -130,33 +126,14 @@ export default function Login() {
               />
 
               <div className="flex justify-between items-center">
-                {/* <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="demo-simple-select-standard-label">
-                    Age
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    // value={age}
-                    // onChange={handleChange}
-                    label="Age"
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl> */}
                 <div className="flex gap-4">
-                  <Link className="" to="forget-password">
+                  <Link className="" to="">
                     Terms
                   </Link>
-                  <Link className="" to="forget-password">
+                  <Link className="" to="">
                     Plans
                   </Link>
-                  <Link className="" to="forget-password">
+                  <Link className="" to="">
                     Contact US
                   </Link>
                 </div>

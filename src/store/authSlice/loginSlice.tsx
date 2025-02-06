@@ -127,8 +127,6 @@ export const loginDataReducer = createSlice({
       .addCase(allUserAsync.fulfilled, (state, action) => {
         state.isUserLoading = "succeeded";
         state.isLoginSuccess = true;
-        console.log('in add case slice',action.payload);
-        
         state.allUser = action.payload
       })
       .addCase(allUserAsync.rejected, (state) => {

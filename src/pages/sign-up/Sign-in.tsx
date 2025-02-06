@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import UserButton from "../../components/UserButton";
 import UserInput from "../../components/UserInput";
-// import "./signIn.scss";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerAsync } from "../../store/authSlice/loginSlice";
@@ -20,7 +19,6 @@ import { emailRegex } from "../../constants";
 interface user {
   name: any;
   email: any;
-  // phone: any;
   password: any;
   cPassword: any;
 }
@@ -28,12 +26,10 @@ export default function SignIn() {
   const obj: user = {
     name: "",
     email: "",
-    // phone: "",
     password: "",
     cPassword: "",
   };
   const [formData, setFormData] = useState<any>({ ...obj });
-  const [isErrorPresent, setIsErrorPresent] = useState<boolean>(true);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -47,33 +43,39 @@ export default function SignIn() {
     navigate("/");
   };
 
-  const validate = () => {    
+  const fieldLabels:user = {
+    name: "Full Name",
+    email: "Email",
+    password: "Password",
+    cPassword: "Confirm Password",
+  }
+
+  const validate = () => {
     for (const field in formData) {
       if (!formData[field]) {
-        toast.warning(`${capitalize(field)} is Required.`);
-        return
+        toast.warning(`${fieldLabels[field]} is Required.`);
+        return false
       }
       if (field === 'email') {
         if (!emailRegex.test(formData[field])) {
           toast.warning(`Invalid Email`);
-          return
+          return false
         }
       }
       if (field === 'cPassword') {
         if (formData.password !== formData.cPassword) {
           toast.warning(`Password and Confirm Password does not match.`);
-          return
+          return false
         }
       }
     }
-    setIsErrorPresent(false)
+    return true;
   }
 
   const handleRegister = async () => {
-    setIsErrorPresent(true)
-    validate();
-    if (!isErrorPresent) {
-      const response: any = await dispatch(registerAsync(formData));      
+    const isValidSuccess = validate();
+    if (isValidSuccess) {
+      const response: any = await dispatch(registerAsync(formData));
       if (response?.payload?.code == 200) {
         navigate("/");
       }
@@ -199,13 +201,13 @@ export default function SignIn() {
                 </Select>
               </FormControl> */}
                 <div className="flex gap-4">
-                  <Link className="" to="forget-password">
+                  <Link className="" to="">
                     Terms
                   </Link>
-                  <Link className="" to="forget-password">
+                  <Link className="" to="">
                     Plans
                   </Link>
-                  <Link className="" to="forget-password">
+                  <Link className="" to="">
                     Contact US
                   </Link>
                 </div>
