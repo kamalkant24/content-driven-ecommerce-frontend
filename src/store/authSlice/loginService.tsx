@@ -1,8 +1,16 @@
 import axiosAPI, { getToast } from "../../utils/InterceptorApi";
+import bcrypt from 'bcryptjs';
 
 const login = async (data: any) => {
   try {
-    const response: any = await axiosAPI.post("/user/login", data);
+    const { email, password } = data;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const body = {
+      email,
+      // password: hashedPassword
+      password
+    }
+    const response: any = await axiosAPI.post("/user/login", body);
     response?.data?.token &&
       localStorage.setItem("access_token", response?.data?.token);
     if (response?.data?.code === 200) {
@@ -19,7 +27,15 @@ const login = async (data: any) => {
 
 const register = async (data: any) => {
   try {
-    const response = await axiosAPI.post("/user/register", data);
+    const { name, email, password } = data;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const body = {
+      name,
+      email,
+      // password: hashedPassword
+      password
+    }
+    const response = await axiosAPI.post("/user/register", body);
     if (response?.data?.code === 200) {
       getToast("success", response?.data?.message);
     } else {
@@ -34,7 +50,7 @@ const register = async (data: any) => {
 
 const verify = async (id: any) => {
   try {
-    const response = await axiosAPI.get(`/user/verify/${id}`);        
+    const response = await axiosAPI.get(`/user/verify/${id}`);
     if (response?.data?.code === 200) {
       getToast("success", response?.data?.message);
     } else {
@@ -42,7 +58,6 @@ const verify = async (id: any) => {
     }
     return response;
   } catch (err: any) {
-    console.log(err);
     getToast("error", err?.response.data.message);
     return err;
   }

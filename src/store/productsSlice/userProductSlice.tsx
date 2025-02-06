@@ -148,8 +148,6 @@ export const productReducer = createSlice({
       .addCase(deleteProductSlice.fulfilled, (state, action) => {
         state.productLoading = "succeeded";
         state.status = '200';
-        console.log({ id: action.payload, prods: state.allProducts.data });
-
         const updatedProducts = state.allProducts.data.filter((product) => product?._id !== action?.payload);
         state.allProducts.data = updatedProducts;
       })
