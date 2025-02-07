@@ -5,10 +5,11 @@ import { Carousal } from "../../components/Carousal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProductSlice, getProductSlice } from "../../store/productsSlice/userProductSlice";
+import { RootState } from "../../store/store";
 
 export const ProductDetails: React.FC = () => {
     const { id } = useParams();
-    const { allProducts } = useSelector((state: any) => state.products);
+    const { allProducts } = useSelector((state: RootState) => state.products);
     const [productDetails, setProductDetails] = useState<any>(null);
     const [expanded, setExpanded] = useState(false);
     const dispatch = useDispatch();

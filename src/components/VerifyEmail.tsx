@@ -17,7 +17,6 @@ const VerifyEmail = () => {
     setError(false);
     try {
       const response: any = await dispatch(verifyAsync(id));
-      console.log({ response });
       if (response?.payload?.code === 200) {
         setMessage(response.payload.message);
       } else {

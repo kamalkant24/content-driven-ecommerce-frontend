@@ -4,12 +4,13 @@ import { allUserAsync } from "../../store/authSlice/loginSlice";
 import DataTable from "react-data-table-component";
 import { CircularProgress } from "@mui/material";
 import UserInput from "../../components/UserInput";
+import { RootState } from "../../store/store";
 
 export default function AllUsers() {
   const dispatch = useDispatch();
 
   const { allUser, isUserLoading } = useSelector(
-    (state: object) => state.login
+    (state: RootState) => state.login
   );
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);

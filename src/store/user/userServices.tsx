@@ -12,9 +12,8 @@ const getUserProfile = async (data: any) => {
 };
 
 const userConfirmedData = async (data: any) => {
-  try {
+  try {    
     const response: any = await axiosAPI.post("/user/confirmation", data);
-
     return response;
   } catch (err: any) {
     getToast("error", err?.response?.data?.error);
@@ -22,6 +21,16 @@ const userConfirmedData = async (data: any) => {
   }
 };
 
-const userService = { getUserProfile, userConfirmedData };
+const editUserProfile = async (data: any) => {
+  try {    
+    const response: any = await axiosAPI.post("/user/update", data);
+    return response;
+  } catch (err: any) {
+    getToast("error", err?.response?.data?.error);
+    return err;
+  }
+};
+
+const userService = { getUserProfile, userConfirmedData, editUserProfile };
 
 export default userService;
