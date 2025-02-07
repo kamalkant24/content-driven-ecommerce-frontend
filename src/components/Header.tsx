@@ -22,7 +22,8 @@ import { getAllCart } from "../store/cartSlice/cartsSlice";
 import { Badge, Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
-import { logout } from "../utils/helpers";
+import { getFullProductUrl, logout } from "../utils/helpers";
+import { RootState } from "../store/store";
 const pages = ["Products", "Blogs", "Chat"];
 const settings = ["Profile", "Setting", "Logout"];
 
@@ -44,9 +45,9 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  const { allCarts } = useSelector((state: any) => state.cart);
-  const { userProfile } = useSelector((state: any) => state.profile);
-  const { loginData } = useSelector((state: any) => state.login);
+  const { allCarts } = useSelector((state: RootState) => state.cart);
+  const { userProfile } = useSelector((state: RootState) => state.profile);
+  const { loginData } = useSelector((state: RootState) => state.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("access_token");
@@ -234,7 +235,7 @@ function Header() {
               <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar className={'border-2 border-gray-200'} sx={{ width: '3rem', height: '3rem' }} alt="Remy Sharp" src={userProfile?.profile_img} />
+                    <Avatar className={'border-2 border-gray-200'} sx={{ width: '3rem', height: '3rem' }} alt="Remy Sharp" src={getFullProductUrl(userProfile?.profile_img)} />
                   </IconButton>
                 </Tooltip>
               </Box>

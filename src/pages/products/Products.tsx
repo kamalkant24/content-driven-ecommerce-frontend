@@ -22,13 +22,14 @@ import { ReactElement, Key, useEffect, useState } from "react";
 import { addToCart, getAllCart } from "../../store/cartSlice/cartsSlice";
 import { useNavigate } from "react-router-dom";
 import { getFullProductUrl } from "../../utils/helpers";
+import { RootState } from "../../store/store";
 
 
 
 const Products = () => {
 
   const { allProducts, productLoading } = useSelector(
-    (state: any) => state.products
+    (state: RootState) => state.products
   );
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);

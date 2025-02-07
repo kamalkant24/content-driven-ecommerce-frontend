@@ -24,7 +24,6 @@ const getProduct = async (id: string) => {
 
 const addProduct = async (product: Product) => {
   try {
-    console.log(product);
     const formData = new FormData();
     formData.append('title', product.title);
     formData.append('description', product.description);
@@ -53,7 +52,6 @@ const addProduct = async (product: Product) => {
 
 const editProduct = async (product: Product) => {
   try {
-    console.log(product);
     const formData = new FormData();
     formData.append('title', product.title);
     formData.append('description', product.description);

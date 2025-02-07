@@ -7,6 +7,7 @@ import { Product } from '../../interface';
 import { addProductSlice, editProductSlice, getProductSlice } from '../../store/productsSlice/userProductSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFullProductUrl } from '../../utils/helpers';
+import { RootState } from '../../store/store';
 
 export const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<Product>({
@@ -22,7 +23,7 @@ export const AddProduct: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const { allProducts } = useSelector((state: any) => state.products);
+    const { allProducts } = useSelector((state: RootState) => state.products);
     const [productDetails, setProductDetails] = useState(null)
 
     useEffect(() => {

@@ -1,9 +1,10 @@
 import { Container } from "@mui/material"
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const Cart = () => {
-  const { allCarts } = useSelector((state: any) => state.cart);
+  const { allCarts } = useSelector((state: RootState) => state.cart);
 
 const [count,setCount] = useState<number>(1)
 

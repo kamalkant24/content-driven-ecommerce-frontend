@@ -8,3 +8,15 @@ export interface Product {
     availability:boolean
     _id?:string
 }
+
+export interface AdditionalDetails {
+    org_Name?: string;
+    industry?: string;
+    org_Size?: string;
+    profile_img: string | File;
+    org_Banner?: string | File;
+    phone: string;
+    address: string;
+    org_Description?: string;
+    role: string;
+  }
