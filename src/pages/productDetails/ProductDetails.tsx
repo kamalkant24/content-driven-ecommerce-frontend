@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, CardContent, Typography, Box, Rating, Accordion, AccordionSummary, AccordionDetails, Container, CardActions, Button } from "@mui/material";
+import { Card, CardContent, Typography, Box, Rating, Accordion, AccordionSummary, AccordionDetails, Container, CardActions, Button, Stack, IconButton } from "@mui/material";
 import { Carousal } from "../../components/Carousal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProductSlice, getProductSlice } from "../../store/productsSlice/userProductSlice";
 import { RootState } from "../../store/store";
+import { discountedProductPrice } from "../../utils/helpers";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export const ProductDetails: React.FC = () => {
     const { id } = useParams();
-    const { allProducts } = useSelector((state: RootState) => state.products);
+    const { allProducts } = useSelector((state: RootState) => state.products)
+    const { userProfile } = useSelector((state: RootState) => state.profile);
     const [productDetails, setProductDetails] = useState<any>(null);
     const [expanded, setExpanded] = useState(false);
     const dispatch = useDispatch();
@@ -50,14 +57,24 @@ export const ProductDetails: React.FC = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const handleCart = async (id: string) => {
+        await dispatch(addToCart({ productId: id }));
+        dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
+    };
+
     const deleteProduct = async (id: string) => {
         await dispatch(deleteProductSlice(id));
         navigate("/products");
     }
 
+    const addToWishlist = (e) => {
+        e.stopPropagation();
+        console.log('added to wishlist');
+    }
+
     return (
         <Container maxWidth="lg" className="p-2 mt-6">
-            <Card className="flex flex-col items-center gap-4">
+            <Card className="flex flex-col items-center gap-4 relative">
                 <Carousal images={productDetails?.image} />
                 <CardContent className="p-2 text-left w-[95%] sm:w-[80%] flex gap-4 flex-col">
                     <Box className="flex flex-col md:flex-row justify-between items-start md:flex-center">
@@ -66,12 +83,24 @@ export const ProductDetails: React.FC = () => {
                         </Typography>
                         <Rating size="large" name="read-only" value={3.5} precision={0.5} readOnly />
                     </Box>
-                    <Box component={'section'} className="flex gap-2">
+                    <Box component={'section'} className="flex gap-2 items-center">
                         <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
                             Price:
                         </Typography>
                         <Typography variant="h6" sx={{ color: 'primary.main' }}>
-                            ${productDetails?.price}
+                            ${discountedProductPrice(productDetails.price, 10)}
+                        </Typography>
+                        <Typography
+                            variant="small"
+                            className="line-through text-gray-500"
+                        >
+                            ${productDetails.price}
+                        </Typography>
+                        <Typography
+                            variant="small"
+                            className="text-green-600 font-bold"
+                        >
+                            10% off
                         </Typography>
                     </Box>
 
@@ -145,31 +174,59 @@ export const ProductDetails: React.FC = () => {
                     </Box>
                 </CardContent>
                 <CardActions
-                    className="flex justify-start w-[95%] sm:w-[80%] mb-4"
-                    sx={{padding: 0, paddingLeft: 2}}
+                    className="w-full flex justify-center items gap-4 flex-wrap"
+                    sx={{ padding: 2 }}
                 >
-                    <Button
-                        variant="contained"
-                        color="success"
-                        className="w-[6.25rem]"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/products/edit/${productDetails?._id}`)
-                        }}
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        variant="contained"
-                        className="w-[6.25rem]"
-                        color="error"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            deleteProduct(productDetails?._id)
-                        }}                >
-                        Delete
-                    </Button>
+                    {userProfile?.role === "vendor" ? (
+                        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
+                            <Button
+                                variant="contained"
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/products/edit/${productDetails?._id}`);
+                                }}
+                                startIcon={<EditIcon />}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' } }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteProduct(productDetails?._id);
+                                }}
+                                startIcon={<DeleteIcon />}
+                            >
+                                Delete
+                            </Button>
+                        </Stack>
+                    ) : (
+                        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
+                            <Button
+                                variant="outlined"
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
+                                onClick={() => console.log('Add to cart')}
+                                startIcon={<ShoppingCartIcon />}
+                            >
+                                Add To Cart
+                            </Button>
+                            <Button
+                                variant="contained"
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
+                                onClick={() => console.log('Buy Now')}
+                                startIcon={<ShoppingBagIcon />}
+                            >
+                                Buy Now
+                            </Button>
+                        </Stack>
+                    )}
                 </CardActions>
+                <IconButton aria-label="add to shopping cart" sx={{ position: 'absolute', top: 0, right: 0 }} size="large" onClick={addToWishlist}>
+                    <FavoriteIcon fontSize="inherit"/>
+                </IconButton>
             </Card>
         </Container>
     );

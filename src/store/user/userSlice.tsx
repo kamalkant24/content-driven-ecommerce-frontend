@@ -72,12 +72,10 @@ export const userProfileReducer = createSlice({
       })
       .addCase(getProfile.fulfilled, (state, action) => {
         state.loading = "succeeded";
-        state.isLoginSuccess = true;
-        console.log({action});
-        
+        state.isLoginSuccess = true;        
         state.userProfile = action.payload;
         //adding role explicitly as backend is sending wrong data
-        state.userProfile.role = 'vendor'
+        state.userProfile.role = 'user';
       })
       .addCase(getProfile.rejected, (state) => {
         state.loading = "failed";
