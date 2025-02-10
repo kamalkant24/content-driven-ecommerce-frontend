@@ -19,7 +19,6 @@ export default function RouteFile() {
     <>
       <Routes>
         <Route path="/" element={<ProtectedRoute />}>
-          <Route path="/home" element={<h1 className="m-4">HOME PAGE</h1>} />
           <Route path="/products" element={<Products />} />
           <Route path="/carts" element={<Cart />} />
           <Route path="/blogs" element={<UserBlogs />} />

@@ -178,7 +178,6 @@ export const AddProduct: React.FC = () => {
                                 <MenuItem value={'Home & Living'}>Home & Living</MenuItem>
                                 <MenuItem value={'Beauty & Health'}>Beauty & Health</MenuItem>
                                 <MenuItem value={'Sports & Outdoors'}>Sports & Outdoors</MenuItem>
-
                             </Select>
                         </FormControl>
                         <FormControlLabel sx={{ flex: 1 }} control={<Switch name='availability' checked={product?.availability} onChange={handleChange} />} label={product?.availability ? 'Available' : 'Out of Stock'} />

@@ -52,7 +52,7 @@ export default function Login() {
         loginAsync(formData)
       );
       if (response?.payload?.code === 200) {
-        navigate("/home");
+        navigate("/products");
       }
     }
   };
@@ -67,7 +67,7 @@ export default function Login() {
 
   useEffect(() => {
     if (token) {
-      navigate("/home");
+      navigate("/products");
     }
   }, [token]);
 

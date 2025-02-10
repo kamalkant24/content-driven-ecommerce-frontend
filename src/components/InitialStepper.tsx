@@ -156,7 +156,7 @@ const InitialStepper = (props: any) => {
     },
     {
       title: "Corporate Account",
-      description: "This is company account. You can post products and blogs and costumers can buy your products, like and comment on your blogs.",
+      description: "This is vendor account. You can post products and blogs and costumers can buy your products, like and comment on your blogs.",
       logo: <CorporateFareIcon height="200px" width="200px" />,
       role: 'vendor'
     },
