@@ -143,11 +143,9 @@ const UserProfile = () => {
     };
 
     if (loading === 'pending') {
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center" height="40vh">
-                <CircularProgress />
-            </Box>
-        );
+        return <div className="absolute inset-0 flex justify-center items-center">
+            <CircularProgress />
+        </div>;
     }
 
     return (

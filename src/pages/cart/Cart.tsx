@@ -1,112 +1,116 @@
-import { Container } from "@mui/material"
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { Container, Box, Typography, Paper, Button, IconButton, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { getAllCart } from "../../store/cartSlice/cartsSlice";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { getFullProductUrl } from "../../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { allCarts } = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
+  const [page, setPage] = useState<number>(1);
+  const [shippingPrice, setShippingPrice] = useState<number>(10);
+  const navigate = useNavigate();
 
-const [count,setCount] = useState<number>(1)
+  useEffect(() => {
+    dispatch(getAllCart({ search: "", page: page.toString(), limit: 5 }));
+  }, [dispatch, page]);
 
+  const totalItems = allCarts?.data?.length || 0;
+  const totalPrice = allCarts?.data?.reduce((acc: number, item: any) => acc + Number(item.price), 0);
+  const showProductDetails = (id: string) => {
+    navigate(`/products/${id}`);
+  };
 
   return (
-    <Container className="mx-auto mt-10 ">
-    <div className="flex my-10 shadow-md">
-      <div className="w-3/4 px-10 py-10 bg-white">
-        <div className="flex justify-between pb-8 border-b">
-          <h1 className="text-2xl font-semibold">Shopping Cart</h1>
-          <h2 className="text-2xl font-semibold">3 Items</h2>
-        </div>
-        <div className="flex mt-10 mb-5">
-          <h3 className="w-2/5 text-xs font-semibold text-gray-600 uppercase">Product Details</h3>
-          <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase ">Quantity</h3>
-          <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase ">Price</h3>
-          <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Total</h3>
-        </div>
-        {allCarts?.data?.map((item :any,index:string)=>{
-         
-          return(        
-        <div className="flex items-center px-6 py-5 -mx-8 hover:bg-gray-100">
-          <div className="flex w-2/5"> 
-            <div className="w-20">
-              <img className="h-24" src="https://drive.google.com/uc?id=18KkAVkGFvaGNqPy2DIvTqmUH_nk39o3z" alt=""/>
-            </div>
-            <div className="flex flex-col justify-between flex-grow ml-4">
-              <span className="text-sm font-bold">{item.title}</span>
-              <span className="text-xs text-red-500">Apple</span>
-              <a href="#" className="text-xs font-semibold text-gray-500 hover:text-red-500">Remove</a>
-            </div>
-          </div>
-          <div className="flex justify-center w-1/5">
-            <svg className="w-3 text-gray-600 fill-current cursor-pointer" id={item._id} onClick={(e:any)=>{
-              if(count<1 ){
-               e.stopPropagation() 
-              }else if(e.target.id==item._id) {
-                
-                setCount(count-1)
-              }
-              
-              }} viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
-            </svg>
+    <Container maxWidth="lg" sx={{ my: 4 }}>
+      <Box className="flex justify-between flex-col md:flex-row">
+        <Box className='w-[100%] md:w-[50%]' display="flex" flexDirection="column" gap={2}>
+          <Typography variant="h4" gutterBottom>
+            Shopping Cart
+          </Typography>
+          {allCarts?.data?.map((item: any) => (
+            <Paper className="p-4 flex gap-4 flex-row flex-wrap justify-between w-full" onClick={() => showProductDetails(item?._id)}>
+              <Box>
+                <img src={getFullProductUrl(item?.image[0])} alt={item?.title} className="w-[50px] sm:w-[100px]"  />
+                <Typography className="capitalize" sx={{ fontWeight: 'bold', marginTop: {xs:0, sm:2} }} variant="subtitle1">{item?.title}</Typography>
+              </Box>
+              <Box onClick={(e) => e.stopPropagation()} className='flex flex-col items-center gap-4'>
+                <Typography sx={{ fontWeight: 'bold' }}>Quantity</Typography>
+                <Box>
+                  <IconButton>
+                    <RemoveIcon />
+                  </IconButton>
+                  <TextField
+                    size="small"
+                    value={1}
+                    sx={{ width: 40, mx: 1 }}
+                    inputProps={{ style: { textAlign: "center" } }}
+                  />
+                  <IconButton>
+                    <AddIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+              <Box className="flex flex-col gap-2 md:gap-4">
+                <Box className="flex gap-4 items-center flex-row">
+                  <Typography sx={{ fontWeight: 'bold' }}>Price: </Typography><Typography color="primary" sx={{ fontWeight: 'bold' }}>${item?.price}</Typography>
+                </Box>
+                <Box className="flex gap-4 items-center flex-row">
+                  <Typography sx={{ fontWeight: 'bold' }}>Total: </Typography><Typography color="primary" sx={{ fontWeight: 'bold' }}>${(item?.price * 1).toFixed(2)}</Typography>
+                </Box>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
+        <Paper elevation={3} className="w-[100%] md:w-[40%] p-8 mt-8 md:mt-0 h-fit">
+          <Typography variant="h5" className="pb-4 text-2xl font-semibold border-b">Order Summary</Typography>
+          <Box className="flex justify-between my-8">
+            <Typography className="text-sm font-semibold uppercase">Items {totalItems}</Typography>
+            <Typography className="text-sm font-semibold">${totalPrice}</Typography>
+          </Box>
+          <Box className="my-8">
+            <FormControl variant="standard" className="w-full">
+              <InputLabel id="demo-simple-select-standard-label">Shipping</InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={shippingPrice}
+                onChange={(e) => setShippingPrice(e.target.value)}
+                label="Shipping"
+              >
+                <MenuItem value={10}>Standard shipping - $10.00</MenuItem>
+                <MenuItem value={15}>Fast shipping - $15.00</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box className="pb-8 flex items-end gap-8 justify-between">
+            <Box className="w-full">
+              <Typography >Promo Code</Typography>
+              <TextField fullWidth id="standard-basic" label="Enter Your Code" variant="standard" />
+            </Box>
+            <Button variant="outlined" className="h-fit">Apply</Button>
+          </Box>
+          <Box className="border-t">
+            <Box className="flex justify-between py-6 text-sm font-semibold uppercase">
+              <Typography>Total cost</Typography>
+              <Typography>${totalPrice + shippingPrice}</Typography>
+            </Box>
+            <Button variant="contained">Checkout</Button>
+          </Box>
+        </Paper>
+      </Box>
 
-            <input className="w-8 mx-2 text-center border" type="text" id={item._id} value={count} onChange={(e:any)=>{
-              if(e.target.id==item._id){
-                setCount(e.target.value)
-              }
-              
-              }}/>
 
-            <svg className="w-3 text-gray-600 fill-current cursor-pointer" viewBox="0 0 448 512" id={item._id} onClick={(e:any)=>{
-            if(e.target.id==item._id){
-                setCount(count+1)
-              }
-              }}>
-              <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
-            </svg>
-          </div>
-          <span className="w-1/5 text-sm font-semibold text-center">${item.price}</span>
-          <span className="w-1/5 text-sm font-semibold text-center">${item.price}</span>
-        </div>
 
-)
+    </Container >
+  );
+};
 
-})}
-        <a href="#" className="flex mt-10 text-sm font-semibold text-indigo-600">
-      
-          <svg className="w-4 mr-2 text-indigo-600 fill-current" viewBox="0 0 448 512"><path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z"/></svg>
-          Continue Shopping
-        </a>
-      </div>
+export default Cart;
 
-      <div id="summary" className="w-1/4 px-8 py-10">
-        <h1 className="pb-8 text-2xl font-semibold border-b">Order Summary</h1>
-        <div className="flex justify-between mt-10 mb-5">
-          <span className="text-sm font-semibold uppercase">Items 3</span>
-          <span className="text-sm font-semibold">$590</span>
-        </div>
-        <div>
-          <label className="inline-block mb-3 text-sm font-medium uppercase">Shipping</label>
-          <select className="block w-full p-2 text-sm text-gray-600">
-            <option>Standard shipping - $10.00</option>
-          </select>
-        </div>
-        <div className="py-10">
-          <label for="promo" className="inline-block mb-3 text-sm font-semibold uppercase">Promo Code</label>
-          <input type="text" id="promo" placeholder="Enter your code" className="w-full p-2 text-sm"/>
-        </div>
-        <button className="px-5 py-2 text-sm text-white uppercase bg-red-500 hover:bg-red-600">Apply</button>
-        <div className="mt-8 border-t">
-          <div className="flex justify-between py-6 text-sm font-semibold uppercase">
-            <span>Total cost</span>
-            <span>$600</span>
-          </div>
-          <button className="w-full py-3 text-sm font-semibold text-white uppercase bg-indigo-500 hover:bg-indigo-600">Checkout</button>
-        </div>
-      </div>
 
-    </div>
-  </Container>
-  )
-}
-
-export default Cart
