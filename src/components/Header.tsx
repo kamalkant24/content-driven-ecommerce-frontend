@@ -11,20 +11,16 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import logo from "../assets/online-store.png";
 import { useAuth } from "../routes/ProtectedRoute";
 import { Link, useNavigate } from "react-router-dom";
-import UserButton from "./UserButton";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCart } from "../store/cartSlice/cartsSlice";
-import { Badge, Modal } from "@mui/material";
+import { Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
 import { getFullProductUrl, logout } from "../utils/helpers";
 import { RootState } from "../store/store";
-const pages = ["Products", "Blogs", "Chat"];
+const pages = ["Products", "Blogs", "Chat", "Cart"];
 const settings = ["Profile", "Setting", "Logout"];
 
 function Header() {
@@ -60,7 +56,6 @@ function Header() {
 
   const handleInitialApis = async () => {
     await dispatch(getProfile({}));
-    dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
   };
 
   React.useEffect(() => {

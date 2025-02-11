@@ -12,13 +12,17 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import CircularProgress from '@mui/material/CircularProgress';
+import { addToCart, getAllCart } from "../../store/cartSlice/cartsSlice";
 
 export const ProductDetails: React.FC = () => {
     const { id } = useParams();
-    const { allProducts } = useSelector((state: RootState) => state.products)
+    const { allProducts, productLoading } = useSelector((state: RootState) => state.products)
     const { userProfile } = useSelector((state: RootState) => state.profile);
+    const { allCarts } = useSelector((state: RootState) => state.cart);
     const [productDetails, setProductDetails] = useState<any>(null);
     const [expanded, setExpanded] = useState(false);
+    const [isPresentInCart, setIsPresentInCart] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -38,9 +42,18 @@ export const ProductDetails: React.FC = () => {
         }
     }, [id, allProducts]);
 
-    if (!productDetails) {
-        return <div className="p-4 font-bold text-2xl">Loading...</div>;
-    }
+    //getting items from cart
+    useEffect(() => {
+        (async () => {
+            const res = await dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
+            const cartItems = res.payload.data;
+            const isPresent = cartItems.find((item: any) => item?._id === productDetails?._id);
+            console.log({ cartItems, productDetails, isPresent });
+            if (isPresent) {
+                setIsPresentInCart(true);
+            }
+        })()
+    }, [productDetails]);
 
     const reviews = [
         { user: "John Doe", rating: 4, review: "Great product! Really useful and high quality." },
@@ -58,8 +71,11 @@ export const ProductDetails: React.FC = () => {
     };
 
     const handleCart = async (id: string) => {
-        await dispatch(addToCart({ productId: id }));
-        dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
+        if (isPresentInCart) {
+            navigate("/cart");
+        } else {
+            await dispatch(addToCart({ productId: id }));
+        }
     };
 
     const deleteProduct = async (id: string) => {
@@ -71,6 +87,16 @@ export const ProductDetails: React.FC = () => {
         e.stopPropagation();
         console.log('added to wishlist');
     }
+
+    if (productLoading === 'pending') {
+        return <div className="absolute inset-0 flex justify-center items-center">
+            <CircularProgress />
+        </div>;
+    }
+    else if (!productDetails) {
+        return <div className="p-4 font-bold text-2xl">Product Not Found!</div>;
+    }
+
 
     return (
         <Container maxWidth="lg" className="p-2 mt-6">
@@ -208,10 +234,10 @@ export const ProductDetails: React.FC = () => {
                             <Button
                                 variant="outlined"
                                 sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
-                                onClick={() => console.log('Add to cart')}
+                                onClick={() => handleCart(productDetails?._id)}
                                 startIcon={<ShoppingCartIcon />}
                             >
-                                Add To Cart
+                                {isPresentInCart ? 'Go To Cart' : 'Add To Cart'}
                             </Button>
                             <Button
                                 variant="contained"
@@ -225,7 +251,7 @@ export const ProductDetails: React.FC = () => {
                     )}
                 </CardActions>
                 <IconButton aria-label="add to shopping cart" sx={{ position: 'absolute', top: 0, right: 0 }} size="large" onClick={addToWishlist}>
-                    <FavoriteIcon fontSize="inherit"/>
+                    <FavoriteIcon fontSize="inherit" />
                 </IconButton>
             </Card>
         </Container>
