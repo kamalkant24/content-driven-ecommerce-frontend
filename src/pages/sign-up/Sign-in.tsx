@@ -176,7 +176,7 @@ export default function SignIn() {
               </div> */}
               <UserButton
                 name="Sign Up"
-                styleClass="text-white h-[44px] lg:h-[48px] w-full rounded-[5px] bg-[#2c5bf4e1] border border-[#0099ff]"
+                styleClass="text-white h-[44px] lg:h-[48px] w-full rounded-[5px] bg-primaryColor border border-primaryColor"
                 action={handleRegister}
               />
 
@@ -216,13 +216,13 @@ export default function SignIn() {
                 <p className="">Already have an account?</p>
                 <UserButton
                   name="Log In"
-                  styleClass="text-black w-fit text-[#0073ff]"
+                  styleClass="text-black w-fit text-primaryColor"
                   action={handleNext}
                 />
               </div>
             </div>
           </div>
-          <div className="text-center text-white bg-[#0073ff] hidden md:flex justify-center items-center py-16 md:w-[50%] ">
+          <div className="text-center text-white bg-primaryColor hidden md:flex justify-center items-center py-16 md:w-[50%] ">
             <div className="flex flex-col gap-4 items-center">
               <p className="font-bold text-2xl md:text-[2rem]">Welcome to Signup</p>
               <p className="">Already have an account?</p>

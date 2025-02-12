@@ -9,6 +9,8 @@ const getAllProducts = async ({ page, pageSize, search }: any | object) => {
     }
     return response;
   } catch (err) {
+    console.log({ errInService: err });
+
     return err;
   }
 };

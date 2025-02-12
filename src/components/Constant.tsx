@@ -6,7 +6,7 @@ const Constant = () => {
   return (
     <div>
         <Header/>
-        <section className="container max-w-[100vw]">
+        <section className="container max-w-[100vw] mt-[7rem]">
             <RouteFile/>
         </section>
         <footer>

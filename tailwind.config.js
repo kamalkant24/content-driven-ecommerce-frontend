@@ -7,12 +7,16 @@ export default {
   theme: {
     extend: {
       screens: {
-        xs: '0px',     
-        sm: '600px',   
-        md: '900px',    
-        lg: '1200px',   
-        xl: '1536px', 
+        xs: '0px',
+        sm: '600px',
+        md: '900px',
+        lg: '1200px',
+        xl: '1536px',
       },
+      colors: {
+        primaryColor: '#27445D',
+        secondaryColor: '#1976d2'
+      }
     },
   },
   plugins: [],

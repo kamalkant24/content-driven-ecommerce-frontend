@@ -18,18 +18,22 @@ const initialState = {
 
 
 
-
-export const getAllProductSlice: any | object | string = createAsyncThunk(
+export const getAllProductSlice = createAsyncThunk(
   "get/allProducts",
-  async (data: object) => {
+  async (data: object, { rejectWithValue }) => {
     try {
-      const response: any = await productService.getAllProducts(data)
-      return response.data
-    } catch (err) {
-      return err
+      const response:any = await productService.getAllProducts(data);
+      if (!response || !response.data) {
+        throw new Error("Invalid response from server");
+      }
+
+      return response.data;
+    } catch (err: any) {
+      console.error("Error in Slice:", err);
+      return rejectWithValue(err?.response?.data || "Something went wrong");
     }
   }
-)
+);
 
 export const getProductSlice: any | object | string = createAsyncThunk(
   "get/getProduct",
@@ -100,7 +104,7 @@ export const productReducer = createSlice({
       .addCase(getAllProductSlice.rejected, (state) => {
         state.productLoading = "failed";
         state.status = '500'
-        state.error = "some thing went wrong"
+        state.error = "something went wrong"
       })
       .addCase(getProductSlice.pending, (state) => {
         state.productLoading = "pending";
@@ -113,7 +117,7 @@ export const productReducer = createSlice({
       .addCase(getProductSlice.rejected, (state) => {
         state.productLoading = "failed";
         state.status = '500'
-        state.error = "some thing went wrong"
+        state.error = "something went wrong"
       })
       .addCase(addProductSlice.pending, (state) => {
         state.productLoading = "pending";
@@ -126,7 +130,7 @@ export const productReducer = createSlice({
       .addCase(addProductSlice.rejected, (state) => {
         state.productLoading = "failed";
         state.status = '500'
-        state.error = "some thing went wrong"
+        state.error = "something went wrong"
       })
       .addCase(editProductSlice.pending, (state) => {
         state.productLoading = "pending";
@@ -139,7 +143,7 @@ export const productReducer = createSlice({
       .addCase(editProductSlice.rejected, (state) => {
         state.productLoading = "failed";
         state.status = '500'
-        state.error = "some thing went wrong"
+        state.error = "something went wrong"
       })
       .addCase(deleteProductSlice.pending, (state) => {
         state.productLoading = "pending";
@@ -154,7 +158,7 @@ export const productReducer = createSlice({
       .addCase(deleteProductSlice.rejected, (state) => {
         state.productLoading = "failed";
         state.status = '500'
-        state.error = "some thing went wrong"
+        state.error = "something went wrong"
       })
   }
 })

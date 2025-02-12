@@ -325,8 +325,8 @@ const UserProfile = () => {
                 )}
                 {editMode && (
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 3 }}>
-                        <Button sx={{ width: '20%', minWidth: '6rem' }} variant="contained" color="primary" onClick={editProfile}>Save</Button>
-                        <Button sx={{ width: '20%', minWidth: '6rem' }} variant="outlined" onClick={cancelEdit}>Cancel</Button>
+                        <Button sx={{ width: '20%', minWidth: '6rem', background: "var(--primary-color)" }} variant="contained" onClick={editProfile}>Save</Button>
+                        <Button sx={{ width: '20%', minWidth: '6rem', borderColor: "var(--primary-color)", color: 'var(--primary-color)' }} variant="outlined" onClick={cancelEdit}>Cancel</Button>
                     </Box>
                 )}
             </Box>

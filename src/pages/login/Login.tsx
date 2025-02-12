@@ -114,14 +114,14 @@ export default function Login() {
                 placeholder="Password"
                 className="h-[42px] md:h-[48px] bg-[#0000000d] w-full px-[20px]"
               />
-              <div className="flex justify-end">
+              {/* <div className="flex justify-end">
                 <Link className="" to="/forgot-password">
                   Forgot Password?
                 </Link>
-              </div>
+              </div> */}
               <UserButton
                 name="Sign in"
-                styleClass="text-white h-[44px] lg:h-[48px] w-full rounded-[5px] bg-[#2c5bf4e1] border border-[#0099ff]"
+                styleClass="text-white h-[44px] lg:h-[48px] w-full rounded-[5px] bg-primaryColor border border-primaryColor"
                 action={handleLogin}
               />
 
@@ -149,7 +149,7 @@ export default function Login() {
 
             </div>
           </div>
-          <div className="text-center text-white bg-[#0073ff] hidden md:flex justify-center items-center py-16 md:w-[50%] ">
+          <div className="text-center text-white bg-primaryColor hidden md:flex justify-center items-center py-16 md:w-[50%] ">
             <div className="flex flex-col gap-4 items-center">
               <p className="font-bold text-2xl md:text-[2rem]">Welcome to login</p>
               <p className="">Don't have an account?</p>
