@@ -29,7 +29,17 @@ const Setting = () => {
 
       <TabContext value={activeTab}>
         <Box sx={{ borderBottom: 1, borderColor: "divider", p: '16px' }}>
-          <TabList aria-label="lab API tabs example" onChange={handleChange}>
+          <TabList aria-label="lab API tabs example" onChange={handleChange} sx={{
+            '& .MuiTabs-indicator': {
+              backgroundColor: 'var(--primary-color)',
+            },
+            '& .MuiTab-root': {
+              color: 'var(--primary-color)',
+            },
+            '& .Mui-selected': {
+              color: 'var(--primary-color) !important',
+            },
+          }}>
             <Tab label="Profile" value="1" />
             <Tab label="Settings" value="2" />
           </TabList>

@@ -83,7 +83,7 @@ export const Carousal: React.FC = ({ images }: { images: string[] }) => {
                                     width: '60px',
                                     height: '60px',
                                     objectFit: 'contain',
-                                    border: index === currentIndex ? '2px solid #3f51b5' : '2px solid transparent',
+                                    border: index === currentIndex ? '2px solid var(--secondary-color)' : '2px solid transparent',
                                     borderRadius: '4px',
                                 }}
                             />

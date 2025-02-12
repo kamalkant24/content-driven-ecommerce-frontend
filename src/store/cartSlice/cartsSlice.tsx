@@ -7,7 +7,6 @@ interface UsersState {
   cartsLoading: string,
   allCarts: any,
   status: string,
-  addCart: any,
 }
 
 const initialState = {
@@ -15,7 +14,6 @@ const initialState = {
   cartsLoading: '',
   allCarts: '',
   status: '',
-  addCart: ''
 } as UsersState
 
 
@@ -57,10 +55,9 @@ export const cartReducer = createSlice({
         state.cartsLoading = "pending";
         state.status = 'idle'
       })
-      .addCase(addToCart.fulfilled, (state, action) => {
+      .addCase(addToCart.fulfilled, (state) => {
         state.cartsLoading = "succeeded";
         state.status = '200';
-        state.addCart = action.payload;
       })
       .addCase(addToCart.rejected, (state) => {
         state.cartsLoading = "failed";

@@ -45,10 +45,9 @@ export const ProductDetails: React.FC = () => {
     //getting items from cart
     useEffect(() => {
         (async () => {
-            const res = await dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
-            const cartItems = res.payload.data;
-            const isPresent = cartItems.find((item: any) => item?._id === productDetails?._id);
-            console.log({ cartItems, productDetails, isPresent });
+            await dispatch(getAllCart({ search: "", page: "1", limit: "10" }));
+            const cartItems = allCarts?.data;
+            const isPresent = cartItems?.find((item: any) => item?._id === productDetails?._id);
             if (isPresent) {
                 setIsPresentInCart(true);
             }
@@ -74,7 +73,10 @@ export const ProductDetails: React.FC = () => {
         if (isPresentInCart) {
             navigate("/cart");
         } else {
-            await dispatch(addToCart({ productId: id }));
+            const response = await dispatch(addToCart({ productId: id }));
+            if (response?.type === "get/addCart/fulfilled") {
+                setIsPresentInCart(true);
+            }
         }
     };
 
@@ -110,10 +112,10 @@ export const ProductDetails: React.FC = () => {
                         <Rating size="large" name="read-only" value={3.5} precision={0.5} readOnly />
                     </Box>
                     <Box component={'section'} className="flex gap-2 items-center">
-                        <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                             Price:
                         </Typography>
-                        <Typography variant="h6" sx={{ color: 'primary.main' }}>
+                        <Typography variant="h6">
                             ${discountedProductPrice(productDetails.price, 10)}
                         </Typography>
                         <Typography
@@ -124,7 +126,7 @@ export const ProductDetails: React.FC = () => {
                         </Typography>
                         <Typography
                             variant="small"
-                            className="text-green-600 font-bold"
+                            className="text-secondaryColor font-bold"
                         >
                             10% off
                         </Typography>
@@ -207,7 +209,7 @@ export const ProductDetails: React.FC = () => {
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
                             <Button
                                 variant="contained"
-                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, backgroundColor: 'var(--primary-color)' }}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(`/products/edit/${productDetails?._id}`);
@@ -233,7 +235,7 @@ export const ProductDetails: React.FC = () => {
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
                             <Button
                                 variant="outlined"
-                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, borderColor: 'var(--primary-color)', color: 'var(--primary-color)' }}
                                 onClick={() => handleCart(productDetails?._id)}
                                 startIcon={<ShoppingCartIcon />}
                             >
@@ -241,7 +243,7 @@ export const ProductDetails: React.FC = () => {
                             </Button>
                             <Button
                                 variant="contained"
-                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, }}
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, backgroundColor: 'var(--primary-color)' }}
                                 onClick={() => console.log('Buy Now')}
                                 startIcon={<ShoppingBagIcon />}
                             >

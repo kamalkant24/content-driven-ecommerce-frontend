@@ -11,11 +11,11 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import logo from "../assets/online-store.png";
+import logo from "../assets/app-logo.png";
 import { useAuth } from "../routes/ProtectedRoute";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "@mui/material";
+import { createTheme, Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
 import { getFullProductUrl, logout } from "../utils/helpers";
@@ -35,6 +35,16 @@ function Header() {
     boxShadow: 26,
     p: 0,
   };
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#27445D',
+      },
+    },
+  });
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -81,7 +91,7 @@ function Header() {
   let auth = useAuth();
 
   return (
-    <AppBar position="static" classes="text-blue-500 bg-transparent" color="transparent">
+    <AppBar position="static" sx={{ backgroundColor: "#27445D", position: 'fixed', top: 0, zIndex:10 }}>
       <Modal
         open={open}
         // onClose={}
@@ -103,7 +113,6 @@ function Header() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -114,12 +123,12 @@ function Header() {
               textDecoration: "none",
             }}
           >
-            <img src={logo} width="45" height="45" />
+            <img src={logo} width="50" height="50" />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <div className="flex justify-center items-center">
-              <img src={logo} width="35" height="35" />
+              <img className="text-left" src={logo} width="35" height="35" />
             </div>
             <IconButton
               size="large"
@@ -187,7 +196,7 @@ function Header() {
                 onClick={(e: any) => {
                   navigate(`/${e?.target?.id.toLowerCase()}`);
                 }}
-                sx={{ my: 2, color: "text-blue-500", display: "block" }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
@@ -209,23 +218,23 @@ function Header() {
           ) : (
             <div className="flex ">
               {/* <Box sx={{ flexGrow: 0 }} className="flex">
-                <UserButton
-                  styleClass="text-blue-500 "
-                  name="Cart"
-                  setIcon={
-                    <Badge
-                      badgeContent={allCarts?.data?.length}
-                      color="warning"
-                      className="p-1 text-blue-500"
-                    >
-                      <ShoppingCartIcon />
-                    </Badge>
-                  }
-                  action={() => {
-                    navigate("/carts");
-                  }}
-                />
-              </Box> */}
+            <UserButton
+              styleClass="text-blue-500 "
+              name="Cart"
+              setIcon={
+                <Badge
+                  badgeContent={allCarts?.length}
+                  color="warning"
+                  className="p-1 text-blue-500"
+                >
+                  <ShoppingCartIcon />
+                </Badge>
+              }
+              action={() => {
+                navigate("/carts");
+              }}
+            />
+          </Box> */}
 
               <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <Tooltip title="Open settings">

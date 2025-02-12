@@ -93,10 +93,10 @@ const InitialStepper = (props: any) => {
       phone: 'Phone Number',
       role: 'Role'
     };
-    const role = additionalDetails?.role as keyof typeof roleFields; 
+    const role = additionalDetails?.role as keyof typeof roleFields;
     for (const field in additionalDetails) {
       if (!additionalDetails[field as keyof AdditionalDetails]) {
-        if (roleFields[role]?.includes(field)) { 
+        if (roleFields[role]?.includes(field)) {
           toast.warning(`${fieldMessageName[field as keyof AdditionalDetails]} is Required.`);
           return false;
         }
@@ -176,7 +176,7 @@ const InitialStepper = (props: any) => {
 
   return (
     <div className="flex h-full w-full flex-row">
-      <div className={`h-full inset-0 sm:w-[30vw] min-w-[17rem] bg-[#1565c04a] ${showStepper ? 'absolute' : 'hidden'} sm:block`} >
+      <div className={`h-full inset-0 sm:w-[30vw] min-w-[17rem] bg-primaryColor ${showStepper ? 'absolute' : 'hidden'} sm:block`} >
         <Box className="block sm:hidden text-blue-500 z-10 m-4">
           <MenuIcon onClick={() => setShowStepper(!showStepper)} />
         </Box>
@@ -196,7 +196,11 @@ const InitialStepper = (props: any) => {
               }
               return (
                 <Step key={index} {...stepProps} className="ml-4">
-                  <StepLabel {...labelProps}>{label?.label} </StepLabel>
+                  <StepLabel {...labelProps} sx={{
+                    color: "white",
+                    "& .MuiStepLabel-label": { color: "white !important" }
+                  }}
+                  >{label?.label} </StepLabel>
                   <Typography
                     {...labelProps}
                     className=" text-white "
@@ -221,7 +225,7 @@ const InitialStepper = (props: any) => {
           <Box className="block sm:hidden text-blue-500 z-10">
             <MenuIcon onClick={() => setShowStepper(!showStepper)} />
           </Box>
-          <Button variant="contained" sx={{ background: 'blue.500' }} onClick={logout} href="/">LOGOUT</Button>
+          <Button variant="contained" sx={{ backgroundColor: 'var(--primary-color)' }} onClick={logout} href="/">LOGOUT</Button>
         </div>
         <Card className="col max-w-[30rem] lg:max-w-[65rem] h-[80vh] mx-auto mb-20 mt-4"
           sx={{
@@ -269,7 +273,7 @@ const InitialStepper = (props: any) => {
                             sx={{ maxWidth: 345 }}
                             className={
                               additionalDetails?.role === item?.role
-                                ? "border-dashed border-2 border-blue-500 p-2"
+                                ? "border-dashed border-2 border-primaryColor p-2"
                                 : " p-2"
                             }
                             onClick={() => setAdditionalDetails({ ...additionalDetails, role: item?.role })}
@@ -373,21 +377,21 @@ const InitialStepper = (props: any) => {
                                 </option>
                               </select>
                             </div>}
-                            {additionalDetails?.role === 'vendor' && 
-                            <div className="my-4 w-full lg:w-[47.5%]">
-                              <label className="block text-gray-700 font-medium mb-2">
-                              Organization Size
-                              </label>
-                              <UserInput
-                                type="number"
-                                id="org_Size"
-                                placeholder="Organization Size"
-                                onChange={handleOrganization}
-                                name="org_Size"
-                                showValue={additionalDetails?.org_Size}
-                                className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
-                              />
-                            </div>
+                            {additionalDetails?.role === 'vendor' &&
+                              <div className="my-4 w-full lg:w-[47.5%]">
+                                <label className="block text-gray-700 font-medium mb-2">
+                                  Organization Size
+                                </label>
+                                <UserInput
+                                  type="number"
+                                  id="org_Size"
+                                  placeholder="Organization Size"
+                                  onChange={handleOrganization}
+                                  name="org_Size"
+                                  showValue={additionalDetails?.org_Size}
+                                  className="bg-slate-100  w-full h-12 focus:border-blue-500 px-3 "
+                                />
+                              </div>
                             }
                             <div className="my-4 w-full lg:w-[47.5%]">
                               <label className="block text-gray-700 font-medium mb-2">
@@ -486,7 +490,7 @@ const InitialStepper = (props: any) => {
                 </Button>
                 <Box sx={{ flex: "1 1 auto" }} />
 
-                <Button onClick={handleNext}>
+                <Button onClick={handleNext} sx={{color:'var(--primary-color)'}}>
                   {activeStep === steps.length - 1 ? "Finish" : "Next"}
                 </Button>
               </Box>

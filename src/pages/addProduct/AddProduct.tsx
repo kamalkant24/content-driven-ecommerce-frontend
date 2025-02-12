@@ -8,6 +8,7 @@ import { addProductSlice, editProductSlice, getProductSlice } from '../../store/
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFullProductUrl } from '../../utils/helpers';
 import { RootState } from '../../store/store';
+import { BorderColor } from '@mui/icons-material';
 
 export const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<Product>({
@@ -96,6 +97,8 @@ export const AddProduct: React.FC = () => {
             return;
         }
         if (id) {
+            console.log(product);
+            
             const res = await dispatch(editProductSlice({ ...product, _id: id }));
             if (res.meta.requestStatus === 'fulfilled') {
                 navigate('/products')
@@ -219,9 +222,9 @@ export const AddProduct: React.FC = () => {
                     </Stack>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
                         <Button
-                            variant="contained"
+                            variant="outlined"
                             component="label"
-                            sx={{ width: '100%' }}
+                            sx={{ width: '100%', borderColor:'var(--primary-color)', color:'var(--primary-color)' }}
                         >
                             Upload Images
                             <input
@@ -236,7 +239,7 @@ export const AddProduct: React.FC = () => {
                             type="submit"
                             variant="contained"
                             color="primary"
-                            sx={{ width: '100%' }}
+                            sx={{ width: '100%', backgroundColor:'var(--primary-color)' }}
                         >
                             {id ? 'Edit' : 'Add'} Product
                         </Button>
