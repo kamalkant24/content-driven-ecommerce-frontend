@@ -1,4 +1,7 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { RootState } from "../store/store";
+import { current } from "@reduxjs/toolkit";
 //  import Header from "../components/Header";
 // import Sidebar from "../components/SideBar";
 // import secureLocalStorage from "react-secure-storage";
@@ -13,7 +16,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export const useAuth = () => {
   // const userdata = localStorage.getItem("access_token");
-  
+
   const userdata = localStorage.getItem("access_token");
   const user = userdata ? { loggedIn: true } : { loggedIn: false };
   return user?.loggedIn;
@@ -27,9 +30,8 @@ export const useAuth = () => {
 export const getToken = () => {
   return {
     headers: {
-      Authorization: `Bearer ${
-        localStorage.getItem("access_token")
-      }`,
+      Authorization: `Bearer ${localStorage.getItem("access_token")
+        }`,
     },
   };
 };
@@ -55,11 +57,24 @@ export const ProtectedRouteCheck = () => {
 
 const ProtectedRoute = () => {
   let auth = useAuth();
- 
-  return auth ? (
-    <>
-        <Outlet />
-    </>
+  const { userProfile } = useSelector((state: RootState) => state.profile);
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const currentRole = userProfile?.role;
+  const noUserAccess = ['/products/add'];
+  const noVendorAccess = ['/cart', '/checkout']
+
+  const isRouteAccessable = () => {
+    if (currentRole === 'user') {
+      return !noUserAccess.includes(currentPath)
+    } else if (currentRole === 'vendor') {
+      return !noVendorAccess.includes(currentPath)
+    }
+    return true
+  }
+
+  return auth && isRouteAccessable() ? (
+    <Outlet />
   ) : (
     <Navigate to="/" />
   );
