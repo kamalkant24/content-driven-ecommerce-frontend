@@ -7,6 +7,7 @@ interface UsersState {
   cartsLoading: string,
   allCarts: any,
   status: string,
+  checkoutDetails: any
 }
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   cartsLoading: '',
   allCarts: '',
   status: '',
+  checkoutDetails: ''
 } as UsersState
 
 
@@ -21,7 +23,7 @@ export const addToCart: any | object | string = createAsyncThunk(
   "get/addCart",
   async (data: object) => {
     try {
-      const response = await cartServices.addCarts(data);      
+      const response = await cartServices.addCarts(data);
       return response.data
     } catch (err) {
       return err
@@ -41,6 +43,17 @@ export const getAllCart: any | object | string = createAsyncThunk(
   }
 )
 
+export const setCheckoutDetails: any | object | string = createAsyncThunk(
+  "set/setCheckoutDetails",
+  async (data: object) => {
+    try {
+      const response = await cartServices.setCheckoutDetails(data);
+      return response;
+    } catch (err) {
+      return err
+    }
+  }
+)
 
 
 export const cartReducer = createSlice({
@@ -77,6 +90,20 @@ export const cartReducer = createSlice({
         state.cartsLoading = "failed";
         state.status = '500'
         state.error = "some thing went wrong"
+      })
+      .addCase(setCheckoutDetails.pending, (state) => {
+        // state.cartsLoading = "pending";
+        // state.status = 'idle'
+      })
+      .addCase(setCheckoutDetails.fulfilled, (state, action) => {
+        // state.cartsLoading = "succeeded";
+        // state.status = '200';
+        state.checkoutDetails = action.payload;
+      })
+      .addCase(setCheckoutDetails.rejected, (state) => {
+        // state.cartsLoading = "failed";
+        // state.status = '500'
+        // state.error = "some thing went wrong"
       })
   }
 })

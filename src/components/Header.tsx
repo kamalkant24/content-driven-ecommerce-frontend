@@ -20,7 +20,6 @@ import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
 import { getFullProductUrl, logout } from "../utils/helpers";
 import { RootState } from "../store/store";
-const pages = ["Products", "Blogs", "Chat", "Cart"];
 const settings = ["Profile", "Setting", "Logout"];
 
 function Header() {
@@ -36,14 +35,10 @@ function Header() {
     p: 0,
   };
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-      primary: {
-        main: '#27445D',
-      },
-    },
-  });
+  const pages = {
+    user: ["Products", "Blogs", "Chat", "Cart"],
+    vendor: ["Products", "Blogs", "Chat"]
+  };
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -91,7 +86,7 @@ function Header() {
   let auth = useAuth();
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#27445D", position: 'fixed', top: 0, zIndex:10 }}>
+    <AppBar position="static" sx={{ backgroundColor: "#27445D", position: 'fixed', top: 0, zIndex: 10 }}>
       <Modal
         open={open}
         // onClose={}
@@ -107,8 +102,8 @@ function Header() {
           />
         </Box>
       </Modal>
-      <Container maxWidth="xxl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xxl" >
+        <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography
             variant="h6"
             noWrap
@@ -128,9 +123,9 @@ function Header() {
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <div className="flex justify-center items-center">
-              <img className="text-left" src={logo} width="35" height="35" />
+              <img className="text-left" src={logo} width="50" height="50" />
             </div>
-            <IconButton
+            {auth && <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
@@ -139,9 +134,7 @@ function Header() {
               color="inherit"
             >
               <MenuIcon />
-
-            </IconButton>
-
+            </IconButton>}
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -160,7 +153,7 @@ function Header() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {pages[userProfile?.role]?.map((page) => (
                 <MenuItem key={page} onClick={(e: any) => {
                   navigate(`/${page}`);
                   handleCloseNavMenu()
@@ -171,25 +164,8 @@ function Header() {
             </Menu>
           </Box>
           {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages?.map((page) => (
+          {auth && <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages[userProfile?.role]?.map((page) => (
               <Button
                 key={page}
                 id={page}
@@ -201,7 +177,7 @@ function Header() {
                 {page}
               </Button>
             ))}
-          </Box>
+          </Box>}
           {!auth ? (
             <Box sx={{ flexGrow: 0 }}>
               <div className="flex gap-4">

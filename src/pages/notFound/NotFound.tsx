@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const NotFound = () => {
     const navigate = useNavigate();
     const GoToHome = () => {
-        navigate('/')
+        navigate('/products')
     }
 
     return (
