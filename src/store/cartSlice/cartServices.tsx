@@ -34,8 +34,20 @@ const setCheckoutDetails = async (data: any | object) => {
   }
 };
 
+const createPaymentIntent = async (payment: number) => {
+  try {
+    const data = { amount: Math.round(payment * 100) }
+    const response = await axiosAPI.post(`/user/create-payment-intent`, data);
+    return { clientSecret: response.data.clientSecret };
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
 export const cartServices = {
   addCarts,
   getAllCarts,
-  setCheckoutDetails
+  setCheckoutDetails,
+  createPaymentIntent
 }

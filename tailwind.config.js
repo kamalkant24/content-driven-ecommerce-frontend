@@ -15,7 +15,8 @@ export default {
       },
       colors: {
         primaryColor: '#27445D',
-        secondaryColor: '#1976d2'
+        secondaryColor: '#1976d2',
+        backdropColor: '#0000004a'
       }
     },
   },

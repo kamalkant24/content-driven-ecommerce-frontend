@@ -15,12 +15,18 @@ import logo from "../assets/app-logo.png";
 import { useAuth } from "../routes/ProtectedRoute";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createTheme, Modal } from "@mui/material";
+import { Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
 import { getFullProductUrl, logout } from "../utils/helpers";
 import { RootState } from "../store/store";
-const settings = ["Profile", "Setting", "Logout"];
+import Person2Icon from '@mui/icons-material/Person2';
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+
+const settings = [{ label: "Profile", icon: <Person2Icon sx={{ width: '20px' }} /> }, { label: "Orders", icon: <ShoppingBagIcon sx={{ width: '20px' }} /> }, { label: "Setting", icon: <SettingsIcon sx={{ width: '20px' }} /> }, { label: "Logout", icon: <LogoutIcon sx={{ width: '20px' }} /> }];
+
 
 function Header() {
   const style = {
@@ -256,10 +262,12 @@ function Header() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem sx={{ borderBottom: '1px solid #80808030', display: 'flex', alignItems: 'center', paddingY: '0.5rem' }} key={setting.label} onClick={handleCloseUserMenu}>
+                    {setting.icon}
                     <Typography
                       textAlign="center"
-                      id={setting}
+                      id={setting.label}
+                      sx={{ width: '5rem' }}
                       onClick={(e: any) => {
                         if (e.target.id == "Logout") {
                           logout();
@@ -268,10 +276,12 @@ function Header() {
                           navigate("/profile");
                         } else if (e.target.id == "Setting") {
                           navigate("/setting");
+                        } else if (e.target.id == "Orders") {
+                          navigate("/orders");
                         }
                       }}
                     >
-                      {setting}
+                      {setting.label}
                     </Typography>
                   </MenuItem>
                 ))}
