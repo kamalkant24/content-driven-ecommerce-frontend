@@ -27,22 +27,18 @@ export const ProductDetails: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!allProducts) {
-            const fetchData = async () => {
-                const res = await dispatch(
-                    getProductSlice(id)
-                );
-                const product = res?.payload
-                setProductDetails(product);
-            };
-            fetchData();
-        } else {
-            const product = allProducts.data.find((product: any) => product?._id === id);
+        const fetchData = async () => {
+            const res = await dispatch(
+                getProductSlice(id)
+            );
+            const product = res?.payload
             setProductDetails(product);
-        }
+        };
+        fetchData();
+        const product = allProducts?.data?.find((product: any) => product?._id === id);
+        setProductDetails(product);
     }, [id, allProducts]);
 
-    //getting items from cart
     useEffect(() => {
         (async () => {
             await dispatch(getAllCart({ search: "", page: "1", limit: "10" }));

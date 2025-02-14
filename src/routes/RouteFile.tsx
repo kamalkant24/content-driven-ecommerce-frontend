@@ -12,6 +12,7 @@ import { AddProduct } from "../pages/addProduct/AddProduct";
 import { ProductDetails } from "../pages/productDetails/ProductDetails";
 import NotFound from "../pages/notFound/NotFound";
 import { Checkout } from "../pages/checkout/Checkout";
+import { Orders } from "../pages/orders/Orders";
 
 export default function RouteFile() {
   return (
@@ -28,6 +29,7 @@ export default function RouteFile() {
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/products/edit/:id" element={<AddProduct />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<Orders />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
