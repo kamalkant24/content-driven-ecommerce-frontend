@@ -19,9 +19,7 @@ const Cart = () => {
   const fetchCarts = async () => await dispatch(getAllCart({ search: "", page: 1, limit: 5 }));
 
   useEffect(() => {
-    // if (!allCarts) {
     fetchCarts();
-    // }
   }, [])
 
   const totalItems = allCarts?.data?.length || 0;
@@ -70,7 +68,6 @@ const Cart = () => {
   }
 
   const getNetPrice = () => getPriceAfterDiscount() + getShippingPrice();
-  console.log(allCarts);
 
   if (allCarts?.data?.length === 0 || !allCarts?.data) {
     return <Container><Typography textAlign={'center'} variant="h4">No Items In The Cart</Typography></Container>

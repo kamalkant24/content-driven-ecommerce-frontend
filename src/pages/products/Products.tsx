@@ -28,7 +28,7 @@ import { ProductCard } from "../../components/ProductCard";
 
 const Products = () => {
 
-  const { allProducts, productLoading, error } = useSelector(
+  const { allProducts, productLoading } = useSelector(
     (state: RootState) => state.products
   );
   const { userProfile } = useSelector((state: RootState) => state.profile);

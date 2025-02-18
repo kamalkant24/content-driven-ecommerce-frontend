@@ -9,7 +9,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutForm } from "../../components/CheckoutForm.tsx";
 const VITE_APP_KEY = import.meta.env.VITE_APP_KEY
 
-
 export const Checkout = () => {
     const { checkoutDetails, allCarts } = useSelector((state: RootState) => state.cart);
     const { userProfile } = useSelector((state: RootState) => state.profile)
@@ -18,6 +17,8 @@ export const Checkout = () => {
     const stripePromise = loadStripe(VITE_APP_KEY);
     const [showPaymentForm, setShowPaymentForm] = useState(false)
     useEffect(() => {
+        console.log(checkoutDetails);
+
         if (!allCarts) {
             fetchCarts();
         }
@@ -30,8 +31,6 @@ export const Checkout = () => {
     if (!checkoutDetails) {
         return <Box className="flex items-center justify-center"><Typography variant="h5">No checkout details found.</Typography></Box>;
     }
-
-
 
     return <Container maxWidth="lg" sx={{ my: 4 }}>
         <Box className="flex flex-col md:flex-row gap-8">
@@ -74,7 +73,7 @@ export const Checkout = () => {
                         onClick={() => setShowPaymentForm(true)}
                     >Proceed to Pay</Button>
                     {showPaymentForm && <Elements stripe={stripePromise}>
-                        <CheckoutForm amount={checkoutDetails.netPrice} closeForm={() => setShowPaymentForm(false)} showPaymentForm={showPaymentForm}/>
+                        <CheckoutForm amount={checkoutDetails.netPrice} closeForm={() => setShowPaymentForm(false)} showPaymentForm={showPaymentForm} />
                     </Elements>}
                 </Paper>
             </Box>

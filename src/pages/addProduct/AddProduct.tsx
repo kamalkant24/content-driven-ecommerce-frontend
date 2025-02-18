@@ -8,7 +8,6 @@ import { addProductSlice, editProductSlice, getProductSlice } from '../../store/
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFullProductUrl } from '../../utils/helpers';
 import { RootState } from '../../store/store';
-import { BorderColor } from '@mui/icons-material';
 
 export const AddProduct: React.FC = () => {
     const [product, setProduct] = useState<Product>({
