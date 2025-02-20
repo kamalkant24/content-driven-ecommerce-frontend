@@ -74,7 +74,7 @@ const Cart = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ my: 4 }}>
+    <Container maxWidth="lg" sx={{ mb: 4 }}>
       <Box className="flex justify-between flex-col md:flex-row">
         <Box className='w-[100%] md:w-[55%] max-w-[30rem] m-auto' display="flex" flexDirection="column" >
           <Typography variant="h4" gutterBottom>
@@ -109,7 +109,7 @@ const Cart = () => {
               <Typography >Offers</Typography>
               <TextField value={inputPromo} fullWidth id="standard-basic" label="Enter Your Code [GET]" variant="standard" onChange={(e) => setInputPromo(e.target.value)} />
             </Box>
-            <Button sx={{ borderColor: 'var(--primary-color)', color: 'var(--primary-color)' }} variant="outlined" className="h-fit" onClick={applyPromo}>Apply</Button>
+            <Button variant="outlined" className="h-fit" onClick={applyPromo}>Apply</Button>
           </Box> */}
           <Box className="my-8">
             <FormControl variant="standard" className="w-full">
@@ -140,9 +140,9 @@ const Cart = () => {
             </Box>
             <Box className="flex justify-between py-2  uppercase">
               <Typography sx={{ fontWeight: 'bold' }}>Net Cost</Typography>
-              <Typography sx={{ fontWeight: 'bold', color: 'var(--secondary-color)' }}>${getNetPrice()}</Typography>
+              <Typography color="secondary" sx={{ fontWeight: 'bold'}}>${getNetPrice()}</Typography>
             </Box>
-            <Button sx={{ backgroundColor: 'var(--primary-color)', marginTop: '1rem' }} variant="contained" onClick={doCheckout}>Checkout</Button>
+            <Button sx={{marginTop: '1rem' }} variant="contained" onClick={doCheckout}>Checkout</Button>
           </Box>
         </Paper>
       </Box>

@@ -225,7 +225,7 @@ const InitialStepper = (props: any) => {
           <Box className="block sm:hidden text-blue-500 z-10">
             <MenuIcon onClick={() => setShowStepper(!showStepper)} />
           </Box>
-          <Button variant="contained" sx={{ backgroundColor: 'var(--primary-color)' }} onClick={logout} href="/">LOGOUT</Button>
+          <Button variant="contained" color="primary" onClick={logout} href="/">LOGOUT</Button>
         </div>
         <Card className="col max-w-[30rem] lg:max-w-[65rem] h-[80vh] mx-auto mb-20 mt-4"
           sx={{
@@ -490,7 +490,7 @@ const InitialStepper = (props: any) => {
                 </Button>
                 <Box sx={{ flex: "1 1 auto" }} />
 
-                <Button onClick={handleNext} sx={{color:'var(--primary-color)'}}>
+                <Button onClick={handleNext}>
                   {activeStep === steps.length - 1 ? "Finish" : "Next"}
                 </Button>
               </Box>

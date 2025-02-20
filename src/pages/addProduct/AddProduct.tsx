@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Typography, Box, InputAdornment, Stack, IconButton, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormControlLabel, Switch } from '@mui/material';
+import { TextField, Button, Typography, Box, InputAdornment, Stack, IconButton, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, FormControlLabel, Switch, Container } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -111,7 +111,7 @@ export const AddProduct: React.FC = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 600, margin: 'auto', padding: 2 }}>
+        <Container maxWidth="md" className='mb-4'>
             <Typography variant="h4" paddingY={4}>
                 {id ? 'Edit' : 'Add'} Product
             </Typography>
@@ -223,7 +223,7 @@ export const AddProduct: React.FC = () => {
                         <Button
                             variant="outlined"
                             component="label"
-                            sx={{ width: '100%', borderColor:'var(--primary-color)', color:'var(--primary-color)' }}
+                            sx={{ width: '100%'}}
                         >
                             Upload Images
                             <input
@@ -238,13 +238,13 @@ export const AddProduct: React.FC = () => {
                             type="submit"
                             variant="contained"
                             color="primary"
-                            sx={{ width: '100%', backgroundColor:'var(--primary-color)' }}
+                            sx={{ width: '100%'}}
                         >
                             {id ? 'Edit' : 'Add'} Product
                         </Button>
                     </Stack>
                 </Stack>
             </form>
-        </Box>
+        </Container>
     );
 };

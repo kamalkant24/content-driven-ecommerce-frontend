@@ -1,0 +1,114 @@
+[
+  {
+    "id": "1",
+    "title": "Understanding React Hooks",
+    "content": "<p><strong><em style=\"font-size: 24px;\">Learn how to effectively use React Hooks like useState, useEffect, and useContext.</em></strong></p>\n<p>React Hooks were introduced in React 16.8, allowing developers to use state and lifecycle methods in functional components.</p>\n<h2>Understanding React Hooks</h2>\n<p>Before hooks, React developers primarily used class components to manage state and lifecycle methods.</p>\n<ul>\n<li>They simplify the code by removing the need for class components.</li>\n<li>Allow reuse of stateful logic between components.</li>\n</ul>\n<h3>useState Hook</h3>\n<pre><code>const [count, setCount] = useState(0);</code></pre>\n<p>In this example, <code>count</code> holds the state value.</p>",
+    "image": "https://plus.unsplash.com/premium_photo-1739955024115-e2d219766d49?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8",
+    "tags": ["React", "Hooks", "JavaScript"],
+    "likes": ["user1", "user2", "user3"],
+    "comments": [
+      { "id": "c1", "text": "Great explanation on hooks!" },
+      { "id": "c2", "text": "useState is really powerful, thanks!" }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Mastering CSS Grid and Flexbox",
+    "content": "<p><strong><em style=\"font-size: 20px;\">A deep dive into CSS Grid and Flexbox.</em></strong></p><p>CSS Grid and Flexbox are powerful layout techniques that allow developers to create responsive and flexible designs efficiently.</p><h2>1. Understanding Flexbox</h2><p>Flexbox is a one-dimensional layout system, best for arranging items in a row or column. It provides control over alignment, spacing, and order.</p><h3>Key Properties:</h3><ul><li><strong>display: flex;</strong> Enables Flexbox on a container.</li><li><strong>justify-content:</strong> Aligns items horizontally.</li><li><strong>align-items:</strong> Aligns items vertically.</li><li><strong>flex-grow & flex-shrink:</strong> Controls how items expand or contract.</li></ul><p>Example:</p><pre><code>.container { display: flex; justify-content: space-between; }</code></pre><h2>2. Understanding CSS Grid</h2><p>CSS Grid is a two-dimensional layout system, perfect for creating complex layouts with precise row and column placement.</p><h3>Key Properties:</h3><ul><li><strong>display: grid;</strong> Enables Grid on a container.</li><li><strong>grid-template-columns:</strong> Defines the number of columns.</li><li><strong>grid-template-rows:</strong> Defines the number of rows.</li><li><strong>gap:</strong> Controls spacing between elements.</li></ul><p>Example:</p><pre><code>.grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }</code></pre><h2>3. When to Use Flexbox vs. Grid?</h2><p>Use Flexbox for simple one-dimensional layouts (e.g., navigation bars, alignment of elements). Use Grid for complex two-dimensional designs (e.g., website layouts, dashboards).</p><h2>4. Combining Grid and Flexbox</h2><p>Both systems can be used together for enhanced flexibility. For instance, a Grid container can hold Flexbox items to create a hybrid layout.</p><h2>5. Optimizing for Responsiveness</h2><p>Use media queries and relative units like <strong>fr, %, em</strong> to ensure layouts adapt to different screen sizes.</p><h2>6. Tools for Debugging</h2><p>Use browser developer tools to visualize Grid and Flexbox layouts easily.</p><p>Mastering these layout techniques allows developers to build modern, responsive designs with ease.</p>",
+
+    "image": "https://images.unsplash.com/photo-1735055147306-0169303a218b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxNnx8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["CSS", "Flexbox", "Grid"],
+    "likes": ["user3", "user4"],
+    "comments": [
+      { "id": "c3", "text": "This helped me structure my layout better!" }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Building a Full-Stack MERN App",
+    "content": "<p><strong><em style=\"font-size: 18px;\">Step-by-step guide to building a full-stack application using MongoDB, Express, React, and Node.js.</em></strong></p> <p>The MERN stack consists of:</p> <ul> <li><strong>MongoDB:</strong> A NoSQL database for storing data.</li> <li><strong>Express.js:</strong> A minimal Node.js framework for backend development.</li> <li><strong>React:</strong> A JavaScript library for building user interfaces.</li> <li><strong>Node.js:</strong> A runtime environment for executing JavaScript on the server.</li> </ul> <h2>1. Setting Up the Backend</h2> <p>To start, initialize a new Node.js project:</p> <pre><code>mkdir mern-app && cd mern-app npm init -y</code></pre> <p>Install the necessary dependencies:</p> <pre><code>npm install express mongoose cors dotenv nodemon</code></pre> <p>Create an Express server in <code>server.js</code>:</p> <pre><code>const express = require('express'); const app = express(); const PORT = 5000; app.use(express.json()); app.get('/', (req, res) => { res.send('MERN Stack App Running!'); }); app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });</code></pre> <h2>2. Connecting to MongoDB</h2> <p>Use Mongoose to interact with MongoDB. Install MongoDB locally or use a cloud database like MongoDB Atlas.</p> <pre><code>const mongoose = require('mongoose'); mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => console.log('MongoDB Connected')) .catch(err => console.error(err));</code></pre> <h2>3. Creating API Routes</h2> <p>Define routes to handle CRUD operations for blog posts:</p> <pre><code>const express = require('express'); const router = express.Router(); const Blog = require('./models/Blog'); router.post('/blogs', async (req, res) => { try { const blog = new Blog(req.body); await blog.save(); res.status(201).send(blog); } catch (error) { res.status(400).send(error); } });</code></pre> <h2>4. Setting Up the Frontend</h2> <p>Now, create the React frontend:</p> <pre><code>npx create-react-app client</code></pre> <p>Inside the <code>client</code> folder, install Axios to fetch data:</p> <pre><code>npm install axios react-router-dom</code></pre> <h2>5. Fetching Data from the API</h2> <p>In <code>App.js</code>, fetch blogs from the backend:</p> <pre><code>import { useEffect, useState } from 'react'; import axios from 'axios'; const App = () => { const [blogs, setBlogs] = useState([]); useEffect(() => { axios.get('http://localhost:5000/blogs') .then(response => setBlogs(response.data)) .catch(error => console.error(error)); }, []); return ( &lt;div&gt; &lt;h1&gt;MERN Blog&lt;/h1&gt; {blogs.map(blog => ( &lt;div key={blog._id}&gt; &lt;h2&gt;{blog.title}&lt;/h2&gt; &lt;p&gt;{blog.content}&lt;/p&gt; &lt;/div&gt; ))} &lt;/div&gt; ); }; export default App;</code></pre> <h2>6. Styling the App</h2> <p>Use Tailwind CSS for styling:</p> <pre><code>npm install tailwindcss</code></pre> <p>Add Tailwind to your project and customize the UI.</p> <h2>7. Deploying the MERN Stack App</h2> <p>Use Heroku for backend deployment and Vercel for frontend deployment.</p> <p>By following these steps, you can build and deploy a full-stack MERN application efficiently!</p>",
+    "image": "https://images.unsplash.com/photo-1739815379712-2f57e06faa0c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMHx8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["MERN", "Full-Stack", "Web Development"],
+    "likes": ["user5", "user6", "user1"],
+    "comments": [
+      { "id": "c4", "text": "MERN stack is awesome for full-stack apps!" },
+      { "id": "c5", "text": "Would love a follow-up on authentication!" }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Optimizing Web Performance",
+    "content": "<p><strong><em style=\"font-size: 22px;\">Tips to improve website loading speed.</em></strong></p><p>Website performance is crucial for user experience and SEO rankings. Here are some key strategies to optimize loading speed:</p><h2>1. Minimize HTTP Requests</h2><p>Reducing the number of external scripts, images, and stylesheets can improve page load times.</p><h2>2. Use a Content Delivery Network (CDN)</h2><p>A CDN stores cached versions of your website on multiple servers worldwide, ensuring faster delivery to users.</p><h2>3. Optimize Images</h2><p>Use compressed images in modern formats like WebP to reduce file size while maintaining quality.</p><h2>4. Enable Browser Caching</h2><p>By setting cache expiration headers, you allow users to load assets from their local storage instead of downloading them again.</p><h2>5. Minify and Bundle Resources</h2><p>Minify CSS, JavaScript, and HTML files to remove unnecessary characters and reduce file sizes.</p><h2>6. Implement Lazy Loading</h2><p>Load images and content only when they appear in the user's viewport to save bandwidth.</p><h2>7. Optimize Server Response Time</h2><p>Choose a fast hosting provider, optimize database queries, and reduce server response time.</p><h2>8. Use Asynchronous Loading for Scripts</h2><p>Load JavaScript asynchronously to prevent render-blocking and improve page speed.</p><h2>9. Reduce Redirects</h2><p>Minimize the number of redirects to prevent unnecessary HTTP requests and improve performance.</p><h2>10. Monitor Performance with Tools</h2><p>Use tools like Google PageSpeed Insights, Lighthouse, and GTmetrix to analyze and optimize your website speed.</p>",
+    "image": "https://plus.unsplash.com/premium_photo-1709829237029-38c4ddc15ff5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzN3x8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["Performance", "SEO", "Optimization"],
+    "likes": ["user7", "user8", "user9"],
+    "comments": [{ "id": "c6", "text": "Great tips on web performance!" }]
+  },
+  {
+    "id": "5",
+    "title": "Introduction to TypeScript",
+    "content": "<p><strong><em style=\"font-size: 22px;\">Why TypeScript is Essential for Modern JavaScript Projects.</em></strong></p><p>TypeScript is a superset of JavaScript that introduces static typing, improving code quality and maintainability.</p><h2>1. What is TypeScript?</h2><p>TypeScript is a strongly typed programming language built on JavaScript, offering features like type annotations and interfaces.</p><h2>2. Key Benefits of TypeScript</h2><ul><li><strong>Static Typing:</strong> Helps catch errors during development.</li><li><strong>Improved Code Readability:</strong> Enhances maintainability in large codebases.</li><li><strong>Better Tooling:</strong> Works seamlessly with modern editors like VS Code.</li><li><strong>Enhanced OOP Features:</strong> Supports classes, interfaces, and generics.</li></ul><h2>3. TypeScript vs JavaScript</h2><p>While JavaScript is dynamic and flexible, TypeScript enforces strict type checking, reducing runtime errors.</p><h2>4. Adoption in the Industry</h2><p>Popular frameworks like Angular and Next.js use TypeScript, making it a valuable skill for developers.</p><h2>5. Conclusion</h2><p>TypeScript improves developer productivity and application stability, making it a must-learn for JavaScript developers.</p>",
+    "image": "https://images.unsplash.com/photo-1739372678564-8d32df109f69?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw0M3x8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["TypeScript", "JavaScript", "Static Typing"],
+    "likes": ["user10", "user11", "user12"],
+    "comments": [
+      { "id": "c7", "text": "TypeScript is a game-changer for large apps!" }
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Getting Started with Next.js",
+    "content": "<p><strong><em style=\"font-size: 22px;\">Why TypeScript is Essential for Modern JavaScript Projects.</em></strong></p><p>TypeScript is a strongly typed superset of JavaScript that enhances code quality, maintainability, and developer productivity.</p><h2>1. What is TypeScript?</h2><p>TypeScript extends JavaScript by adding static typing, interfaces, and advanced tooling support, making large-scale applications more manageable.</p><h2>2. Key Features of TypeScript</h2><ul><li><strong>Static Typing:</strong> Detect errors at compile-time instead of runtime.</li><li><strong>Interfaces:</strong> Define object structures for better code organization.</li><li><strong>Optional and Default Parameters:</strong> Improve function flexibility.</li><li><strong>Enums:</strong> Create named constants for readability.</li><li><strong>Type Inference:</strong> Automatically determines variable types.</li></ul><h2>3. TypeScript vs. JavaScript</h2><p>While JavaScript is dynamically typed, TypeScript enforces stricter rules, reducing unexpected errors in production.</p><h2>4. Example Code</h2><pre><code>interface User { name: string; age: number; } const user: User = { name: 'John Doe', age: 30 };</code></pre><h2>5. Benefits of Using TypeScript</h2><ul><li><strong>Better Code Quality:</strong> Enforces type safety and consistency.</li><li><strong>Improved Debugging:</strong> Catches errors early.</li><li><strong>Scalability:</strong> Ideal for large applications.</li></ul><h2>6. Getting Started</h2><p>Install TypeScript globally:</p><pre><code>npm install -g typescript</code></pre><p>Compile TypeScript files:</p><pre><code>tsc filename.ts</code></pre><h2>7. TypeScript in Modern Development</h2><p>Used in frameworks like Angular, Next.js, and NestJS, TypeScript has become an industry standard for scalable web applications.</p><h2>8. Conclusion</h2><p>Adopting TypeScript enhances JavaScript development by reducing bugs, improving maintainability, and increasing developer efficiency.</p>",
+    "image": "https://plus.unsplash.com/premium_photo-1739844476608-6d4e22c38b68?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw2MXx8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["Next.js", "React", "SSR"],
+    "likes": ["user13", "user14"],
+    "comments": [{ "id": "c8", "text": "SSR is a must for SEO-heavy apps!" }]
+  },
+  {
+    "id": "7",
+    "title": "GraphQL vs REST: Which One to Choose?",
+    "content": "<p><strong><em style=\"font-size: 22px;\">Comparing GraphQL and REST API Approaches.</em></strong></p><p>GraphQL and REST are two popular approaches for building APIs, but they have key differences.</p><h2>1. What is REST?</h2><p>REST (Representational State Transfer) follows a standard structure using endpoints like <code>/users</code> and <code>/posts</code> for data retrieval.</p><h2>2. What is GraphQL?</h2><p>GraphQL is a query language that allows clients to request only the data they need, reducing over-fetching.</p><h2>3. Key Differences</h2><ul><li><strong>Data Fetching:</strong> REST fetches fixed data structures; GraphQL fetches flexible data.</li><li><strong>Performance:</strong> GraphQL minimizes API calls by fetching multiple resources in a single request.</li><li><strong>Complexity:</strong> REST is simpler but can lead to multiple API calls, while GraphQL requires schema definition.</li></ul><h2>4. When to Use Which?</h2><p>Use REST for standard APIs with predictable responses; use GraphQL for dynamic and data-heavy applications.</p><h2>5. Conclusion</h2><p>Both REST and GraphQL have their use cases. Choosing the right one depends on project needs.</p>",
+    "image": "https://plus.unsplash.com/premium_photo-1718146019028-6118387862d8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw2OXx8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["GraphQL", "REST", "API"],
+    "likes": ["user15", "user16"],
+    "comments": [
+      {
+        "id": "c9",
+        "text": "GraphQL is amazing for fetching only what you need!"
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "title": "A Guide to Progressive Web Apps (PWAs)",
+    "content": "<p><strong><em style=\"font-size: 20px;\">Enhancing User Experience with PWAs.</em></strong></p><p>Progressive Web Apps (PWAs) combine the best of web and mobile experiences.</p><h2>1. What is a PWA?</h2><p>A PWA is a web app that behaves like a native app, offering offline support, push notifications, and better performance.</p><h2>2. Key Features</h2><ul><li><strong>Offline Mode:</strong> Works even when disconnected.</li><li><strong>Fast Loading:</strong> Uses caching for instant page loads.</li><li><strong>Responsive Design:</strong> Works across all devices.</li></ul><h2>3. Benefits of PWAs</h2><p>PWAs increase engagement, reduce bounce rates, and provide an app-like experience without installation.</p><h2>4. Examples of PWAs</h2><p>Popular PWAs include Twitter Lite, Pinterest, and Uber.</p><h2>5. Conclusion</h2><p>PWAs are a powerful way to enhance user experience without requiring a native app.</p>",
+    "image": "https://images.unsplash.com/photo-1739582766954-800630482ccd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3OXx8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["PWA", "Web Development", "Offline Support"],
+    "likes": ["user17", "user18", "user19"],
+    "comments": [
+      { "id": "c10", "text": "PWAs feel like native apps, love them!" }
+    ]
+  },
+  {
+    "id": "9",
+    "title": "Best Practices for Writing Clean Code",
+    "content": "<p><strong><em style=\"font-size: 22px;\">Improve Code Maintainability with These Best Practices.</em></strong></p><p>Clean code is essential for collaboration, scalability, and debugging.</p><h2>1. Follow Naming Conventions</h2><p>Use meaningful variable and function names to improve readability.</p><h2>2. Write Modular Functions</h2><p>Break large functions into smaller reusable functions.</p><h2>3. Keep Code DRY</h2><p>Don’t Repeat Yourself (DRY) to avoid redundancy.</p><h2>4. Use Comments Wisely</h2><p>Write comments to explain complex logic, but avoid unnecessary ones.</p><h2>5. Consistent Formatting</h2><p>Use tools like Prettier or ESLint to maintain consistency.</p><h2>6. Conclusion</h2><p>Writing clean code saves time, improves debugging, and ensures better teamwork.</p>",
+    "image": "https://images.unsplash.com/photo-1739813498570-f0ef6ee15b81?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw4M3x8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["Clean Code", "Best Practices", "Software Engineering"],
+    "likes": ["user20", "user21"],
+    "comments": [
+      { "id": "c11", "text": "Writing clean code saves time in the long run!" }
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Top 10 JavaScript Libraries to Learn in 2025",
+    "content": "<p><strong><em style=\"font-size: 22px;\">Discover the Most Popular JS Libraries for 2025.</em></strong></p><p>JavaScript evolves rapidly, and staying updated with the latest libraries is essential.</p><h2>1. React.js</h2><p>A powerful UI library for building interactive front-end applications.</p><h2>2. Vue.js</h2><p>A progressive framework for easy and flexible development.</p><h2>3. Angular</h2><p>A robust framework used for enterprise applications.</p><h2>4. Svelte</h2><p>A lightweight framework with a compiler-based approach.</p><h2>5. Node.js</h2><p>Enables JavaScript on the backend for full-stack development.</p><h2>6. Next.js</h2><p>A React framework for server-side rendering and static site generation.</p><h2>7. Nuxt.js</h2><p>A Vue-based framework for SEO-friendly applications.</p><h2>8. D3.js</h2><p>Used for creating dynamic and interactive data visualizations.</p><h2>9. Three.js</h2><p>A library for rendering 3D graphics in the browser.</p><h2>10. Express.js</h2><p>A minimal backend framework for building APIs and web applications.</p><h2>Conclusion</h2><p>Learning these libraries in 2025 will keep you ahead in web development.</p>",
+    "image": "https://plus.unsplash.com/premium_photo-1739000485631-7b587e5bd020?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw5M3x8fGVufDB8fHx8fA%3D%3D",
+    "tags": ["JavaScript", "Libraries", "Frontend"],
+    "likes": ["user22", "user23", "user24"],
+    "comments": [
+      { "id": "c12", "text": "Excited to try out new JS libraries!" }
+    ]
+  }
+]
