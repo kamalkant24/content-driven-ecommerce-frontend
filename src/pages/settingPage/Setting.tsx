@@ -5,6 +5,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import UserProfile from "../profile/UserProfile";
 import { useState } from "react";
+import { Container } from "@mui/material";
 
 const Setting = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -23,23 +24,13 @@ const Setting = () => {
   //   return datetime
   // }
   return (
-    <div className="container max-w-[100vw] my-4">
+    <Container maxWidth="md" className="my-4">
       <h5 className="font-bold mx-4">Account & Settings</h5>
       {/* <p className="text-sm text-gray-500">{getCurrentDateAndTime()}</p> */}
 
       <TabContext value={activeTab}>
         <Box sx={{ borderBottom: 1, borderColor: "divider", p: '16px' }}>
-          <TabList aria-label="lab API tabs example" onChange={handleChange} sx={{
-            '& .MuiTabs-indicator': {
-              backgroundColor: 'var(--primary-color)',
-            },
-            '& .MuiTab-root': {
-              color: 'var(--primary-color)',
-            },
-            '& .Mui-selected': {
-              color: 'var(--primary-color) !important',
-            },
-          }}>
+          <TabList aria-label="lab API tabs example" onChange={handleChange} >
             <Tab label="Profile" value="1" />
             <Tab label="Settings" value="2" />
           </TabList>
@@ -80,7 +71,7 @@ const Setting = () => {
           </div>
         </TabPanel>
       </TabContext>
-    </div>
+    </Container>
   );
 };
 

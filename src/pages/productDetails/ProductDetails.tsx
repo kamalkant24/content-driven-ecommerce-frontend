@@ -97,7 +97,7 @@ export const ProductDetails: React.FC = () => {
 
 
     return (
-        <Container maxWidth="lg" className="p-2 mt-6">
+        <Container maxWidth="lg" className="my-4">
             <Card className="flex flex-col items-center gap-4 relative">
                 <Carousal images={productDetails?.image} />
                 <CardContent className="p-2 text-left w-[95%] sm:w-[80%] flex gap-4 flex-col">
@@ -205,7 +205,7 @@ export const ProductDetails: React.FC = () => {
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
                             <Button
                                 variant="contained"
-                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, backgroundColor: 'var(--primary-color)' }}
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }}}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(`/products/edit/${productDetails?._id}`);
@@ -231,7 +231,7 @@ export const ProductDetails: React.FC = () => {
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
                             <Button
                                 variant="outlined"
-                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, borderColor: 'var(--primary-color)', color: 'var(--primary-color)' }}
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }}}
                                 onClick={() => handleCart(productDetails?._id)}
                                 startIcon={<ShoppingCartIcon />}
                             >
@@ -239,7 +239,7 @@ export const ProductDetails: React.FC = () => {
                             </Button>
                             <Button
                                 variant="contained"
-                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }, backgroundColor: 'var(--primary-color)' }}
+                                sx={{ width: { xs: '80%', sm: '40%', md: '30%', lg: '25%' }}}
                                 onClick={() => console.log('Buy Now')}
                                 startIcon={<ShoppingBagIcon />}
                             >
