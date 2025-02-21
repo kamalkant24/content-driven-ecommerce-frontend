@@ -7,6 +7,10 @@ import {
   Typography,
   Chip,
   Container,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import JoditEditor from "jodit-react";
 import { BlogDetails } from "../blogDetails/BlogDetails";
@@ -18,6 +22,7 @@ export const CreateBlog = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
+  const [category, setCategory] = useState<string>("");
   const [previewBlog, setPreviewBlog] = useState(null);
 
   const config = useMemo(
@@ -67,6 +72,7 @@ export const CreateBlog = () => {
       title,
       content,
       image: selectedImage,
+      category,
       tags,
     };
     setPreviewBlog(blogData);
@@ -112,7 +118,7 @@ export const CreateBlog = () => {
           />
 
           <Stack spacing={2}>
-            <Button variant="outlined" component="label">
+            <Button variant="outlined" component="label" sx={{width:'10rem'}}>
               Upload Image
               <input
                 type="file"
@@ -134,18 +140,41 @@ export const CreateBlog = () => {
               />
             )}
           </Stack>
-
-          <Stack direction="row" spacing={1}>
-            <TextField
-              label="Add Tag"
-              variant="outlined"
-              fullWidth
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-            />
-            <Button variant="contained" onClick={handleAddTag}>
-              Add
-            </Button>
+          <Stack direction={"row"} spacing={2}>
+            <Stack direction="row" spacing={1} width={"50%"}>
+              <TextField
+                label="Add Tag"
+                variant="outlined"
+                fullWidth
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+              />
+              <Button variant="contained" onClick={handleAddTag}>
+                Add
+              </Button>
+            </Stack>
+            <FormControl sx={{ flex: 1, width: "50%" }}>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                name="category"
+                value={category}
+                label="Category"
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
+                <MenuItem value={"Electronics"}>Electronics</MenuItem>
+                <MenuItem value={"Clothing & Accessories"}>
+                  Clothing & Accessories
+                </MenuItem>
+                <MenuItem value={"Home & Living"}>Home & Living</MenuItem>
+                <MenuItem value={"Beauty & Health"}>Beauty & Health</MenuItem>
+                <MenuItem value={"Sports & Outdoors"}>
+                  Sports & Outdoors
+                </MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
 
           <Stack direction="row" spacing={1} flexWrap="wrap">

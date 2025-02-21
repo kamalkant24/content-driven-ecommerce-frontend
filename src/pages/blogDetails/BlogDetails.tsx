@@ -18,8 +18,13 @@ import Person2Icon from "@mui/icons-material/Person2";
 import { getBlog } from "../../store/blog/blogSlice";
 import { useAppDispatch } from "../../store/store";
 import { Blog } from "../../interface";
+import AddCommentDialog from "../../components/AddCommentDialog";
 
-export const BlogDetails: React.FC = ({ previewBlog }) => {
+interface BlogDetailsProps {
+  previewBlog?: Blog;
+}
+
+export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [blog, setBlog] = useState<null | Blog>(null);
@@ -36,11 +41,16 @@ export const BlogDetails: React.FC = ({ previewBlog }) => {
     }
   }, []);
   const [isLiked, setIsLiked] = useState(false);
+  console.log(blog);
+
   return (
     <Container maxWidth="md" className="my-8">
       {blog ? (
         <Box className="flex flex-col gap-8">
-          <Typography variant="h3">{blog?.title}</Typography>
+          <Stack gap={1}>
+            <Typography variant="h3">{blog?.title}</Typography>
+            <Typography color="gray">{blog?.category}</Typography>
+          </Stack>
           <Box>
             <img
               className="max-h-[30rem] text-center"
@@ -56,7 +66,6 @@ export const BlogDetails: React.FC = ({ previewBlog }) => {
             <Stack direction={"row"} gap={2}>
               {blog?.tags.map((tag, id) => (
                 <Chip key={id} label={tag} />
-                // <Button variant="contained">{tag}</Button>
               ))}
             </Stack>
           </Stack>
@@ -82,7 +91,10 @@ export const BlogDetails: React.FC = ({ previewBlog }) => {
             </Box>
           </Stack>
           <Stack spacing={2} sx={{ mt: 3 }}>
-            <Typography variant="h6">Comments</Typography>
+            <Stack direction={"row"} gap={4}>
+              <Typography variant="h6">Comments</Typography>{" "}
+              <AddCommentDialog />
+            </Stack>
             {blog?.comments.map((comment, idx) => (
               <Paper
                 key={idx}
@@ -95,12 +107,9 @@ export const BlogDetails: React.FC = ({ previewBlog }) => {
                   gap: 2,
                 }}
               >
-                {/* User Avatar */}
                 <Avatar sx={{ bgcolor: "primary.main" }}>
                   <Person2Icon />
                 </Avatar>
-
-                {/* Comment Content */}
                 <Box>
                   <Typography variant="subtitle2" fontWeight="bold">
                     John Doe
