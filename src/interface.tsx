@@ -32,4 +32,10 @@ export interface Blog {
     id: string;
     text: string;
   };
+  category:
+    | "Electronics"
+    | "Clothing & Accessories"
+    | "Home & Living"
+    | "Beauty & Health"
+    | "Sports & Outdoors";
 }

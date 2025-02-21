@@ -28,6 +28,9 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
         <Typography variant="subtitle1" marginY={2}>
           {shortText(blog?.content.replace(/<[^>]+>/g, ""))}
         </Typography>
+        <Typography variant="subtitle1" color="gray">
+          Category: {blog?.category}
+        </Typography>
       </Stack>
     </Stack>
   );

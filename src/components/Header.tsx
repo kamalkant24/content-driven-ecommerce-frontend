@@ -220,7 +220,7 @@ function Header() {
               <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar className={'border-2 border-gray-200'} sx={{ width: '3rem', height: '3rem' }} alt="Remy Sharp" src={getFullProductUrl(userProfile?.profile_img)} />
+                    <Avatar className={'border-2 border-gray-200'} sx={{ width: '2.5rem', height: '2.5rem' }} alt="Remy Sharp" src={getFullProductUrl(userProfile?.profile_img)} />
                   </IconButton>
                 </Tooltip>
               </Box>

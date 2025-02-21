@@ -18,12 +18,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useDispatch, useSelector } from "react-redux";
 import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { RootState } from "../../store/store";
 import { ProductCard } from "../../components/ProductCard";
+import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
+
 
 const Products = () => {
   const { allProducts, productLoading } = useSelector(
@@ -70,6 +73,13 @@ const Products = () => {
               variant="outlined"
               onChange={(e) => setSearch(e.target.value)}
               sx={{ width: { xs: "100%" } }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
             {userProfile?.role === "user" && (
               <FormControl sx={{ width: "100%" }}>
