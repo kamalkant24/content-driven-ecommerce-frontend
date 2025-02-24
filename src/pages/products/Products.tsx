@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,6 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../store/store";
 import { ProductCard } from "../../components/ProductCard";
 import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
-
 
 const Products = () => {
   const { allProducts, productLoading } = useSelector(
@@ -39,20 +38,25 @@ const Products = () => {
   const [search, setSearch] = useState<string>("");
   const [sortbyPrice, setSortbyPrice] = useState<string>("");
   const [sortbyVendor, setSortbyVendor] = useState<string>("All Vendors");
-  const [sortbyCategory, setSortbyCategory] = useState<string>("All Categories");
+  const [sortbyCategory, setSortbyCategory] =
+    useState<string>("All Categories");
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userProfile?.role === "user") {
-        await dispatch(
-          getAllProductSlice({ page: page, pageSize: 9, search: search })
-        );
-      } else {
-        await dispatch(
-          getAllProductSlice({ page: page, pageSize: 9, search: search }) //this api is getting products of all vendors. get current vendor products instead. BE API is not built for it.
-        );
+      console.log(userProfile);
+      
+      if (userProfile?.data?.isReadDocumentation) {
+        if (userProfile?.role === "user") {
+          await dispatch(
+            getAllProductSlice({ page: page, pageSize: 9, search: search })
+          );
+        } else {
+          await dispatch(
+            getAllProductSlice({ page: page, pageSize: 9, search: search }) //this api is getting products of all vendors. get current vendor products instead. BE API is not built for it.
+          );
+        }
       }
     };
 

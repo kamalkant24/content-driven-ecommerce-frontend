@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { RootState } from "../store/store";
-import { current } from "@reduxjs/toolkit";
 //  import Header from "../components/Header";
 // import Sidebar from "../components/SideBar";
 // import secureLocalStorage from "react-secure-storage";
@@ -15,10 +14,9 @@ import { current } from "@reduxjs/toolkit";
  */
 
 export const useAuth = () => {
-  // const userdata = localStorage.getItem("access_token");
-
-  const userdata = localStorage.getItem("access_token");
-  const user = userdata ? { loggedIn: true } : { loggedIn: false };
+  // const access_token = localStorage.getItem("access_token");  
+  const access_token = localStorage.getItem("access_token");  
+  const user = access_token ? { loggedIn: true } : { loggedIn: false };
   return user?.loggedIn;
 };
 

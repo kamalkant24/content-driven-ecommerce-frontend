@@ -28,9 +28,9 @@ interface EditDetails {
   org_Name: string;
   industry: string;
   org_Size: string;
-  profile_img: string;
-  org_Banner: string;
-  org_Description: string;
+  logo: string;
+  banner: string;
+  description: string;
   address: string;
 }
 
@@ -47,9 +47,9 @@ const UserProfile = () => {
     org_Name: "",
     industry: "",
     org_Size: "",
-    profile_img: "",
-    org_Banner: "",
-    org_Description: "",
+    logo: "",
+    banner: "",
+    description: "",
     address: "",
   });
   const [editProfileInput, setEditProfileInput] = useState(false);
@@ -58,7 +58,7 @@ const UserProfile = () => {
   const [newBannerFile, setNewBannerFile] = useState<string>("");
   const roleFields = {
     vendor: Object.keys(editDetails),
-    user: ["name", "email", "phone", "address", "profile_img"],
+    user: ["name", "email", "phone", "address", "logo"],
   };
 
   useEffect(() => {
@@ -69,11 +69,11 @@ const UserProfile = () => {
       industry: userProfile?.industry || "",
       org_Size: userProfile?.org_Size,
       phone: "123456789",
-      org_Description:
+      description:
         "Shoes Mart is a leading footwear retailer that offers a wide selection of shoes from global brands.",
       address: "1234 Fashion Ave, Suite 567, New York, NY 10001, USA",
-      profile_img: getFullProductUrl(userProfile?.profile_img),
-      org_Banner: banner,
+      logo: getFullProductUrl(userProfile?.logo),
+      banner: banner,
     });
   }, [editMode, userProfile]);
 
@@ -87,7 +87,7 @@ const UserProfile = () => {
     const imageFile = e.target.files[0];
     setNewImageFile(imageFile);
     const url = URL.createObjectURL(imageFile);
-    setEditDetails({ ...editDetails, profile_img: url });
+    setEditDetails({ ...editDetails, logo: url });
     setEditProfileInput(false);
   };
 
@@ -95,7 +95,7 @@ const UserProfile = () => {
     const imageFile = e.target.files[0];
     setNewBannerFile(imageFile);
     const url = URL.createObjectURL(imageFile);
-    setEditDetails({ ...editDetails, org_Banner: url });
+    setEditDetails({ ...editDetails, banner: url });
     setEditBannerInput(false);
   };
 
@@ -110,10 +110,10 @@ const UserProfile = () => {
       org_Name: "Organization Name",
       industry: "Industry",
       org_Size: "Organization Size",
-      profile_img: "Avatar",
-      org_Banner: "Banner",
+      logo: "Avatar",
+      banner: "Banner",
       address: "Address",
-      org_Description: "Description",
+      description: "Description",
       phone: "Phone Number",
       name: "Full Name",
       email: "Email",
@@ -142,11 +142,11 @@ const UserProfile = () => {
           updatedDetails[field] = editDetails[field as keyof EditDetails];
         }
       }
-      if (updatedDetails?.profile_img) {
-        updatedDetails.profile_img = newImageFile;
+      if (updatedDetails?.logo) {
+        updatedDetails.logo = newImageFile;
       }
-      if (updatedDetails?.org_Banner) {
-        updatedDetails.org_Banner = newBannerFile;
+      if (updatedDetails?.banner) {
+        updatedDetails.banner = newBannerFile;
       }
       if (Object.keys(updatedDetails).length > 0) {
         const res = await dispatch(
@@ -180,7 +180,7 @@ const UserProfile = () => {
           <Box display="flex" alignItems="center" gap={2}>
             <Avatar
               alt="Profile Image"
-              src={getFullProductUrl(userProfile?.profile_img)}
+              src={getFullProductUrl(userProfile?.logo)}
               className="border-2 border-gray-300 shadow-md"
               sx={{ width: 60, height: 60 }}
             />
@@ -197,7 +197,7 @@ const UserProfile = () => {
           {userProfile?.role === "vendor" && (
             <Box mt={2}>
               <img
-                src={editDetails?.org_Banner}
+                src={editDetails?.banner}
                 alt="Banner"
                 className="max-h-[6rem] max-w-[100%] contain"
               />
@@ -338,8 +338,8 @@ const UserProfile = () => {
                 fullWidth
                 multiline
                 rows={4}
-                value={editDetails?.org_Description}
-                name="org_Description"
+                value={editDetails?.description}
+                name="description"
                 onChange={handleEditInputChange}
                 disabled={!editMode}
               />
@@ -375,7 +375,7 @@ const UserProfile = () => {
               ) : (
                 <>
                   <img
-                    src={editDetails?.profile_img}
+                    src={editDetails?.logo}
                     alt="Profile Image"
                     style={{ height: "3rem", maxWidth: "90%" }}
                   />
@@ -383,7 +383,7 @@ const UserProfile = () => {
                     className="cursor-pointer"
                     onClick={() => {
                       setEditProfileInput(true);
-                      setEditDetails({ ...editDetails, profile_img: "" });
+                      setEditDetails({ ...editDetails, logo: "" });
                     }}
                   />
                 </>
@@ -406,14 +406,14 @@ const UserProfile = () => {
               ) : (
                 <>
                   <img
-                    src={editDetails?.org_Banner}
+                    src={editDetails?.banner}
                     alt="Banner"
                     style={{ height: "3rem", maxWidth: "90%" }}
                   />
                   <RxCross1
                     onClick={() => {
                       setEditBannerInput(true);
-                      setEditDetails({ ...editDetails, org_Banner: "" });
+                      setEditDetails({ ...editDetails, banner: "" });
                     }}
                   />
                 </>

@@ -20,12 +20,17 @@ import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
 import { getFullProductUrl, logout } from "../utils/helpers";
 import { RootState } from "../store/store";
-import Person2Icon from '@mui/icons-material/Person2';
+import Person2Icon from "@mui/icons-material/Person2";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
 
-const settings = [{ label: "Profile", icon: <Person2Icon sx={{ width: '20px' }} /> }, { label: "Orders", icon: <ShoppingBagIcon sx={{ width: '20px' }} /> }, { label: "Setting", icon: <SettingsIcon sx={{ width: '20px' }} /> }, { label: "Logout", icon: <LogoutIcon sx={{ width: '20px' }} /> }];
+const settings = [
+  { label: "Profile", icon: <Person2Icon sx={{ width: "20px" }} /> },
+  { label: "Orders", icon: <ShoppingBagIcon sx={{ width: "20px" }} /> },
+  { label: "Setting", icon: <SettingsIcon sx={{ width: "20px" }} /> },
+  { label: "Logout", icon: <LogoutIcon sx={{ width: "20px" }} /> },
+];
 
 function Header() {
   const style = {
@@ -42,7 +47,7 @@ function Header() {
 
   const pages = {
     user: ["Products", "Blogs", "Chat", "Cart"],
-    vendor: ["Products", "Blogs", "Chat"]
+    vendor: ["Products", "Blogs", "Chat"],
   };
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -53,13 +58,14 @@ function Header() {
   );
   const { allCarts } = useSelector((state: RootState) => state.cart);
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  const { loginData } = useSelector((state: RootState) => state.login);
+  // const { loginData } = useSelector((state: RootState) => state.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("access_token");
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
-    if (userProfile?.isReadDocumentation == false) {
+    const isApproved = userProfile?.data?.isApproved;    
+    if (userProfile?.data?.isReadDocumentation == false || !isApproved) {
       setOpen(true);
     }
   }, [userProfile]);
@@ -69,10 +75,10 @@ function Header() {
   };
 
   React.useEffect(() => {
-    if (token || loginData?.code == 200) {
+    if (token) {
       handleInitialApis();
     }
-  }, [loginData]);
+  }, [token]);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -91,7 +97,10 @@ function Header() {
   let auth = useAuth();
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#27445D", position: 'fixed', top: 0, zIndex: 10 }}>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "#27445D", position: "fixed", top: 0, zIndex: 10 }}
+    >
       <Modal
         open={open}
         // onClose={}
@@ -107,8 +116,11 @@ function Header() {
           />
         </Box>
       </Modal>
-      <Container maxWidth="xxl" >
-        <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Container maxWidth="xxl">
+        <Toolbar
+          disableGutters
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Typography
             variant="h6"
             noWrap
@@ -130,16 +142,18 @@ function Header() {
             <div className="flex justify-center items-center">
               <img className="text-left" src={logo} width="50" height="50" />
             </div>
-            {auth && <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>}
+            {auth && (
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -159,30 +173,35 @@ function Header() {
               }}
             >
               {pages[userProfile?.role]?.map((page) => (
-                <MenuItem key={page} onClick={(e: any) => {
-                  navigate(`/${page}`);
-                  handleCloseNavMenu()
-                }}>
+                <MenuItem
+                  key={page}
+                  onClick={(e: any) => {
+                    navigate(`/${page}`);
+                    handleCloseNavMenu();
+                  }}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
-          {auth && <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages[userProfile?.role]?.map((page) => (
-              <Button
-                key={page}
-                id={page}
-                onClick={(e: any) => {
-                  navigate(`/${e?.target?.id.toLowerCase()}`);
-                }}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>}
+          {auth && (
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              {pages[userProfile?.role]?.map((page) => (
+                <Button
+                  key={page}
+                  id={page}
+                  onClick={(e: any) => {
+                    navigate(`/${e?.target?.id.toLowerCase()}`);
+                  }}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              ))}
+            </Box>
+          )}
           {!auth ? (
             <Box sx={{ flexGrow: 0 }}>
               <div className="flex gap-4">
@@ -217,10 +236,21 @@ function Header() {
             />
           </Box> */}
 
-              <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+              >
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar className={'border-2 border-gray-200'} sx={{ width: '2.5rem', height: '2.5rem' }} alt="Remy Sharp" src={getFullProductUrl(userProfile?.profile_img)} />
+                    <Avatar
+                      className={"border-2 border-gray-200"}
+                      sx={{ width: "2.5rem", height: "2.5rem" }}
+                      alt="Remy Sharp"
+                      src={getFullProductUrl(userProfile?.logo)}
+                    />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -231,46 +261,55 @@ function Header() {
                   paper: {
                     elevation: 0,
                     sx: {
-                      overflow: 'visible',
-                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                      overflow: "visible",
+                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                       mt: 1.5,
-                      '& .MuiAvatar-root': {
+                      "& .MuiAvatar-root": {
                         width: 32,
                         height: 32,
                         ml: -0.5,
                         mr: 1,
                       },
-                      '&::before': {
+                      "&::before": {
                         content: '""',
-                        display: 'block',
-                        position: 'absolute',
+                        display: "block",
+                        position: "absolute",
                         top: 0,
                         right: 14,
                         width: 10,
                         height: 10,
-                        bgcolor: 'background.paper',
-                        transform: 'translateY(-50%) rotate(45deg)',
+                        bgcolor: "background.paper",
+                        transform: "translateY(-50%) rotate(45deg)",
                         zIndex: 0,
                       },
                     },
                   },
                 }}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem sx={{ borderBottom: '1px solid #80808030', display: 'flex', alignItems: 'center', paddingY: '0.5rem' }} key={setting.label} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    sx={{
+                      borderBottom: "1px solid #80808030",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingY: "0.5rem",
+                    }}
+                    key={setting.label}
+                    onClick={handleCloseUserMenu}
+                  >
                     {setting.icon}
                     <Typography
                       textAlign="center"
                       id={setting.label}
-                      sx={{ width: '5rem' }}
+                      sx={{ width: "5rem" }}
                       onClick={(e: any) => {
                         if (e.target.id == "Logout") {
                           logout();
-                          navigate('/')
+                          navigate("/");
                         } else if (e.target.id == "Profile") {
                           navigate("/profile");
                         } else if (e.target.id == "Setting") {
