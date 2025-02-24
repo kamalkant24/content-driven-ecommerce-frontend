@@ -14,7 +14,6 @@ import { RootState } from "../store/store";
  */
 
 export const useAuth = () => {
-  // const access_token = localStorage.getItem("access_token");  
   const access_token = localStorage.getItem("access_token");  
   const user = access_token ? { loggedIn: true } : { loggedIn: false };
   return user?.loggedIn;

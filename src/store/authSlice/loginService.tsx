@@ -10,7 +10,7 @@ const login = async (data: any) => {
       // password: hashedPassword
       password
     }
-    const response: any = await axiosAPI.post("/user/login", body);             
+    const response: any = await axiosAPI.post("/user/login", body);
     response?.data?.data?.token &&
       localStorage.setItem("access_token", response?.data?.data?.token);
     if (response?.data?.code === 200) {
@@ -35,7 +35,7 @@ const register = async (data: any) => {
       // password: hashedPassword
       password
     }
-    const response = await axiosAPI.post("/user/register", body);    
+    const response = await axiosAPI.post("/user/register", body);
     if (response?.data?.code === 200) {
       getToast("success", response?.data?.message);
     } else {

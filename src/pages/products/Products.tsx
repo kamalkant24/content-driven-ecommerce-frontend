@@ -38,15 +38,12 @@ const Products = () => {
   const [search, setSearch] = useState<string>("");
   const [sortbyPrice, setSortbyPrice] = useState<string>("");
   const [sortbyVendor, setSortbyVendor] = useState<string>("All Vendors");
-  const [sortbyCategory, setSortbyCategory] =
-    useState<string>("All Categories");
+  const [sortbyCategory, setSortbyCategory] = useState<string>("All Categories");
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log(userProfile);
-      
+    const fetchData = async () => {      
       if (userProfile?.data?.isReadDocumentation) {
         if (userProfile?.role === "user") {
           await dispatch(

@@ -48,26 +48,21 @@ const InitialStepper = (props: any) => {
   // const [activeAccount, setActiveAccount] = React.useState(0);
   const [additionalDetails, setAdditionalDetails] =
     React.useState<AdditionalDetails>({
-      //setting dummy details for testing
-      org_Name: "Shoes Mart",
-      phone: "123456789",
+      org_Name: "",
+      phone: "",
       industry: "",
-      org_Size: "100",
+      org_Size: "",
       logo: "",
       banner: "",
-      address: "1234 Elm Street, Suite 567, New York, NY, 10001, USA",
-      description: "test desc",
-      role: "",
+      address: "",
+      description: "",
+      role: ""
     });
   const [showStepper, setShowStepper] = React.useState(false);
   const roleFields = {
     vendor: Object.keys(additionalDetails) as string[],
     user: ["phone", "logo", "address"] as string[],
   };
-
-  React.useEffect(() => {
-    console.log({ userProfile });
-  }, [userProfile]);
 
   const handleOrganization = (e: any) => {
     const { name, value } = e.target;
@@ -117,8 +112,6 @@ const InitialStepper = (props: any) => {
 
   const handleNext = async (e: any) => {
     e.preventDefault();
-    console.log(activeStep);
-
     if (activeStep === 0 && !additionalDetails?.role) {
       toast.warning(`Please Select a Role before Proceeding.`);
     } else if (activeStep === 1) {
