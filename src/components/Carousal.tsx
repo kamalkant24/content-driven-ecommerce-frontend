@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Card, CardMedia } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';  
-import { getFullProductUrl } from '../utils/helpers';
 
 export const Carousal: React.FC = ({ images }: { images: string[] }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,7 +24,7 @@ export const Carousal: React.FC = ({ images }: { images: string[] }) => {
                     <CardMedia
                         component="img"
                         alt="Product Image"
-                        image={getFullProductUrl(images[currentIndex])}
+                        image={images[currentIndex]}
                         sx={{ objectFit: 'contain'}}
                         className='h-[200px] sm:h-[300px] md:h-[400px] contain bg-[#BCCCDC]'
                     />
@@ -78,7 +77,7 @@ export const Carousal: React.FC = ({ images }: { images: string[] }) => {
                             <CardMedia
                                 component="img"
                                 alt={`Thumbnail ${index + 1}`}
-                                image={getFullProductUrl(image)}
+                                image={image}
                                 sx={{
                                     width: '60px',
                                     height: '60px',

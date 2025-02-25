@@ -184,7 +184,6 @@ const InitialStepper = (props: any) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
-    navigate("/");
   };
 
   return (

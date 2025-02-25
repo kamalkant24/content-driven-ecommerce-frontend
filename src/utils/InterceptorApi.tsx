@@ -2,6 +2,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { logout } from "./helpers";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -31,9 +32,6 @@ axiosAPI.interceptors.request.use(
 axiosAPI.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log({ errorInInterceptor: error.response.status });
-    console.log('herreee', error.response);
-    
     if (error.response && error.response.status === 401) {
       logout();
     }

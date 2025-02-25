@@ -201,7 +201,7 @@ export const ProductDetails: React.FC = () => {
                     className="w-full flex justify-center items gap-4 flex-wrap"
                     sx={{ padding: 2 }}
                 >
-                    {userProfile?.role === "vendor" ? (
+                    {userProfile?.data?.role === "vendor" ? (
                         <Stack direction={{ xs: "column", sm: "row" }} spacing={2} className="w-full items-center justify-center">
                             <Button
                                 variant="contained"

@@ -7,6 +7,7 @@ export interface Product {
   category: string;
   availability: boolean;
   _id?: string;
+  discount:''
 }
 
 export interface AdditionalDetails {

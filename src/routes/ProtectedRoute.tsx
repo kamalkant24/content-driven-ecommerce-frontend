@@ -57,7 +57,7 @@ const ProtectedRoute = () => {
   const { userProfile } = useSelector((state: RootState) => state.profile);
   const location = useLocation();
   const currentPath = location.pathname;
-  const currentRole = userProfile?.role;
+  const currentRole = userProfile?.data?.role;
   const noUserAccess = ['/products/add'];
   const noVendorAccess = ['/cart', '/checkout']
 

@@ -12,7 +12,7 @@ const getUserProfile = async (data: any) => {
 };
 
 const userConfirmedData = async (data: any) => {
-  try {    
+  try {
     const response: any = await axiosAPI.post("/user/confirmation", data);
     return response;
   } catch (err: any) {
@@ -22,8 +22,12 @@ const userConfirmedData = async (data: any) => {
 };
 
 const editUserProfile = async (data: any) => {
-  try {    
-    const response: any = await axiosAPI.post("/user/update", data);
+  try {
+    const formData = new FormData();
+    for (const key in data) {
+      formData.append(key, data[key]);
+    }
+    const response: any = await axiosAPI.post("/user/update", formData);
     return response;
   } catch (err: any) {
     getToast("error", err?.response?.data?.error);

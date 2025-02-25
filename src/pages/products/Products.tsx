@@ -45,7 +45,7 @@ const Products = () => {
   useEffect(() => {
     const fetchData = async () => {      
       if (userProfile?.data?.isReadDocumentation) {
-        if (userProfile?.role === "user") {
+        if (userProfile?.data?.role === "customer") {
           await dispatch(
             getAllProductSlice({ page: page, pageSize: 9, search: search })
           );
@@ -82,7 +82,7 @@ const Products = () => {
                 ),
               }}
             />
-            {userProfile?.role === "user" && (
+            {userProfile?.data?.role === "customer" && (
               <FormControl sx={{ width: "100%" }}>
                 <InputLabel className="bg-white">Vendor</InputLabel>
                 <Select
@@ -154,7 +154,7 @@ const Products = () => {
             </Box>
           </Box>
         </Paper>
-        {userProfile?.role === "vendor" && (
+        {userProfile?.data?.role === "vendor" && (
           <Box className="flex justify-end mt-[32px]">
             <Button
               variant="contained"

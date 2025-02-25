@@ -18,8 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "@mui/material";
 import { getProfile } from "../store/user/userSlice";
 import InitialStepper from "./InitialStepper";
-import { getFullProductUrl, logout } from "../utils/helpers";
-import { RootState } from "../store/store";
+import { logout } from "../utils/helpers";
+import { AppDispatch, RootState } from "../store/store";
 import Person2Icon from "@mui/icons-material/Person2";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -46,7 +46,7 @@ function Header() {
   };
 
   const pages = {
-    user: ["Products", "Blogs", "Chat", "Cart"],
+    customer: ["Products", "Blogs", "Chat", "Cart"],
     vendor: ["Products", "Blogs", "Chat"],
   };
 
@@ -58,20 +58,21 @@ function Header() {
   );
   const { allCarts } = useSelector((state: RootState) => state.cart);
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  // const { loginData } = useSelector((state: RootState) => state.login);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const token = localStorage.getItem("access_token");
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
-    const isApproved = userProfile?.data?.isApproved;    
+    const isApproved = userProfile?.data?.isApproved;
     if (userProfile?.data?.isReadDocumentation == false || !isApproved) {
       setOpen(true);
+    } else {
+      setOpen(false);
     }
   }, [userProfile]);
 
   const handleInitialApis = async () => {
-    await dispatch(getProfile({}));
+    await dispatch(getProfile());
   };
 
   React.useEffect(() => {
@@ -172,7 +173,7 @@ function Header() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages[userProfile?.role]?.map((page) => (
+              {pages[userProfile?.data?.role]?.map((page) => (
                 <MenuItem
                   key={page}
                   onClick={(e: any) => {
@@ -188,7 +189,7 @@ function Header() {
           {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
           {auth && (
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages[userProfile?.role]?.map((page) => (
+              {pages[userProfile?.data?.role]?.map((page) => (
                 <Button
                   key={page}
                   id={page}
@@ -217,25 +218,6 @@ function Header() {
             </Box>
           ) : (
             <div className="flex ">
-              {/* <Box sx={{ flexGrow: 0 }} className="flex">
-            <UserButton
-              styleClass="text-blue-500 "
-              name="Cart"
-              setIcon={
-                <Badge
-                  badgeContent={allCarts?.length}
-                  color="warning"
-                  className="p-1 text-blue-500"
-                >
-                  <ShoppingCartIcon />
-                </Badge>
-              }
-              action={() => {
-                navigate("/carts");
-              }}
-            />
-          </Box> */}
-
               <Box
                 sx={{
                   display: "flex",
@@ -249,7 +231,7 @@ function Header() {
                       className={"border-2 border-gray-200"}
                       sx={{ width: "2.5rem", height: "2.5rem" }}
                       alt="Remy Sharp"
-                      src={getFullProductUrl(userProfile?.logo)}
+                      src={userProfile?.data?.profile_img}
                     />
                   </IconButton>
                 </Tooltip>
@@ -309,7 +291,6 @@ function Header() {
                       onClick={(e: any) => {
                         if (e.target.id == "Logout") {
                           logout();
-                          navigate("/");
                         } else if (e.target.id == "Profile") {
                           navigate("/profile");
                         } else if (e.target.id == "Setting") {

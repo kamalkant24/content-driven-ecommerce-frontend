@@ -2,7 +2,6 @@ import { Box, IconButton, Paper, TextField, Typography } from "@mui/material"
 import RemoveIcon from "@mui/icons-material/Remove";
 import CloseIcon from '@mui/icons-material/Close'; import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import { getFullProductUrl } from "../utils/helpers";
 
 export const CartCard = ({ item, checkoutCards }) => {
     const navigate = useNavigate();
@@ -13,7 +12,7 @@ export const CartCard = ({ item, checkoutCards }) => {
     };
     return <Paper square elevation={0} sx={{ boxShadow: { xs: 0, sm: 3 } }} className="sm:px-8 sm:py-4 flex gap-2 flex-row justify-between w-full relative border-b sm:border-none border-primaryColor pb-4 pt-10" onClick={() => showProductDetails(item?._id)}>
         <Box>
-            <img src={getFullProductUrl(item?.image[0])} alt={item?.title} className={`w-[50px] ${!checkoutCards && 'sm:w-[100px]'} `} />
+            <img src={item?.image[0]} alt={item?.title} className={`w-[50px] ${!checkoutCards && 'sm:w-[100px]'} `} />
             <Typography className="capitalize" sx={{ textAlign: 'center', marginTop: 2, fontSize: { xs: '0.8rem', sm: '1rem' } }} variant="subtitle1">{item?.title}</Typography>
         </Box>
         <Box onClick={(e) => e.stopPropagation()} className='flex flex-col items-center gap-4'>
