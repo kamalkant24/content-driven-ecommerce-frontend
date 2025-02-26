@@ -60,8 +60,6 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    console.log({ userProfile });
-
     setEditDetails({
       name: userProfile?.data?.name,
       email: userProfile?.data?.email,

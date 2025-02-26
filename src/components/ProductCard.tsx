@@ -20,8 +20,6 @@ export const ProductCard = ({ item }) => {
     e.stopPropagation();
     console.log("added to wishlist");
   };
-  console.log(item);
-
   return (
     <Card
       sx={{
@@ -60,7 +58,7 @@ export const ProductCard = ({ item }) => {
             variant="h6"
             sx={{ fontWeight: "bold", color: "black", mb: 1 }}
           >
-            ${item?.discount_price}
+            ${Number(item?.discount_price).toFixed(2)}
           </Typography>
           {item?.discount !== 0 && (
             <>
@@ -81,11 +79,11 @@ export const ProductCard = ({ item }) => {
             </>
           )}
         </Box>
-        {userProfile?.data?.role === "vendor" ? (
+        {userProfile?.data?.role === "vendor" && item?.quantity !== 0 ? (
           <Typography variant="body2">{item.quantity} items left</Typography>
         ) : (
-          item.quantity < 20 &&
-          item.quantity > 0 && (
+          Number(item.quantity) < 20 &&
+          Number(item.quantity) > 0 && (
             <Typography variant="body2" sx={{ color: "red" }}>
               {item.quantity} {item.quantity == 1 ? "item" : "items"} left only.
               Hurry Up!
@@ -93,7 +91,7 @@ export const ProductCard = ({ item }) => {
           )
         )}
       </CardContent>
-      {!item?.availability && item.quantity === 0 && (
+      {!item?.availability && item.quantity == 0 && (
         <Typography
           variant="body2"
           className="text-red-500 bg-[#fee2e299] w-fit px-2 py-1 rounded-sm absolute top-0 left-0"

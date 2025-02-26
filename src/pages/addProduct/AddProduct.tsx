@@ -51,7 +51,7 @@ export const AddProduct: React.FC = () => {
       if (!allProducts) {
         const fetchData = async () => {
           const res = await dispatch(getProductSlice(id));
-          const product = res?.payload;
+          const product = res?.payload?.data;
           setProductDetails(product);
         };
         fetchData();
@@ -225,6 +225,16 @@ export const AddProduct: React.FC = () => {
                 </MenuItem>
               </Select>
             </FormControl>
+            {/* <FormControlLabel
+              sx={{ flex: 1 }}
+              control={
+                <Switch
+                  name="availability"
+                  checked={product?.availability}
+                  onChange={handleChange}
+                />
+              }
+              label={product?.availability ? "Available" : "Out of Stock"}
             /> */}
             <TextField
               sx={{ flex: 1 }}
@@ -243,7 +253,7 @@ export const AddProduct: React.FC = () => {
             />
           </Stack>
           <Stack spacing={1}>
-            {product.images.length > 0 && (
+            {product?.images?.length > 0 && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" color="textSecondary">
                   Selected Images:

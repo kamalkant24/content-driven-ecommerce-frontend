@@ -1,48 +1,59 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { cartServices } from "./cartServices"
-
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { cartServices } from "./cartServices";
+import { act } from "react";
 
 interface UsersState {
-  error: string,
-  cartsLoading: string,
-  allCarts: any,
-  status: string,
-  checkoutDetails: any,
+  error: string;
+  cartsLoading: string;
+  allCarts: any;
+  status: string;
+  checkoutDetails: any;
 }
 
 const initialState = {
-  error: '',
-  cartsLoading: '',
-  allCarts: '',
-  status: '',
-  checkoutDetails: '',
-  paymentLoading: false
-} as UsersState
-
+  error: "",
+  cartsLoading: "",
+  allCarts: "",
+  status: "",
+  checkoutDetails: "",
+  paymentLoading: false,
+} as UsersState;
 
 export const addToCart: any | object | string = createAsyncThunk(
   "get/addCart",
   async (data: object) => {
     try {
       const response = await cartServices.addCarts(data);
-      return response.data
+      return response.data;
     } catch (err) {
-      return err
+      return err;
     }
   }
-)
+);
 
 export const getAllCart: any | object | string = createAsyncThunk(
   "get/getCarts",
   async (data: object) => {
     try {
-      const response = await cartServices.getAllCarts(data)
-      return response.data
+      const response = await cartServices.getAllCarts(data);
+      return response.data;
     } catch (err) {
-      return err
+      return err;
     }
   }
-)
+);
+
+export const removeItemFromCartSlice: any | object | string = createAsyncThunk(
+  "get/removecart",
+  async (id: string) => {
+    try {
+      const response = await cartServices.removeCartItem(id);
+      return { ...response, id };
+    } catch (err) {
+      return err;
+    }
+  }
+);
 
 export const setCheckoutDetails: any | object | string = createAsyncThunk(
   "set/setCheckoutDetails",
@@ -51,10 +62,10 @@ export const setCheckoutDetails: any | object | string = createAsyncThunk(
       const response = await cartServices.setCheckoutDetails(data);
       return response;
     } catch (err) {
-      return err
+      return err;
     }
   }
-)
+);
 
 export const createPaymentIntent: any | object | string = createAsyncThunk(
   "set/createPaymentIntent",
@@ -63,46 +74,64 @@ export const createPaymentIntent: any | object | string = createAsyncThunk(
       const response = await cartServices.createPaymentIntent(payment);
       return response;
     } catch (err) {
-      return err
+      return err;
     }
   }
-)
-
+);
 
 export const cartReducer = createSlice({
-  name: 'Cart',
+  name: "Cart",
   initialState,
   reducers: {
-    reset: () => initialState
+    reset: () => initialState,
   },
   extraReducers: (builder) => {
     builder
       .addCase(addToCart.pending, (state) => {
         state.cartsLoading = "pending";
-        state.status = 'idle'
+        state.status = "idle";
       })
       .addCase(addToCart.fulfilled, (state) => {
         state.cartsLoading = "succeeded";
-        state.status = '200';
+        state.status = "200";
       })
       .addCase(addToCart.rejected, (state) => {
         state.cartsLoading = "failed";
-        state.status = '500'
-        state.error = "some thing went wrong"
+        state.status = "500";
+        state.error = "some thing went wrong";
+      })
+      .addCase(removeItemFromCartSlice.pending, (state) => {
+        state.cartsLoading = "pending";
+        state.status = "idle";
+      })
+      .addCase(removeItemFromCartSlice.fulfilled, (state, action) => {
+        state.cartsLoading = "succeeded";
+        state.status = "200";
+        // const deletedCartItemId = action?.payload?.id;
+
+        // const updatedCartItems = state.allCarts.filter(
+        //   (cart) => cart?.product?.id !== deletedCartItemId
+        // );
+
+      })
+      .addCase(removeItemFromCartSlice.rejected, (state) => {
+        state.cartsLoading = "failed";
+        state.status = "500";
+        state.error = "some thing went wrong";
       })
       .addCase(getAllCart.pending, (state) => {
         state.cartsLoading = "pending";
-        state.status = 'idle'
+        state.status = "idle";
       })
       .addCase(getAllCart.fulfilled, (state, action) => {
         state.cartsLoading = "succeeded";
-        state.status = '200';
-        state.allCarts = action.payload;
+        state.status = "200";
+        state.allCarts = action.payload?.cart?.products;
       })
       .addCase(getAllCart.rejected, (state) => {
         state.cartsLoading = "failed";
-        state.status = '500'
-        state.error = "some thing went wrong"
+        state.status = "500";
+        state.error = "some thing went wrong";
       })
       .addCase(setCheckoutDetails.pending, (state) => {
         // state.cartsLoading = "pending";
@@ -131,9 +160,9 @@ export const cartReducer = createSlice({
         // state.cartsLoading = "failed";
         // state.status = '500'
         // state.error = "some thing went wrong"
-      })
-  }
-})
+      });
+  },
+});
 
-export const { reset } = cartReducer.actions
-export default cartReducer.reducer
+export const { reset } = cartReducer.actions;
+export default cartReducer.reducer;

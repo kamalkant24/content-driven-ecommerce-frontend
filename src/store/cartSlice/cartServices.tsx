@@ -11,11 +11,24 @@ const addCarts = async (data: any | object) => {
   }
 };
 
-const getAllCarts = async ({ search, page, limit }: any | object) => {
+const getAllCarts = async () => {
   try {
-    const response = await axiosAPI.get(`/user/carts?search=${search}&page=${page}&pageSize=${limit}`);
+    const response = await axiosAPI.get(`/user/carts`);
     return response;
   } catch (err) {
+    return err;
+  }
+};
+
+const removeCartItem = async (id: string) => {
+  try {
+    const response = await axiosAPI.delete(`/user/remove-from-cart/${id}`);
+    if (response?.status === 200) {
+      getToast("success", response?.data?.message);
+      return response.data;
+    }
+  } catch (err) {
+    getToast("error", err.response.data.message);
     return err;
   }
 };
@@ -36,7 +49,7 @@ const setCheckoutDetails = async (data: any | object) => {
 
 const createPaymentIntent = async (payment: number) => {
   try {
-    const data = { amount: Math.round(payment * 100) }
+    const data = { amount: Math.round(payment * 100) };
     const response = await axiosAPI.post(`/user/create-payment-intent`, data);
     return { clientSecret: response.data.clientSecret };
   } catch (err) {
@@ -48,6 +61,7 @@ const createPaymentIntent = async (payment: number) => {
 export const cartServices = {
   addCarts,
   getAllCarts,
+  removeCartItem,
   setCheckoutDetails,
-  createPaymentIntent
-}
+  createPaymentIntent,
+};

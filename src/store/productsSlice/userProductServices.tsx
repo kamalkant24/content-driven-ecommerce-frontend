@@ -1,13 +1,44 @@
 import { Product } from "../../interface";
 import axiosAPI, { getToast } from "../../utils/InterceptorApi";
 
-const getAllProducts = async ({ page, pageSize, search }: any | object) => {
+const getAllProducts = async ({
+  page,
+  pageSize,
+  search,
+  category,
+  sortPrice,
+  minPrice,
+  maxPrice,
+  vendorId,
+}: any | object) => {
   try {
-    // const response = await axiosAPI.get(`/user/get-all-produts?page=${page}&pageSize=${pageSize}&search=${search}`);
     const response = await axiosAPI.get(
-      `/user/get-all-products?page=${page}&pageSize=${pageSize}&search=${search}&category=&vendor=&minPrice=&maxPrice=&sortByPrice=high-to-low`
+      `/user/get-all-products?page=${page}&pageSize=${pageSize}&search=${search}&category=${category}&vendor=${vendorId}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortByPrice=${sortPrice}`
     );
 
+    if (response?.data?.code === 200) {
+      getToast("success", response?.data?.message);
+    }
+    return response;
+  } catch (err) {
+    return err;
+  }
+};
+
+const getAllProductsByVendorId = async ({
+  id,
+  page,
+  pageSize,
+  search,
+  category,
+  sortPrice,
+  minPrice,
+  maxPrice,
+}: any | object) => {
+  try {
+    const response = await axiosAPI.get(
+      `/user/get-product/${id}/?page=${page}&pageSize=${pageSize}&search=${search}&category=${category}&vendor=&minPrice=${minPrice}&maxPrice=${maxPrice}&sortByPrice=${sortPrice}`
+    );
     if (response?.data?.code === 200) {
       getToast("success", response?.data?.message);
     }
@@ -35,6 +66,7 @@ const addProduct = async (product: Product) => {
     formData.append("quantity", product.quantity);
     formData.append("category", product.category);
     formData.append("availability", product.availability);
+    formData.append("discount", product?.discount);
     product.images.forEach((image, index) => {
       formData.append("image", image, image.name);
     });
@@ -56,19 +88,21 @@ const addProduct = async (product: Product) => {
 
 const editProduct = async (product: Product) => {
   try {
-    const formData = new FormData();
+    const formData = new FormData();  
     formData.append("title", product.title);
     formData.append("description", product.description);
     formData.append("price", product.price);
     formData.append("quantity", product.quantity);
     formData.append("category", product.category);
     formData.append("availability", product.availability);
-    formData.append("image", product?.images);
+    formData.append("images", product?.images);
+    formData.append("discount", product?.discount);
+
     // product.images.forEach((image, index) => {
     //   console.log(typeof image)
     //   formData.append('image', image, image.name);
     // });
-    const response = await axiosAPI.put(
+    const response = await axiosAPI.post(
       `/user/update-product/${product._id}`,
       formData,
       {
@@ -102,6 +136,7 @@ const deleteProduct = async (id: string) => {
 
 const productService = {
   getAllProducts,
+  getAllProductsByVendorId,
   getProduct,
   addProduct,
   editProduct,

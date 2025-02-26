@@ -56,7 +56,6 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  const { allCarts } = useSelector((state: RootState) => state.cart);
   const { userProfile } = useSelector((state: RootState) => state.profile);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();

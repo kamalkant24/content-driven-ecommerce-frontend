@@ -35,6 +35,22 @@ export const getAllProductSlice = createAsyncThunk(
   }
 );
 
+export const getAllProductsByVendorIdSlice = createAsyncThunk(
+  "get/allProductsByVendorId",
+  async (data: object, { rejectWithValue }) => {
+    try {
+      const response:any = await productService.getAllProductsByVendorId(data);
+      if (!response || !response.data) {
+        throw new Error("Invalid response from server");
+      }
+      return response.data;
+    } catch (err: any) {
+      console.error("Error in Slice:", err);
+      return rejectWithValue(err?.response?.data || "Something went wrong");
+    }
+  }
+);
+
 export const getProductSlice: any | object | string = createAsyncThunk(
   "get/getProduct",
   async (id: string) => {
@@ -102,6 +118,20 @@ export const productReducer = createSlice({
         state.allProducts = action.payload;
       })
       .addCase(getAllProductSlice.rejected, (state) => {
+        state.productLoading = "failed";
+        state.status = '500'
+        state.error = "something went wrong"
+      })
+      .addCase(getAllProductsByVendorIdSlice.pending, (state) => {
+        state.productLoading = "pending";
+        state.status = 'idle'
+      })
+      .addCase(getAllProductsByVendorIdSlice.fulfilled, (state, action) => {
+        state.productLoading = "succeeded";
+        state.status = '200';
+        state.allProducts = action.payload;
+      })
+      .addCase(getAllProductsByVendorIdSlice.rejected, (state) => {
         state.productLoading = "failed";
         state.status = '500'
         state.error = "something went wrong"
