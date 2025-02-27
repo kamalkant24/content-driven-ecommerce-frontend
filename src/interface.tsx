@@ -40,3 +40,18 @@ export interface Blog {
     | "Beauty & Health"
     | "Sports & Outdoors";
 }
+
+export interface CartCardInterface {
+  product: Product;
+  quantity: number;
+  _id: string;
+}
+
+export interface Wishlist {
+  products: {
+    _id: string;
+    product: Product;
+  }[];
+  createdDate: string;
+  _id: string;
+}

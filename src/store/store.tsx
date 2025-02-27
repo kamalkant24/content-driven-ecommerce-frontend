@@ -5,6 +5,7 @@ import cartDataReducer from "./cartSlice/cartsSlice";
 import userProfileReducer from "./user/userSlice";
 import blogReducer from "./blog/blogSlice";
 import { useDispatch } from "react-redux";
+import wishlistReducer from "./wishlist/WishlistSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     cart: cartDataReducer,
     profile: userProfileReducer,
     blogs: blogReducer,
+    wishlist: wishlistReducer,
   },
 });
 

@@ -7,18 +7,25 @@ import {
   Typography,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { discountedProductPrice } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
 
-export const ProductCard = ({ item }) => {
+import { AppDispatch, RootState } from "../store/store";
+import { addToWishlistSlice } from "../store/wishlist/WishlistSlice";
+import React from "react";
+import { Product } from "../interface";
+
+interface ProductCardProps {
+  item: Product;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
   const navigate = useNavigate();
   const { userProfile } = useSelector((state: RootState) => state.profile);
-
-  const addToWishlist = (e: any) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const addToWishlist = async (e: any) => {
     e.stopPropagation();
-    console.log("added to wishlist");
+    await dispatch(addToWishlistSlice(item?._id || ""));
   };
   return (
     <Card

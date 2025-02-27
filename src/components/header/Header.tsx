@@ -38,7 +38,7 @@ function Header() {
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     const isApproved = userProfile?.data?.isApproved;
-    if (userProfile?.data?.isReadDocumentation !== false || !isApproved) {
+    if (userProfile?.data?.isReadDocumentation == false || !isApproved) {
       setOpen(true);
     } else {
       setOpen(false);

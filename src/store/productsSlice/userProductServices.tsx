@@ -87,21 +87,25 @@ const addProduct = async (product: Product) => {
 };
 
 const editProduct = async (product: Product) => {
+  console.log(product);
+
   try {
-    const formData = new FormData();  
+    const formData = new FormData();
     formData.append("title", product.title);
     formData.append("description", product.description);
     formData.append("price", product.price);
     formData.append("quantity", product.quantity);
     formData.append("category", product.category);
     formData.append("availability", product.availability);
-    formData.append("images", product?.images);
+    formData.append("imagesToDelete", product?.removedImages);
     formData.append("discount", product?.discount);
 
-    // product.images.forEach((image, index) => {
-    //   console.log(typeof image)
-    //   formData.append('image', image, image.name);
-    // });
+    if (product?.addedImages?.length) {
+      product.addedImages.forEach((image: File) => {
+        formData.append("image", image); 
+      });
+    }
+
     const response = await axiosAPI.post(
       `/user/update-product/${product._id}`,
       formData,

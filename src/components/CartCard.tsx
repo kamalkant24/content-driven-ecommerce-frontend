@@ -1,16 +1,25 @@
+import React from "react";
 import { Box, IconButton, Paper, TextField, Typography } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 import { AppDispatch } from "../store/store";
 import {
   getAllCart,
   removeItemFromCartSlice,
+  setItemCountSlice,
 } from "../store/cartSlice/cartsSlice";
+import { CartCardInterface } from "../interface";
 
-export const CartCard = ({ item, checkoutCards }) => {
+interface CartCardProps {
+  item: CartCardInterface;
+  checkoutCards?: boolean;
+}
+
+export const CartCard: React.FC<CartCardProps> = ({ item, checkoutCards }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const showProductDetails = (id: string) => {
@@ -25,12 +34,9 @@ export const CartCard = ({ item, checkoutCards }) => {
     }
   };
 
-  const setItemCount = async(count) => {
-    console.log({count});
-    
-    const res = await dispatch(setItemCountSlice(item?.product?._id, count));
-
-  }
+  const setItemCount = async (count: number) => {
+    await dispatch(setItemCountSlice({ id: item?.product?._id || "", count }));
+  };
   return (
     <Paper
       square
@@ -67,7 +73,10 @@ export const CartCard = ({ item, checkoutCards }) => {
             <Typography>1</Typography>
           ) : (
             <>
-              <IconButton onClick={() => setItemCount(item?.quantity + 1)}>
+              <IconButton
+                disabled={item?.quantity === 1}
+                onClick={() => setItemCount(item?.quantity - 1)}
+              >
                 <RemoveIcon sx={{ width: { xs: "15px", sm: "auto" } }} />
               </IconButton>
               <TextField
@@ -84,7 +93,7 @@ export const CartCard = ({ item, checkoutCards }) => {
                 }}
                 inputProps={{ style: { textAlign: "center" } }}
               />
-              <IconButton>
+              <IconButton onClick={() => setItemCount(item?.quantity + 1)}>
                 <AddIcon sx={{ width: { xs: "15px", sm: "auto" } }} />
               </IconButton>
             </>

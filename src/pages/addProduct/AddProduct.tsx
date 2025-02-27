@@ -12,8 +12,6 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  FormControlLabel,
-  Switch,
   Container,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -45,6 +43,8 @@ export const AddProduct: React.FC = () => {
   const { id } = useParams();
   const { allProducts } = useSelector((state: RootState) => state.products);
   const [productDetails, setProductDetails] = useState(null);
+  const [addedImages, setAddedImages] = useState<File[]>([]);
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -104,6 +104,7 @@ export const AddProduct: React.FC = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
+      setAddedImages([...addedImages, newFiles[0]]);
       setProduct((prevState) => ({
         ...prevState,
         images: [...prevState.images, ...newFiles],
@@ -111,12 +112,20 @@ export const AddProduct: React.FC = () => {
     }
   };
 
-  const handleImageDelete = (index: number) => {
+  const handleImageDelete = (index: number, image) => {
     const updatedImages = product.images.filter((_, i) => i !== index);
     setProduct((prevState) => ({
       ...prevState,
       images: updatedImages,
     }));
+    //deleted images of string type are images present in database that we need to delete
+    if (typeof image === "string") {
+      console.log(image);
+      const arr = image.split("/");
+      const imageFileName = arr[arr.length - 1];
+      console.log(imageFileName);
+      setRemovedImages([...removedImages, imageFileName]);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -127,7 +136,9 @@ export const AddProduct: React.FC = () => {
       return;
     }
     if (id) {
-      const res = await dispatch(editProductSlice({ ...product, _id: id }));
+      const res = await dispatch(
+        editProductSlice({ ...product, _id: id, addedImages, removedImages })
+      );
       if (res.meta.requestStatus === "fulfilled") {
         navigate("/products");
       }
@@ -273,7 +284,7 @@ export const AddProduct: React.FC = () => {
                         }}
                       />
                       <IconButton
-                        onClick={() => handleImageDelete(index)}
+                        onClick={() => handleImageDelete(index, image)}
                         sx={{
                           position: "absolute",
                           top: 0,

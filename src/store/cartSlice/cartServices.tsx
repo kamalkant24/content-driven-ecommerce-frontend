@@ -33,6 +33,23 @@ const removeCartItem = async (id: string) => {
   }
 };
 
+const setItemCount = async (id: string, count: number) => {
+  try {
+    const body = {
+      productId: id,
+      count: count,
+    };
+    const response = await axiosAPI.post(`/user/update-cart`, body);
+    if (response?.status === 200) {
+      getToast("success", response?.data?.message);
+      return response.data;
+    }
+  } catch (err: any) {
+    getToast("error", err?.message);
+    return err;
+  }
+};
+
 const setCheckoutDetails = async (data: any | object) => {
   try {
     // const response = await axiosAPI.post(`/user/add-to-cart`, data);
@@ -64,4 +81,5 @@ export const cartServices = {
   removeCartItem,
   setCheckoutDetails,
   createPaymentIntent,
+  setItemCount,
 };
