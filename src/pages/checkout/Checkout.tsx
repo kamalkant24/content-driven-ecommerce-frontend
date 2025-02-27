@@ -114,7 +114,7 @@ export const Checkout = () => {
           <Typography variant="h5" className="pb-4">
             Your Items
           </Typography>
-          {allCarts?.data?.map((item: any, index: number) => (
+          {allCarts?.map((item: any, index: number) => (
             <CartCard item={item} key={index} checkoutCards={true} />
           ))}
         </Box>

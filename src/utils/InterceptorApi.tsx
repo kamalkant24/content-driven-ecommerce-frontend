@@ -1,9 +1,11 @@
 // Importing necessary modules and components
 import axios from "axios";
 import { toast } from "react-toastify";
+import { logout } from "./helpers";
+import { useNavigate } from "react-router-dom";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL
- 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const axiosAPI = axios.create({
   baseURL: BASE_URL,
 });
@@ -15,12 +17,10 @@ axiosAPI.interceptors.request.use(
   (config: any) => {
     // Retrieve the access token from secure local storage
     const userdata = localStorage.getItem("access_token");
-    
     // If an access token is available, add it to the request headers
 
-    if (userdata && !config?.token)  {
+    if (userdata && !config?.token) {
       config.headers["Authorization"] = `Bearer ${userdata}`;
-
     }
     return config;
   },
@@ -29,9 +29,17 @@ axiosAPI.interceptors.request.use(
   }
 );
 
+axiosAPI.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      logout();
+    }
+    return Promise.reject(error);
+  }
+);
 
-
-export const getToast = (type:string, message:string) => {
+export const getToast = (type: string, message: string) => {
   switch (type) {
     case "success":
       toast.success(message);

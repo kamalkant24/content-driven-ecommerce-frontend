@@ -17,8 +17,6 @@ import {
   Container,
 } from "@mui/material";
 import { AppDispatch, RootState } from "../../store/store";
-import { getFullProductUrl } from "../../utils/helpers";
-import banner from "../../assets/banner-shoes.jpg";
 import { editUserSlice, getProfile } from "../../store/user/userSlice";
 
 interface EditDetails {
@@ -29,8 +27,8 @@ interface EditDetails {
   industry: string;
   org_Size: string;
   profile_img: string;
-  org_Banner: string;
-  org_Description: string;
+  banner: string;
+  description: string;
   address: string;
 }
 
@@ -48,8 +46,8 @@ const UserProfile = () => {
     industry: "",
     org_Size: "",
     profile_img: "",
-    org_Banner: "",
-    org_Description: "",
+    banner: "",
+    description: "",
     address: "",
   });
   const [editProfileInput, setEditProfileInput] = useState(false);
@@ -58,22 +56,21 @@ const UserProfile = () => {
   const [newBannerFile, setNewBannerFile] = useState<string>("");
   const roleFields = {
     vendor: Object.keys(editDetails),
-    user: ["name", "email", "phone", "address", "profile_img"],
+    customer: ["name", "email", "phone", "address", "profile_img"],
   };
 
   useEffect(() => {
     setEditDetails({
-      name: userProfile?.name,
-      email: userProfile?.email,
-      org_Name: userProfile?.org_Name,
-      industry: userProfile?.industry || "",
-      org_Size: userProfile?.org_Size,
-      phone: "123456789",
-      org_Description:
-        "Shoes Mart is a leading footwear retailer that offers a wide selection of shoes from global brands.",
-      address: "1234 Fashion Ave, Suite 567, New York, NY 10001, USA",
-      profile_img: getFullProductUrl(userProfile?.profile_img),
-      org_Banner: banner,
+      name: userProfile?.data?.name,
+      email: userProfile?.data?.email,
+      org_Name: userProfile?.data?.org_Name,
+      industry: userProfile?.data?.industry || "",
+      org_Size: userProfile?.data?.org_Size,
+      phone: userProfile?.data?.phone,
+      description: userProfile?.data?.description,
+      address: userProfile?.data?.address,
+      profile_img: userProfile?.data?.profile_img,
+      banner: userProfile?.data?.banner,
     });
   }, [editMode, userProfile]);
 
@@ -95,7 +92,7 @@ const UserProfile = () => {
     const imageFile = e.target.files[0];
     setNewBannerFile(imageFile);
     const url = URL.createObjectURL(imageFile);
-    setEditDetails({ ...editDetails, org_Banner: url });
+    setEditDetails({ ...editDetails, banner: url });
     setEditBannerInput(false);
   };
 
@@ -111,16 +108,16 @@ const UserProfile = () => {
       industry: "Industry",
       org_Size: "Organization Size",
       profile_img: "Avatar",
-      org_Banner: "Banner",
+      banner: "Banner",
       address: "Address",
-      org_Description: "Description",
+      description: "Description",
       phone: "Phone Number",
       name: "Full Name",
       email: "Email",
     };
     for (const field in editDetails) {
       if (!editDetails[field as keyof EditDetails]) {
-        const role = userProfile?.role as keyof typeof roleFields;
+        const role = userProfile?.data?.role as keyof typeof roleFields;
         if (roleFields[role]?.includes(field)) {
           toast.warning(`${fieldMessageName[field]} is required.`);
           return false;
@@ -137,28 +134,26 @@ const UserProfile = () => {
       for (const field in editDetails) {
         if (
           editDetails[field as keyof EditDetails] !==
-          userProfile[field as keyof EditDetails]
+          userProfile?.data?.[field as keyof EditDetails]
         ) {
           updatedDetails[field] = editDetails[field as keyof EditDetails];
         }
       }
       if (updatedDetails?.profile_img) {
-        updatedDetails.profile_img = newImageFile;
+        updatedDetails.logo = newImageFile;
       }
-      if (updatedDetails?.org_Banner) {
-        updatedDetails.org_Banner = newBannerFile;
+      if (updatedDetails?.banner) {
+        updatedDetails.banner = newBannerFile;
       }
       if (Object.keys(updatedDetails).length > 0) {
         const res = await dispatch(
-          editUserSlice({ ...updatedDetails, email: userProfile?.email })
+          editUserSlice({ ...updatedDetails, email: userProfile?.data?.email })
         );
         if (res.type === "put/editUserProfile/fulfilled") {
-          setEditMode(false);
           await dispatch(getProfile());
         }
-      } else {
-        setEditMode(false);
       }
+      setEditMode(false);
     }
   };
 
@@ -169,9 +164,8 @@ const UserProfile = () => {
       </div>
     );
   }
-
   return (
-    <Container maxWidth="md" className="my-4" >
+    <Container maxWidth="md" className="my-4">
       {!editMode && (
         <Box
           className="flex flex-col mb-4 p-4"
@@ -180,24 +174,24 @@ const UserProfile = () => {
           <Box display="flex" alignItems="center" gap={2}>
             <Avatar
               alt="Profile Image"
-              src={getFullProductUrl(userProfile?.profile_img)}
+              src={userProfile?.data?.profile_img}
               className="border-2 border-gray-300 shadow-md"
               sx={{ width: 60, height: 60 }}
             />
             <Box className="capitalize">
-              <Typography variant="h6">{userProfile?.name}</Typography>
+              <Typography variant="h6">{userProfile?.data?.name}</Typography>
               <Typography variant="subtitle1" color="text.secondary">
-                {userProfile?.org_Name}
+                {userProfile?.data?.org_Name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {userProfile?.role}
+                {userProfile?.data?.role}
               </Typography>
             </Box>
           </Box>
-          {userProfile?.role === "vendor" && (
+          {userProfile?.data?.role === "vendor" && (
             <Box mt={2}>
               <img
-                src={editDetails?.org_Banner}
+                src={editDetails?.banner}
                 alt="Banner"
                 className="max-h-[6rem] max-w-[100%] contain"
               />
@@ -255,8 +249,7 @@ const UserProfile = () => {
             />
           </Box>
         </Box>
-
-        {userProfile?.role === "vendor" && (
+        {userProfile?.data?.role === "vendor" && (
           <>
             <hr style={{ margin: "1rem 0" }} />
             <Typography variant="subtitle1" marginBottom={2}>
@@ -266,7 +259,7 @@ const UserProfile = () => {
         )}
 
         <Box marginTop={2} display="flex" flexWrap="wrap" gap={2}>
-          {userProfile?.role === "vendor" && (
+          {userProfile?.data?.role === "vendor" && (
             <>
               <Box flex="1 1 48%">
                 <TextField
@@ -330,7 +323,7 @@ const UserProfile = () => {
               disabled={!editMode}
             />
           </Box>
-          {userProfile?.role === "vendor" && (
+          {userProfile?.data?.role === "vendor" && (
             <Box flex="1 1 100%">
               <TextField
                 label="Description"
@@ -338,8 +331,8 @@ const UserProfile = () => {
                 fullWidth
                 multiline
                 rows={4}
-                value={editDetails?.org_Description}
-                name="org_Description"
+                value={editDetails?.description}
+                name="description"
                 onChange={handleEditInputChange}
                 disabled={!editMode}
               />
@@ -363,7 +356,7 @@ const UserProfile = () => {
         {editMode && (
           <div className="my-4">
             <Typography variant="subtitle1" gutterBottom>
-              Upload {userProfile?.role === "vendor" ? "Logo" : "Avatar"}
+              Upload {userProfile?.data?.role === "vendor" ? "Logo" : "Avatar"}
             </Typography>
             <Box className="flex gap-2">
               {editProfileInput ? (
@@ -391,7 +384,7 @@ const UserProfile = () => {
             </Box>
           </div>
         )}
-        {(editMode && userProfile?.role) === "vendor" && (
+        {(editMode && userProfile?.data?.role) === "vendor" && (
           <>
             <Typography variant="subtitle1" gutterBottom>
               Upload Organization Banner
@@ -406,14 +399,14 @@ const UserProfile = () => {
               ) : (
                 <>
                   <img
-                    src={editDetails?.org_Banner}
+                    src={editDetails?.banner}
                     alt="Banner"
                     style={{ height: "3rem", maxWidth: "90%" }}
                   />
                   <RxCross1
                     onClick={() => {
                       setEditBannerInput(true);
-                      setEditDetails({ ...editDetails, org_Banner: "" });
+                      setEditDetails({ ...editDetails, banner: "" });
                     }}
                   />
                 </>

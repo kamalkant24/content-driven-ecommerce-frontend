@@ -7,17 +7,18 @@ export interface Product {
   category: string;
   availability: boolean;
   _id?: string;
+  discount: string;
 }
 
 export interface AdditionalDetails {
   org_Name?: string;
   industry?: string;
   org_Size?: string;
-  profile_img: string | File;
-  org_Banner?: string | File;
+  logo: string | File;
+  banner?: string | File;
   phone: string;
   address: string;
-  org_Description?: string;
+  description?: string;
   role: string;
 }
 

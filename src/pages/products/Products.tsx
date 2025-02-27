@@ -18,46 +18,88 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { ProductCard } from "../../components/ProductCard";
 import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
-
+import { getVendorListSlice } from "../../store/user/userSlice";
+import { productCategories } from "./productContent";
 
 const Products = () => {
   const { allProducts, productLoading } = useSelector(
     (state: RootState) => state.products
   );
-  const { userProfile } = useSelector((state: RootState) => state.profile);
+  const { userProfile, vendorList } = useSelector(
+    (state: RootState) => state.profile
+  );
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  // const [limit, setLimit] = useState<number>(9);
   const [search, setSearch] = useState<string>("");
   const [sortbyPrice, setSortbyPrice] = useState<string>("");
-  const [sortbyVendor, setSortbyVendor] = useState<string>("All Vendors");
-  const [sortbyCategory, setSortbyCategory] = useState<string>("All Categories");
+  const [sortbyVendor, setSortbyVendor] = useState<string>("");
+  const [sortbyCategory, setSortbyCategory] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userProfile?.role === "user") {
-        await dispatch(
-          getAllProductSlice({ page: page, pageSize: 9, search: search })
-        );
-      } else {
-        await dispatch(
-          getAllProductSlice({ page: page, pageSize: 9, search: search }) //this api is getting products of all vendors. get current vendor products instead. BE API is not built for it.
-        );
+      if (userProfile?.data?.isReadDocumentation) {
+        if (userProfile?.data?.role === "customer") {
+          await dispatch(
+            getAllProductSlice({
+              vendorId: sortbyVendor,
+              page: page,
+              pageSize: 9,
+              search: search,
+              category: sortbyCategory,
+              sortPrice: sortbyPrice,
+              minPrice,
+              maxPrice,
+            })
+          );
+        } else {
+          await dispatch(
+            getAllProductSlice({
+              vendorId: userProfile?.data?._id,
+              page: page,
+              pageSize: 9,
+              search: search,
+              category: sortbyCategory,
+              sortPrice: sortbyPrice,
+              minPrice,
+              maxPrice,
+            })
+          );
+        }
       }
     };
 
     fetchData();
-  }, [dispatch, search, page, userProfile]);
+  }, [
+    dispatch,
+    search,
+    page,
+    userProfile,
+    sortbyCategory,
+    sortbyPrice,
+    minPrice,
+    maxPrice,
+    sortbyVendor,
+  ]);
+
+  useEffect(() => {
+    if (userProfile?.data?.role === "customer") {
+      (async () => {
+        await dispatch(getVendorListSlice());
+      })();
+    }
+  }, [userProfile]);
 
   const handlePageChange = (event: any, page: number) => {
     setPage(page);
@@ -81,41 +123,43 @@ const Products = () => {
                 ),
               }}
             />
-            {userProfile?.role === "user" && (
+            {userProfile?.data?.role === "customer" && (
               <FormControl sx={{ width: "100%" }}>
                 <InputLabel className="bg-white">Vendor</InputLabel>
                 <Select
                   value={sortbyVendor}
                   onChange={(e) => setSortbyVendor(e.target.value)}
                 >
-                  <MenuItem value="All Vendors">All Vendors</MenuItem>
-                  <MenuItem value="Vendor 1">Vendor 1</MenuItem>
-                  <MenuItem value="Vendor 2">Vendor 2</MenuItem>
+                  <MenuItem value="">All Vendors</MenuItem>
+                  {vendorList?.map((vendor) => (
+                    <MenuItem key={vendor?.id} value={vendor?.id}>
+                      {vendor?.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             )}
-
-            <FormControl sx={{ width: "100%" }}>
+            <FormControl fullWidth>
               <InputLabel className="bg-white">Category</InputLabel>
               <Select
                 value={sortbyCategory}
                 onChange={(e) => setSortbyCategory(e.target.value)}
               >
-                <MenuItem value="All Categories">All Categories</MenuItem>
-                <MenuItem value="Category 1">Category 1</MenuItem>
-                <MenuItem value="Category 2">Category 2</MenuItem>
+                {productCategories?.map((product) => (
+                  <MenuItem value={product?.value}>{product?.name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl component="fieldset">
               <FormLabel>Price</FormLabel>
               <RadioGroup row onChange={(e) => setSortbyPrice(e.target.value)}>
                 <FormControlLabel
-                  value="Low to High"
+                  value="low-to-high"
                   control={<Radio />}
                   label="Low to High"
                 />
                 <FormControlLabel
-                  value="High to Low"
+                  value="high-to-low"
                   control={<Radio />}
                   label="High to Low"
                 />
@@ -135,6 +179,8 @@ const Products = () => {
                       <InputAdornment position="start">$</InputAdornment>
                     ),
                   }}
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
                 />
                 <Typography variant="small">To</Typography>
                 <TextField
@@ -148,12 +194,14 @@ const Products = () => {
                       <InputAdornment position="start">$</InputAdornment>
                     ),
                   }}
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
                 />
               </Box>
             </Box>
           </Box>
         </Paper>
-        {userProfile?.role === "vendor" && (
+        {userProfile?.data?.role === "vendor" && (
           <Box className="flex justify-end mt-[32px]">
             <Button
               variant="contained"
