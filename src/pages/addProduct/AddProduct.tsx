@@ -225,17 +225,6 @@ export const AddProduct: React.FC = () => {
                 </MenuItem>
               </Select>
             </FormControl>
-            {/* <FormControlLabel
-              sx={{ flex: 1 }}
-              control={
-                <Switch
-                  name="availability"
-                  checked={product?.availability}
-                  onChange={handleChange}
-                />
-              }
-              label={product?.availability ? "Available" : "Out of Stock"}
-            /> */}
             <TextField
               sx={{ flex: 1 }}
               label="Discount (%)"

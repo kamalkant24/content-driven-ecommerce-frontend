@@ -164,7 +164,6 @@ const UserProfile = () => {
       </div>
     );
   }
-  console.log({ userProfile });
   return (
     <Container maxWidth="md" className="my-4">
       {!editMode && (

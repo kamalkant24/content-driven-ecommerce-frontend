@@ -27,6 +27,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { ProductCard } from "../../components/ProductCard";
 import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
 import { getVendorListSlice } from "../../store/user/userSlice";
+import { productCategories } from "./productContent";
 
 const Products = () => {
   const { allProducts, productLoading } = useSelector(
@@ -37,7 +38,6 @@ const Products = () => {
   );
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  // const [limit, setLimit] = useState<number>(9);
   const [search, setSearch] = useState<string>("");
   const [sortbyPrice, setSortbyPrice] = useState<string>("");
   const [sortbyVendor, setSortbyVendor] = useState<string>("");
@@ -90,7 +90,7 @@ const Products = () => {
     sortbyPrice,
     minPrice,
     maxPrice,
-    sortbyVendor
+    sortbyVendor,
   ]);
 
   useEffect(() => {
@@ -145,16 +145,9 @@ const Products = () => {
                 value={sortbyCategory}
                 onChange={(e) => setSortbyCategory(e.target.value)}
               >
-                <MenuItem value={""}>All Categories</MenuItem>
-                <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                <MenuItem value={"Clothing %26 Accessories"}>
-                  Clothing & Accessories
-                </MenuItem>
-                <MenuItem value={"Home %26 Living"}>Home & Living</MenuItem>
-                <MenuItem value={"Beauty %26 Health"}>Beauty & Health</MenuItem>
-                <MenuItem value={"Sports %26 Outdoors"}>
-                  Sports & Outdoors
-                </MenuItem>
+                {productCategories?.map((product) => (
+                  <MenuItem value={product?.value}>{product?.name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl component="fieldset">

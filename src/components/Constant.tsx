@@ -1,6 +1,6 @@
 import RouteFile from "../routes/RouteFile"
 import Footer from "./Footer"
-import Header from "./Header"
+import Header from "./header/Header"
 
 const Constant = () => {
   return (

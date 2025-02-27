@@ -11,45 +11,20 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import logo from "../assets/app-logo.png";
-import { useAuth } from "../routes/ProtectedRoute";
+import { Modal } from "@mui/material";
+
+import logo from "../../assets/app-logo.png";
+import { useAuth } from "../../routes/ProtectedRoute";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "@mui/material";
-import { getProfile } from "../store/user/userSlice";
-import InitialStepper from "./InitialStepper";
-import { logout } from "../utils/helpers";
-import { AppDispatch, RootState } from "../store/store";
-import Person2Icon from "@mui/icons-material/Person2";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
-
-const settings = [
-  { label: "Profile", icon: <Person2Icon sx={{ width: "20px" }} /> },
-  { label: "Orders", icon: <ShoppingBagIcon sx={{ width: "20px" }} /> },
-  { label: "Setting", icon: <SettingsIcon sx={{ width: "20px" }} /> },
-  { label: "Logout", icon: <LogoutIcon sx={{ width: "20px" }} /> },
-];
+import { getProfile } from "../../store/user/userSlice";
+import InitialStepper from "../initialStepper/InitialStepper";
+import { logout } from "../../utils/helpers";
+import { AppDispatch, RootState } from "../../store/store";
+import { pages, settings } from "./headerContent";
+import { initialStepperContainerStyle } from "./headerStyle";
 
 function Header() {
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "100%",
-    height: "100%",
-    bgcolor: "background.paper",
-    boxShadow: 26,
-    p: 0,
-  };
-
-  const pages = {
-    customer: ["Products", "Blogs", "Chat", "Cart"],
-    vendor: ["Products", "Blogs", "Chat"],
-  };
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -63,7 +38,7 @@ function Header() {
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     const isApproved = userProfile?.data?.isApproved;
-    if (userProfile?.data?.isReadDocumentation == false || !isApproved) {
+    if (userProfile?.data?.isReadDocumentation !== false || !isApproved) {
       setOpen(true);
     } else {
       setOpen(false);
@@ -103,12 +78,11 @@ function Header() {
     >
       <Modal
         open={open}
-        // onClose={}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         className="border-0"
       >
-        <Box sx={style}>
+        <Box sx={initialStepperContainerStyle}>
           <InitialStepper
             onClose={() => {
               setOpen(false);
