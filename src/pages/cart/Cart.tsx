@@ -128,9 +128,7 @@ const Cart = () => {
             Shopping Cart
           </Typography>
           {allCarts?.map((item: CartCardInterface, index: number) => (
-            <>
               <CartCard item={item} key={index} />
-            </>
           ))}
         </Box>
         <Paper

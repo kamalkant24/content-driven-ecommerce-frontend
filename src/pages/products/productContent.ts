@@ -1,5 +1,4 @@
 export const productCategories = [
-  { name: "All Categories", value: "" },
   { name: "Electronics", value: "Electronics" },
   { name: "Clothing & Accessories", value: "Clothing %26 Accessories" },
   { name: "Home & Living", value: "Home %26 Living" },

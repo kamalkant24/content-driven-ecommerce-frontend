@@ -1,32 +1,24 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
-import { AppDispatch, RootState } from "../store/store";
-import { addToWishlistSlice } from "../store/wishlist/WishlistSlice";
+import { useSelector } from "react-redux";
 import React from "react";
+
+import { RootState } from "../store/store";
 import { Product } from "../interface";
+import { WishlistButton } from "./wishlistButton/WishlistButton";
+import { AddToCartButton } from "./addToCartButton/AddToCartButton";
 
 interface ProductCardProps {
   item: Product;
+  showCartButton?: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  item,
+  showCartButton,
+}) => {
   const navigate = useNavigate();
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  const dispatch = useDispatch<AppDispatch>();
-  const addToWishlist = async (e: any) => {
-    e.stopPropagation();
-    await dispatch(addToWishlistSlice(item?._id || ""));
-  };
   return (
     <Card
       sx={{
@@ -60,11 +52,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
         >
           {item?.title}
         </Typography>
-        <Box className="flex justify-start items-center gap-2">
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: "bold", color: "black", mb: 1 }}
-          >
+        <Box className="flex justify-start items-center gap-2 mb-[1rem]">
+          <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>
             ${Number(item?.discount_price).toFixed(2)}
           </Typography>
           {item?.discount !== 0 && (
@@ -72,23 +61,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
               <Typography
                 variant="small"
                 className="line-through text-gray-500"
-                sx={{ mb: 1 }}
               >
                 ${item.price}
               </Typography>
               <Typography
                 variant="small"
                 className="text-secondaryColor font-bold"
-                sx={{ mb: 1 }}
               >
                 ${item?.discount}% off
               </Typography>
             </>
           )}
         </Box>
+        {showCartButton && (
+          <AddToCartButton
+            productId={item?._id}
+            disabled={item?.quantity === 0}
+          />
+        )}
+
         {userProfile?.data?.role === "vendor" && item?.quantity !== 0 ? (
           <Typography variant="body2">{item.quantity} items left</Typography>
         ) : (
+          !showCartButton &&
           Number(item.quantity) < 20 &&
           Number(item.quantity) > 0 && (
             <Typography variant="body2" sx={{ color: "red" }}>
@@ -106,13 +101,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
           Out of Stock
         </Typography>
       )}
-      <IconButton
-        aria-label="add to shopping cart"
-        sx={{ position: "absolute", top: 0, right: 0 }}
-        onClick={addToWishlist}
-      >
-        <FavoriteIcon />
-      </IconButton>
+      {userProfile?.data?.role === "customer" && (
+        <WishlistButton productId={item?._id} />
+      )}
     </Card>
   );
 };
