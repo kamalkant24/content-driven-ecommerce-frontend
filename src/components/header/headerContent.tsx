@@ -11,6 +11,6 @@ export const settings = [
 ];
 
 export const pages = {
-  customer: ["Products", "Blogs", "Chat", "Cart"],
+  customer: ["Products", "Blogs", "Chat", "Cart", "Wishlist"],
   vendor: ["Products", "Blogs", "Chat"],
 };

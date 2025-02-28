@@ -4,34 +4,36 @@ import {
   Typography,
   Paper,
   Button,
-  TextField,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+
+import { AppDispatch, RootState } from "../../store/store";
 import {
   getAllCart,
   setCheckoutDetails,
 } from "../../store/cartSlice/cartsSlice";
 import { CartCard } from "../../components/CartCard";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { CartCardInterface } from "../../interface";
 
 const Cart = () => {
-  const { allCarts } = useSelector((state: RootState) => state.cart);
-  const dispatch = useDispatch();
-  const [page, setPage] = useState<number>(1);
+  const { allCarts, cartsLoading } = useSelector(
+    (state: RootState) => state.cart
+  );
+  const dispatch = useDispatch<AppDispatch>();
   const [shippingChargeId, setShhippingId] = useState<number>(1);
   const [offerId, setOfferId] = useState<number>(1);
 
   const navigate = useNavigate();
 
   const fetchCarts = async () => {
-     await dispatch(getAllCart());
+    await dispatch(getAllCart());
   };
 
   useEffect(() => {
@@ -97,9 +99,7 @@ const Cart = () => {
     return offers.find((offer) => offer?.id === offerId)?.discount;
   };
 
-  const getNetPrice = () => getPriceAfterDiscount() + getShippingPrice();
-  console.log({ allCarts });
-
+  const getNetPrice = () => getPriceAfterDiscount() + (getShippingPrice() || 0);
   if (allCarts?.length === 0 || !allCarts) {
     return (
       <Container>
@@ -109,6 +109,12 @@ const Cart = () => {
       </Container>
     );
   }
+  if (cartsLoading === "pending")
+    return (
+      <div className="absolute inset-0 flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <Container maxWidth="lg" sx={{ mb: 4 }}>
@@ -121,8 +127,10 @@ const Cart = () => {
           <Typography variant="h4" gutterBottom>
             Shopping Cart
           </Typography>
-          {allCarts?.map((item: any, index: number) => (
-            <CartCard item={item} key={index} />
+          {allCarts?.map((item: CartCardInterface, index: number) => (
+            <>
+              <CartCard item={item} key={index} />
+            </>
           ))}
         </Box>
         <Paper
@@ -136,7 +144,9 @@ const Cart = () => {
             <Typography sx={{ fontWeight: "bold" }} className="uppercase">
               Items {totalItems}
             </Typography>
-            <Typography sx={{ fontWeight: "bold" }}>${totalPrice}</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>
+              ${totalPrice.toFixed(2)}
+            </Typography>
           </Box>
           <Box className="my-8">
             <FormControl variant="standard" className="w-full">
@@ -159,13 +169,6 @@ const Cart = () => {
               </Select>
             </FormControl>
           </Box>
-          {/* <Box className="pb-8 flex items-end gap-8 justify-between">
-            <Box className="w-full">
-              <Typography >Offers</Typography>
-              <TextField value={inputPromo} fullWidth id="standard-basic" label="Enter Your Code [GET]" variant="standard" onChange={(e) => setInputPromo(e.target.value)} />
-            </Box>
-            <Button variant="outlined" className="h-fit" onClick={applyPromo}>Apply</Button>
-          </Box> */}
           <Box className="my-8">
             <FormControl variant="standard" className="w-full">
               <InputLabel id="demo-simple-select-standard-label">
@@ -190,11 +193,11 @@ const Cart = () => {
           <Box className="border-t pt-6">
             <Box className="flex justify-between py-2">
               <Typography>{`Discount (${getDiscountPercentage()}%)`}</Typography>
-              <Typography>-${getDiscountAmount()}</Typography>
+              <Typography>-${getDiscountAmount().toFixed(2)}</Typography>
             </Box>
             <Box className="flex justify-between py-2">
               <Typography>{`Price After Discount`}</Typography>
-              <Typography>${getPriceAfterDiscount()}</Typography>
+              <Typography>${getPriceAfterDiscount().toFixed(2)}</Typography>
             </Box>
             <Box className="flex justify-between py-2">
               <Typography>Delivery Charges</Typography>
@@ -203,7 +206,7 @@ const Cart = () => {
             <Box className="flex justify-between py-2  uppercase">
               <Typography sx={{ fontWeight: "bold" }}>Net Cost</Typography>
               <Typography color="secondary" sx={{ fontWeight: "bold" }}>
-                ${getNetPrice()}
+                ${getNetPrice().toFixed(2)}
               </Typography>
             </Box>
             <Button

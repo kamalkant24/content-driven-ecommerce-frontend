@@ -23,7 +23,6 @@ import {
   getProductSlice,
 } from "../../store/productsSlice/userProductSlice";
 import { RootState } from "../../store/store";
-import { discountedProductPrice } from "../../utils/helpers";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import EditIcon from "@mui/icons-material/Edit";

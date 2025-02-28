@@ -14,6 +14,7 @@ import { Checkout } from "../pages/checkout/Checkout";
 import { Orders } from "../pages/orders/Orders";
 import { CreateBlog } from "../pages/createBlog/createBlog";
 import { BlogDetails } from "../pages/blogDetails/BlogDetails";
+import { Wishlist } from "../pages/wishlist/Wishlist";
 
 export default function RouteFile() {
   return (
@@ -32,6 +33,7 @@ export default function RouteFile() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/blogs/create" element={<CreateBlog />} />
         <Route path="/blogs/:id" element={<BlogDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
