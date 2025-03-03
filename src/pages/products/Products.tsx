@@ -28,6 +28,7 @@ import { ProductCard } from "../../components/ProductCard";
 import { getAllProductSlice } from "../../store/productsSlice/userProductSlice";
 import { getVendorListSlice } from "../../store/user/userSlice";
 import { productCategories } from "./productContent";
+import { getWishlistSlice } from "../../store/wishlist/WishlistSlice";
 
 const Products = () => {
   const { allProducts, productLoading } = useSelector(
@@ -53,11 +54,11 @@ const Products = () => {
         if (userProfile?.data?.role === "customer") {
           await dispatch(
             getAllProductSlice({
-              vendorId: sortbyVendor,
+              vendorId: sortbyVendor === "all" ? "" : sortbyVendor,
               page: page,
               pageSize: 9,
               search: search,
-              category: sortbyCategory,
+              category: sortbyCategory === "all" ? "" : sortbyCategory,
               sortPrice: sortbyPrice,
               minPrice,
               maxPrice,
@@ -70,7 +71,7 @@ const Products = () => {
               page: page,
               pageSize: 9,
               search: search,
-              category: sortbyCategory,
+              category: sortbyCategory === "all" ? "" : sortbyCategory,
               sortPrice: sortbyPrice,
               minPrice,
               maxPrice,
@@ -101,6 +102,12 @@ const Products = () => {
     }
   }, [userProfile]);
 
+  useEffect(() => {
+    (async () => {
+      await dispatch(getWishlistSlice());
+    })();
+  }, []);
+
   const handlePageChange = (event: any, page: number) => {
     setPage(page);
   };
@@ -129,8 +136,9 @@ const Products = () => {
                 <Select
                   value={sortbyVendor}
                   onChange={(e) => setSortbyVendor(e.target.value)}
+                  defaultValue="all"
                 >
-                  <MenuItem value="">All Vendors</MenuItem>
+                  <MenuItem value="all">All Vendors</MenuItem>
                   {vendorList?.map((vendor) => (
                     <MenuItem key={vendor?.id} value={vendor?.id}>
                       {vendor?.name}
@@ -145,6 +153,7 @@ const Products = () => {
                 value={sortbyCategory}
                 onChange={(e) => setSortbyCategory(e.target.value)}
               >
+                <MenuItem value={"all"}>All Categories</MenuItem>
                 {productCategories?.map((product) => (
                   <MenuItem value={product?.value}>{product?.name}</MenuItem>
                 ))}
@@ -234,7 +243,7 @@ const Products = () => {
           ) : (
             allProducts?.data?.map(
               (item: any | ReactElement, index: number) => (
-                <ProductCard item={item} key={index} />
+                  <ProductCard item={item} key={index} />
               )
             )
           )}

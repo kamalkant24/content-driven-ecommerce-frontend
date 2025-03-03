@@ -41,7 +41,6 @@ export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
     }
   }, []);
   const [isLiked, setIsLiked] = useState(false);
-  console.log(blog);
 
   return (
     <Container maxWidth="md" className="my-8">
