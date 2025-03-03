@@ -13,7 +13,6 @@ import {
   CardActions,
   Button,
   Stack,
-  IconButton,
 } from "@mui/material";
 import { Carousal } from "../../components/Carousal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -22,24 +21,24 @@ import {
   deleteProductSlice,
   getProductSlice,
 } from "../../store/productsSlice/userProductSlice";
-import { RootState } from "../../store/store";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { AppDispatch, RootState } from "../../store/store";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import CircularProgress from "@mui/material/CircularProgress";
-import { addToCart, getAllCart } from "../../store/cartSlice/cartsSlice";
+import { getAllCart } from "../../store/cartSlice/cartsSlice";
+import { WishlistButton } from "../../components/wishlistButton/WishlistButton";
+import { AddToCartButton } from "../../components/addToCartButton/AddToCartButton";
 
 export const ProductDetails: React.FC = () => {
   const { id } = useParams();
-  const { allProducts, productLoading } = useSelector((state: RootState) => state.products)
+  const { allProducts, productLoading } = useSelector(
+    (state: RootState) => state.products
+  );
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  const { allCarts } = useSelector((state: RootState) => state.cart);
   const [productDetails, setProductDetails] = useState<any>(null);
   const [expanded, setExpanded] = useState(false);
-  const [isPresentInCart, setIsPresentInCart] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,17 +61,6 @@ export const ProductDetails: React.FC = () => {
       })();
     }
   }, [productDetails, userProfile]);
-
-  useEffect(() => {
-    if (allCarts) {
-      const isPresent = allCarts?.find(
-        (item: any) => item?.product?._id === productDetails?._id
-      );
-      if (isPresent) {
-        setIsPresentInCart(true);
-      }
-    }
-  }, [allCarts]);
 
   const reviews = [
     {
@@ -102,25 +90,9 @@ export const ProductDetails: React.FC = () => {
       setExpanded(isExpanded ? panel : false);
     };
 
-  const handleCart = async (id: string) => {
-    if (isPresentInCart) {
-      navigate("/cart");
-    } else {
-      const response = await dispatch(addToCart({ productId: id, count: "1" }));
-      if (response?.type === "get/addCart/fulfilled") {
-        setIsPresentInCart(true);
-      }
-    }
-  };
-
   const deleteProduct = async (id: string) => {
     await dispatch(deleteProductSlice(id));
     navigate("/products");
-  };
-
-  const addToWishlist = (e) => {
-    e.stopPropagation();
-    console.log("added to wishlist");
   };
 
   if (productLoading === "pending") {
@@ -328,14 +300,14 @@ export const ProductDetails: React.FC = () => {
               spacing={2}
               className="w-full items-center justify-center"
             >
-              <Button
-                variant="outlined"
+              <Box
                 sx={{ width: { xs: "80%", sm: "40%", md: "30%", lg: "25%" } }}
-                onClick={() => handleCart(productDetails?._id)}
-                startIcon={<ShoppingCartIcon />}
               >
-                {isPresentInCart ? "Go To Cart" : "Add To Cart"}
-              </Button>
+                <AddToCartButton
+                  productId={productDetails?._id}
+                  disabled={productDetails?.quantity === 0}
+                />
+              </Box>
               <Button
                 variant="contained"
                 sx={{ width: { xs: "80%", sm: "40%", md: "30%", lg: "25%" } }}
@@ -347,14 +319,9 @@ export const ProductDetails: React.FC = () => {
             </Stack>
           )}
         </CardActions>
-        <IconButton
-          aria-label="add to shopping cart"
-          sx={{ position: "absolute", top: 0, right: 0 }}
-          size="large"
-          onClick={addToWishlist}
-        >
-          <FavoriteIcon fontSize="inherit" />
-        </IconButton>
+        {userProfile?.data?.role === "customer" && (
+          <WishlistButton productId={productDetails?._id} />
+        )}
       </Card>
     </Container>
   );
