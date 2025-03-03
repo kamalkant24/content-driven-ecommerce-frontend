@@ -11,7 +11,7 @@ import { ProductDetails } from "../pages/productDetails/ProductDetails";
 import NotFound from "../pages/notFound/NotFound";
 import { Checkout } from "../pages/checkout/Checkout";
 import { Orders } from "../pages/orders/Orders";
-import { CreateBlog } from "../pages/createBlog/createBlog";
+import { CreateBlog } from "../pages/createBlog/CreateBlog";
 import { BlogDetails } from "../pages/blogDetails/BlogDetails";
 import { Wishlist } from "../pages/wishlist/Wishlist";
 

@@ -14,16 +14,25 @@ import {
 } from "@mui/material";
 import JoditEditor from "jodit-react";
 import { BlogDetails } from "../blogDetails/BlogDetails";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { createBlogSlice } from "../../store/blog/blogSlice";
+import { useNavigate } from "react-router-dom";
+import { getToast } from "../../utils/InterceptorApi";
+import { productCategories } from "../products/productContent";
 
 export const CreateBlog = () => {
   const editor = useRef(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const [uploadedImageFile, setUploadedImagefile] = useState<File | null>(null);
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [category, setCategory] = useState<string>("");
   const [previewBlog, setPreviewBlog] = useState(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const config = useMemo(
     () => ({
@@ -37,7 +46,8 @@ export const CreateBlog = () => {
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedImage(URL.createObjectURL(file));
+      setUploadedImagefile(file);
+      setSelectedImageUrl(URL.createObjectURL(file));
     }
   };
 
@@ -52,16 +62,23 @@ export const CreateBlog = () => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const blogData = {
-      title,
-      content,
-      image: selectedImage,
-      tags,
-    };
-    console.log("Blog Data:", blogData);
-    alert("Blog submitted successfully!");
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!uploadedImageFile) {
+      getToast("warning", "Please upload blog image.");
+    } else {
+      const blogData = {
+        title,
+        content,
+        image: uploadedImageFile,
+        tags,
+        category,
+      };
+      const res = await dispatch(createBlogSlice(blogData));
+      if (res?.type === "create/Blog/fulfilled") {
+        navigate("/blogs");
+      }
+    }
   };
 
   const showPreview = () => {
@@ -71,12 +88,11 @@ export const CreateBlog = () => {
       comments: [],
       title,
       content,
-      image: selectedImage,
+      image: selectedImageUrl,
       category,
       tags,
     };
     setPreviewBlog(blogData);
-    console.log("Blog Data:", blogData);
   };
 
   if (previewBlog) {
@@ -118,7 +134,11 @@ export const CreateBlog = () => {
           />
 
           <Stack spacing={2}>
-            <Button variant="outlined" component="label" sx={{width:'10rem'}}>
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{ width: "10rem" }}
+            >
               Upload Image
               <input
                 type="file"
@@ -127,9 +147,9 @@ export const CreateBlog = () => {
                 onChange={handleImageUpload}
               />
             </Button>
-            {selectedImage && (
+            {selectedImageUrl && (
               <img
-                src={selectedImage}
+                src={selectedImageUrl}
                 alt="Preview"
                 style={{
                   width: "100%",
@@ -164,15 +184,11 @@ export const CreateBlog = () => {
                 onChange={(e) => setCategory(e.target.value)}
                 required
               >
-                <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                <MenuItem value={"Clothing & Accessories"}>
-                  Clothing & Accessories
-                </MenuItem>
-                <MenuItem value={"Home & Living"}>Home & Living</MenuItem>
-                <MenuItem value={"Beauty & Health"}>Beauty & Health</MenuItem>
-                <MenuItem value={"Sports & Outdoors"}>
-                  Sports & Outdoors
-                </MenuItem>
+                {productCategories?.map((product, index) => (
+                  <MenuItem key={index} value={product?.name}>
+                    {product?.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Stack>

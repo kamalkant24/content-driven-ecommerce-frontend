@@ -23,7 +23,7 @@ export interface AdditionalDetails {
 }
 
 export interface Blog {
-  id: string;
+  _id: string;
   content: string;
   image: string;
   tags: string[];

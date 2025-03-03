@@ -41,8 +41,8 @@ const Products = () => {
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [sortbyPrice, setSortbyPrice] = useState<string>("");
-  const [sortbyVendor, setSortbyVendor] = useState<string>("");
-  const [sortbyCategory, setSortbyCategory] = useState<string>("");
+  const [sortbyVendor, setSortbyVendor] = useState<string>("all");
+  const [sortbyCategory, setSortbyCategory] = useState<string>("all");
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
 

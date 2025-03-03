@@ -58,11 +58,11 @@ const ProtectedRoute = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const currentRole = userProfile?.data?.role;
-  const noUserAccess = ['/products/add'];
+  const noUserAccess = ['/products/add', '/blogs/create'];
   const noVendorAccess = ['/cart', '/checkout']
 
-  const isRouteAccessable = () => {
-    if (currentRole === 'user') {
+  const isRouteAccessable = () => {    
+    if (currentRole === 'customer') {
       return !noUserAccess.includes(currentPath)
     } else if (currentRole === 'vendor') {
       return !noVendorAccess.includes(currentPath)

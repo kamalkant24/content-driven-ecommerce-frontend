@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { cartServices } from "./cartServices";
-import { act } from "react";
 
 interface UsersState {
   error: string;

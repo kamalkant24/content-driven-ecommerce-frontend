@@ -35,8 +35,7 @@ export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
     } else {
       (async () => {
         const res = await dispatch(getBlog(id ?? ""));
-        console.log(res.payload);
-        setBlog(res?.payload as Blog);
+        setBlog(res?.payload?.data as Blog);
       })();
     }
   }, []);

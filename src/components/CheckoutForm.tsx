@@ -33,7 +33,6 @@ export const CheckoutForm = ({ amount, closeForm, showPaymentForm }) => {
             },
         });
         if (error) {
-            console.log(error);
             setMessage({ text: error.message, color: 'red' });
         } else {
             setMessage(`Payment ${paymentIntent.status}`);

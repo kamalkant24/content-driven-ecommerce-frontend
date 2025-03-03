@@ -5,7 +5,9 @@ export const logout = () => {
 
 export const shortText = (str: string) => {
   const shortStrArray = str.split(" ").slice(0, 15);
-  shortStrArray.push("...");
+  if (shortStrArray?.length > 15) {
+    shortStrArray.push("...");
+  }
   const resultStr = shortStrArray.join(" ");
   return resultStr;
 };
