@@ -13,6 +13,19 @@ const addToWishlist = async (productId: string) => {
   }
 };
 
+const removeFromWishlist = async (productId: string) => {
+  try {
+    const response = await axiosAPI.delete(
+      `/user/remove-from-wishlist/${productId}`
+    );
+    getToast("success", response?.data?.message);
+    return response.data;
+  } catch (err) {
+    getToast("error", err.response.data.message);
+    return err;
+  }
+};
+
 const getWishlist = async () => {
   try {
     const response = await axiosAPI.get(`/user/wishlist`);
@@ -25,4 +38,5 @@ const getWishlist = async () => {
 export const wishlistServices = {
   addToWishlist,
   getWishlist,
+  removeFromWishlist,
 };

@@ -6,7 +6,6 @@ import Cart from "../pages/cart/Cart";
 import Blogs from "../pages/blogs/Blogs";
 import UserProfile from "../pages/profile/UserProfile";
 import Setting from "../pages/settingPage/Setting";
-import { Chat } from "../pages/chat/Chat";
 import { AddProduct } from "../pages/addProduct/AddProduct";
 import { ProductDetails } from "../pages/productDetails/ProductDetails";
 import NotFound from "../pages/notFound/NotFound";
@@ -25,7 +24,6 @@ export default function RouteFile() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/setting" element={<Setting />} />
-        <Route path="/chat" element={<Chat />} />
         <Route path="/products/add" element={<AddProduct />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/products/edit/:id" element={<AddProduct />} />

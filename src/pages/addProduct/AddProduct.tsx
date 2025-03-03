@@ -25,6 +25,7 @@ import {
 } from "../../store/productsSlice/userProductSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../store/store";
+import { productCategories } from "../products/productContent";
 
 export const AddProduct: React.FC = () => {
   const [product, setProduct] = useState<Product>({
@@ -120,10 +121,8 @@ export const AddProduct: React.FC = () => {
     }));
     //deleted images of string type are images present in database that we need to delete
     if (typeof image === "string") {
-      console.log(image);
       const arr = image.split("/");
       const imageFileName = arr[arr.length - 1];
-      console.log(imageFileName);
       setRemovedImages([...removedImages, imageFileName]);
     }
   };
@@ -225,15 +224,9 @@ export const AddProduct: React.FC = () => {
                 onChange={handleChange}
                 required
               >
-                <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                <MenuItem value={"Clothing & Accessories"}>
-                  Clothing & Accessories
-                </MenuItem>
-                <MenuItem value={"Home & Living"}>Home & Living</MenuItem>
-                <MenuItem value={"Beauty & Health"}>Beauty & Health</MenuItem>
-                <MenuItem value={"Sports & Outdoors"}>
-                  Sports & Outdoors
-                </MenuItem>
+                {productCategories.map(({ name }) => (
+                  <MenuItem value={name}>{name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
             <TextField
