@@ -98,15 +98,11 @@ const Products = () => {
     if (userProfile?.data?.role === "customer") {
       (async () => {
         await dispatch(getVendorListSlice());
+        await dispatch(getWishlistSlice());
       })();
     }
   }, [userProfile]);
 
-  useEffect(() => {
-    (async () => {
-      await dispatch(getWishlistSlice());
-    })();
-  }, []);
 
   const handlePageChange = (event: any, page: number) => {
     setPage(page);

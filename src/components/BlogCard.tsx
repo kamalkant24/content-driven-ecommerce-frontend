@@ -17,19 +17,15 @@ interface BlogCardProps {
 export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const navigateTo = (route: string) => {
-    navigate(route);
-  };
   const { userProfile } = useSelector((state: RootState) => state.profile);
   const deleteBlog = async (e) => {
     e.stopPropagation();
-    console.log("delete ", blog?._id);
     await dispatch(deleteBlogSlice(blog?._id));
   };
 
   const editBlog = (e) => {
     e.stopPropagation();
-    console.log("edit ", blog?._id);
+    navigate(`edit/${blog?._id}`);
   };
 
   return (
@@ -37,7 +33,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
       direction={{ xs: "column", sm: "row" }}
       spacing={4}
       className="cursor-pointer hover:bg-gray-200 py-12 border rounded-lg shadow-md p-4 mb-8 relative"
-      onClick={() => navigateTo(`${blog?._id}`)}
+      onClick={() => navigate(`${blog?._id}`)}
     >
       <img src={blog?.image} className="w-[15rem]" />
       <Stack>

@@ -15,7 +15,6 @@ export const getBlogsSlice = createAsyncThunk(
       const response = await blogServices.getBlogs(filterData);
       return response;
     } catch (err) {
-      console.error("Create Blog Error:", err);
       return rejectWithValue(
         err || "Something went wrong. Please try again later!"
       );
@@ -30,7 +29,20 @@ export const createBlogSlice = createAsyncThunk(
       const response = await blogServices.createBlog(blogData);
       return response;
     } catch (err) {
-      console.error("Create Blog Error:", err);
+      return rejectWithValue(
+        err || "Something went wrong. Please try again later!"
+      );
+    }
+  }
+);
+
+export const editBlogSlice = createAsyncThunk(
+  "edit/Blog",
+  async (blogData, { rejectWithValue }) => {
+    try {
+      const response = await blogServices.editBlog(blogData);
+      return response;
+    } catch (err) {
       return rejectWithValue(
         err || "Something went wrong. Please try again later!"
       );
@@ -62,6 +74,30 @@ export const deleteBlogSlice = createAsyncThunk(
   }
 );
 
+export const likeBlogSlice = createAsyncThunk(
+  "like/blog",
+  async ({ id, doLike }, { rejectWithValue }) => {
+    try {
+      const response = await blogServices.likeBlog(id, doLike);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
+export const addCommentSlice = createAsyncThunk(
+  "add/comment",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await blogServices.commentBlog(data);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
 export const blogSlice = createSlice({
   name: "Blog",
   initialState,
@@ -74,10 +110,10 @@ export const blogSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(getBlogsSlice.fulfilled, (state, action) => {        
+      .addCase(getBlogsSlice.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.blogs = action.payload;        
+        state.blogs = action.payload;
       })
       .addCase(getBlogsSlice.rejected, (state, action) => {
         state.loading = false;
@@ -103,8 +139,6 @@ export const blogSlice = createSlice({
       .addCase(createBlogSlice.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        console.log(action.payload);
-        
       })
       .addCase(createBlogSlice.rejected, (state, action) => {
         state.loading = false;
@@ -115,13 +149,49 @@ export const blogSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteBlogSlice.fulfilled, (state, action) => {
-        console.log({insideaddcasesuccess: state.blogs})
+        state.loading = false;
+        state.error = null;
+        state.blogs = action?.payload;
+      })
+      .addCase(deleteBlogSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editBlogSlice.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editBlogSlice.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(editBlogSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(likeBlogSlice.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(likeBlogSlice.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
         state.blog = action?.payload?.data;
-
       })
-      .addCase(deleteBlogSlice.rejected, (state, action) => {
+      .addCase(likeBlogSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(addCommentSlice.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addCommentSlice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;        
+        state.blog = action?.payload?.data;
+      })
+      .addCase(addCommentSlice.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

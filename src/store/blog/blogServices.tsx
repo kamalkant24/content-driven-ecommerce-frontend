@@ -54,4 +54,63 @@ const createBlog = async (blogData) => {
   }
 };
 
-export const blogServices = { getBlogs, getBlog, createBlog, deleteBlog };
+const editBlog = async (blogData) => {
+  try {
+    const { title, content, image, tags, category, imagesToDelete, id } =
+      blogData;
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("categories", category);
+    formData.append("image", image);
+    formData.append("tags", tags);
+    formData.append("imagesToDelete", imagesToDelete);
+    const response = await axiosAPI.post(`/user/update-blogs/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (err) {
+    getToast("error", err?.response?.data?.error || "Something Went Wrong.");
+    throw new Error(err?.response?.data?.error || "Something went wrong");
+  }
+};
+
+const likeBlog = async (id: string, doLike: boolean) => {
+  try {
+    const likeType = doLike ? "like" : "unlike";
+    const response = await axiosAPI.post(
+      `/user/${likeType}-blogs/${id}/${likeType}`
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err?.response?.data?.error || "Something went wrong");
+  }
+};
+
+const commentBlog = async (data) => {
+  try {
+    const { commentJson, id } = data;
+    const response = await axiosAPI.post(
+      `/user/comment-blog/${id}`,
+      commentJson
+    );
+    if (response.status === 200) {
+      getToast("success", response.data.message);
+    }
+    return response?.data;
+  } catch (err) {
+    throw new Error(err?.response?.data?.error || "Something went wrong");
+  }
+};
+
+export const blogServices = {
+  getBlogs,
+  getBlog,
+  createBlog,
+  deleteBlog,
+  editBlog,
+  likeBlog,
+  commentBlog,
+};

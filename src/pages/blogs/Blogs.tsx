@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Container,
   FormControl,
   FormControlLabel,
@@ -37,10 +38,12 @@ const Blogs = () => {
   );
 
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
   const [category, setCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
   const [vendorId, setVendorId] = useState("All");
+  const [isMyBlogsChecked, setIsMyBlogsChecked] = useState(false);
+  const pageSize = 5;
+
   useEffect(() => {
     const filters = {
       page,
@@ -62,11 +65,23 @@ const Blogs = () => {
     setPage(value);
   };
   const getmyBlogs = (e) => {
-    if (e.target.checked) setVendorId(userProfile?.data?._id);
-    else setVendorId("All");
+    if (e.target.checked) {
+      setVendorId(userProfile?.data?._id);
+      setIsMyBlogsChecked(true);
+    } else {
+      setVendorId("All");
+      setIsMyBlogsChecked(false);
+    }
   };
-  console.log(blogs);
-  
+
+  if (loading) {
+    return (
+      <Box className="flex justify-center items-center absolute inset-0">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Container maxWidth="md" className="mb-12">
       <Paper sx={{ padding: 3, borderRadius: 2 }} elevation={3}>
@@ -136,6 +151,7 @@ const Blogs = () => {
                 <FormControlLabel
                   control={<Checkbox />}
                   label="My Blogs"
+                  checked={isMyBlogsChecked}
                   onChange={(e) => getmyBlogs(e)}
                 />
               </FormGroup>

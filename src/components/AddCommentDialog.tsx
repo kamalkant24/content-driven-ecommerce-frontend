@@ -6,9 +6,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { AppDispatch } from "../store/store";
+import { useDispatch } from "react-redux";
+import { addCommentSlice } from "../store/blog/blogSlice";
 
-export default function AddCommentDialog() {
+interface AddCommentDialogProps {
+  blogId: string;
+}
+
+const AddCommentDialog: React.FC<AddCommentDialogProps> = ({ blogId }) => {
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -16,6 +24,16 @@ export default function AddCommentDialog() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const addComment = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const commentJson = Object.fromEntries((formData as any).entries());
+    const res = await dispatch(addCommentSlice({ commentJson, id: blogId }));
+    if (res?.type === "add/comment/fulfilled") {
+      handleClose();
+    }
   };
 
   return (
@@ -29,25 +47,23 @@ export default function AddCommentDialog() {
         slotProps={{
           paper: {
             component: "form",
-            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries((formData as any).entries());
-              console.log(formJson);
-              handleClose();
-            },
+            onSubmit: addComment,
           },
         }}
       >
         <DialogTitle>Add a Comment</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please Write Your Comment Below.</DialogContentText>
-          <DialogContentText>Note: It would be visible to everyone.</DialogContentText>
+          <DialogContentText>
+            Please Write Your Comment Below.
+          </DialogContentText>
+          <DialogContentText>
+            Note: It would be visible to everyone.
+          </DialogContentText>
           <TextField
             autoFocus
             required
             margin="dense"
-            id="name"
+            blogId="name"
             name="comment"
             label="Comment"
             type="text"
@@ -62,4 +78,6 @@ export default function AddCommentDialog() {
       </Dialog>
     </React.Fragment>
   );
-}
+};
+
+export default AddCommentDialog;

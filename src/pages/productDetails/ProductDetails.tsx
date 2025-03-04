@@ -137,7 +137,7 @@ export const ProductDetails: React.FC = () => {
             <Typography variant="h6">
               ${Number(productDetails?.discount_price).toFixed(2)}
             </Typography>
-            {productDetails?.discount !== 0 && (
+            {productDetails?.discount && (
               <>
                 <Typography
                   variant="small"

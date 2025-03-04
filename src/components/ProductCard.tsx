@@ -56,7 +56,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>
             ${Number(item?.discount_price).toFixed(2)}
           </Typography>
-          {item?.discount !== 0 && (
+          {item?.discount  && (
             <>
               <Typography
                 variant="small"

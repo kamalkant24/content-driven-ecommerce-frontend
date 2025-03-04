@@ -75,7 +75,7 @@ const addProduct = async (product: Product) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (response.status === 200) {
+    if (response.status === 201) {
       getToast("success", response?.data?.message);
     }
     return response;
@@ -100,7 +100,7 @@ const editProduct = async (product: Product) => {
 
     if (product?.addedImages?.length) {
       product.addedImages.forEach((image: File) => {
-        formData.append("images", image); 
+        formData.append("images", image);
       });
     }
 
