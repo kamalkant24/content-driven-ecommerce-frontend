@@ -1,34 +1,33 @@
 import { Box, Button, Container, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { useEffect, useState } from "react";
-import { getAllCart } from "../../store/cartSlice/cartsSlice";
+import { AppDispatch, RootState } from "../../store/store";
+import { useEffect } from "react";
+import { getCheckoutDetails } from "../../store/cartSlice/cartsSlice";
 import { CartCard } from "../../components/CartCard";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { CheckoutForm } from "../../components/CheckoutForm.tsx";
-const VITE_APP_KEY = import.meta.env.VITE_APP_KEY;
 
 export const Checkout = () => {
-  const { checkoutDetails, allCarts } = useSelector(
-    (state: RootState) => state.cart
-  );
+  const { checkoutDetails } = useSelector((state: RootState) => state.cart);
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  const dispatch = useDispatch();
-  const fetchCarts = async () =>
-    await dispatch(getAllCart({ search: "", page: 1, limit: 5 }));
-  const stripePromise = loadStripe(VITE_APP_KEY);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
-    if (!allCarts) {
-      fetchCarts();
-    }
-  }, []);
+    (async () => {
+      if (userProfile?.data?._id) {
+        const res = await dispatch(getCheckoutDetails(userProfile?.data?._id));
+        console.log({ res });
+      }
+    })();
+  }, [userProfile]);
 
   const getDiscountAmount = () => {
     const offerDiscount = checkoutDetails?.offer?.discount;
     return (checkoutDetails?.totalPrice * (offerDiscount || 0)) / 100;
   };
+
+  const goToStripeCheckout = () => {
+    window.open(checkoutDetails?.stripeSessionUrl, "_blank");
+  };
+
   if (!checkoutDetails) {
     return (
       <Box className="flex items-center justify-center">
@@ -36,6 +35,7 @@ export const Checkout = () => {
       </Box>
     );
   }
+  console.log({ checkoutDetails, userProfile });
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
@@ -52,19 +52,19 @@ export const Checkout = () => {
             <Box className="flex justify-between gap-10">
               <Typography>Name </Typography>
               <Typography className="capitalize">
-                {userProfile?.name}
+                {userProfile?.data?.name}
               </Typography>
             </Box>
             <Box className="flex justify-between gap-10">
               <Typography>Address </Typography>
               <Typography className="capitalize break-all">
-                123 Main Street, City, Country
+                {userProfile?.data?.address}
               </Typography>
             </Box>
             <Box className="flex justify-between gap-10">
               <Typography>Phone </Typography>
               <Typography className="capitalize">
-                {userProfile?.phone}
+                {userProfile?.data?.phone}
               </Typography>
             </Box>
           </Paper>
@@ -95,26 +95,17 @@ export const Checkout = () => {
             <Button
               sx={{ marginTop: "1rem" }}
               variant="contained"
-              onClick={() => setShowPaymentForm(true)}
+              onClick={goToStripeCheckout}
             >
               Proceed to Pay
             </Button>
-            {showPaymentForm && (
-              <Elements stripe={stripePromise}>
-                <CheckoutForm
-                  amount={checkoutDetails.netPrice}
-                  closeForm={() => setShowPaymentForm(false)}
-                  showPaymentForm={showPaymentForm}
-                />
-              </Elements>
-            )}
           </Paper>
         </Box>
         <Box className="w-full md:w-[50%] max-w-[30rem] mx-auto">
           <Typography variant="h5" className="pb-4">
             Your Items
           </Typography>
-          {allCarts?.map((item: any, index: number) => (
+          {checkoutDetails?.products?.map((item: any, index: number) => (
             <CartCard item={item} key={index} checkoutCards={true} />
           ))}
         </Box>

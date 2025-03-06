@@ -8,39 +8,54 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { AppDispatch } from "../store/store";
 import { useDispatch } from "react-redux";
-import { addCommentSlice } from "../store/blog/blogSlice";
+import { addCommentSlice, editCommentSlice } from "../store/blog/blogSlice";
 
 interface AddCommentDialogProps {
   blogId: string;
+  open: boolean;
+  handleClose: () => void;
+  editCommentDetails?: any;
 }
 
-const AddCommentDialog: React.FC<AddCommentDialogProps> = ({ blogId }) => {
-  const [open, setOpen] = React.useState(false);
+const AddCommentDialog: React.FC<AddCommentDialogProps> = ({
+  blogId,
+  open,
+  handleClose,
+  editCommentDetails,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const [comment, setComment] = React.useState("");
   const addComment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const commentJson = Object.fromEntries((formData as any).entries());
-    const res = await dispatch(addCommentSlice({ commentJson, id: blogId }));
-    if (res?.type === "add/comment/fulfilled") {
-      handleClose();
+    if (editCommentDetails) {
+      const res = await dispatch(
+        editCommentSlice({
+          comment,
+          id: blogId,
+          commentId: editCommentDetails._id,
+        })
+      );
+      if (res?.type === "edit/comment/fulfilled") {
+        handleClose();
+      }
+    } else {
+      const res = await dispatch(addCommentSlice({ comment, id: blogId }));
+      if (res?.type === "add/comment/fulfilled") {
+        handleClose();
+      }
     }
   };
 
+  React.useEffect(() => {
+    if (editCommentDetails) {
+      setComment(editCommentDetails?.comment);
+    } else {
+      setComment("");
+    }
+  }, [editCommentDetails]);
+
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Add a Comment
-      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -51,7 +66,9 @@ const AddCommentDialog: React.FC<AddCommentDialogProps> = ({ blogId }) => {
           },
         }}
       >
-        <DialogTitle>Add a Comment</DialogTitle>
+        <DialogTitle>
+          {editCommentDetails ? "Edit" : "Add a"} Comment
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please Write Your Comment Below.
@@ -69,11 +86,13 @@ const AddCommentDialog: React.FC<AddCommentDialogProps> = ({ blogId }) => {
             type="text"
             fullWidth
             variant="standard"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Add</Button>
+          <Button type="submit">{editCommentDetails ? "Edit" : "Add"}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

@@ -89,12 +89,44 @@ const likeBlog = async (id: string, doLike: boolean) => {
   }
 };
 
-const commentBlog = async (data) => {
+const addComment = async (data) => {
   try {
-    const { commentJson, id } = data;
+    const { comment, id } = data;
+    const response = await axiosAPI.post(`/user/comment-blog/${id}`, {
+      comment,
+    });
+    if (response.status === 200) {
+      getToast("success", response.data.message);
+    }
+    return response?.data;
+  } catch (err) {
+    throw new Error(err?.response?.data?.error || "Something went wrong");
+  }
+};
+
+const editComment = async (data) => {
+  try {
+    const { comment, commentId, id } = data;
     const response = await axiosAPI.post(
-      `/user/comment-blog/${id}`,
-      commentJson
+      `/user/blog/${id}/comment/${commentId}`,
+      {
+        comment,
+      }
+    );
+    if (response.status === 200) {
+      getToast("success", response.data.message);
+    }
+    return response?.data;
+  } catch (err) {
+    throw new Error(err?.response?.data?.error || "Something went wrong");
+  }
+};
+
+const deleteComment = async (data) => {
+  try {
+    const { commentId, blogId } = data;
+    const response = await axiosAPI.delete(
+      `/user/blog/${blogId}/comment/${commentId}`
     );
     if (response.status === 200) {
       getToast("success", response.data.message);
@@ -112,5 +144,7 @@ export const blogServices = {
   deleteBlog,
   editBlog,
   likeBlog,
-  commentBlog,
+  addComment,
+  editComment,
+  deleteComment,
 };

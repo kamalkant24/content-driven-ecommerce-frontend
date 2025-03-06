@@ -103,7 +103,6 @@ const Products = () => {
     }
   }, [userProfile]);
 
-
   const handlePageChange = (event: any, page: number) => {
     setPage(page);
   };
@@ -150,8 +149,10 @@ const Products = () => {
                 onChange={(e) => setSortbyCategory(e.target.value)}
               >
                 <MenuItem value={"all"}>All Categories</MenuItem>
-                {productCategories?.map((product) => (
-                  <MenuItem value={product?.value}>{product?.name}</MenuItem>
+                {productCategories?.map((product, id) => (
+                  <MenuItem key={id} value={product?.value}>
+                    {product?.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -239,7 +240,7 @@ const Products = () => {
           ) : (
             allProducts?.data?.map(
               (item: any | ReactElement, index: number) => (
-                  <ProductCard item={item} key={index} />
+                <ProductCard item={item} key={index} />
               )
             )
           )}

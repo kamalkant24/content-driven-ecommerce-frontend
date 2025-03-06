@@ -90,7 +90,31 @@ export const addCommentSlice = createAsyncThunk(
   "add/comment",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await blogServices.commentBlog(data);
+      const response = await blogServices.addComment(data);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
+export const editCommentSlice = createAsyncThunk(
+  "edit/comment",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await blogServices.editComment(data);
+      return response;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
+export const deleteCommentSlice = createAsyncThunk(
+  "delete/comment",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await blogServices.deleteComment(data);
       return response;
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);
@@ -188,10 +212,36 @@ export const blogSlice = createSlice({
       })
       .addCase(addCommentSlice.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = null;        
+        state.error = null;
         state.blog = action?.payload?.data;
       })
       .addCase(addCommentSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteCommentSlice.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteCommentSlice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.blog = action?.payload?.data;
+      })
+      .addCase(deleteCommentSlice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editCommentSlice.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editCommentSlice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.blog = action?.payload?.data;
+      })
+      .addCase(editCommentSlice.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

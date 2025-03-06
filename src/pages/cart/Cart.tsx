@@ -63,13 +63,10 @@ const Cart = () => {
 
   const doCheckout = async () => {
     const checkoutDetails = {
-      noOfItems: totalItems,
-      totalPrice,
       shipping: shippingCharges?.find(
         (charge) => charge?.id === shippingChargeId
       ),
       offer: offers?.find((offer) => offer?.id === offerId),
-      netPrice: getNetPrice(),
     };
     const response = await dispatch(setCheckoutDetails(checkoutDetails));
     if (response.type === "set/setCheckoutDetails/fulfilled") {
@@ -128,7 +125,7 @@ const Cart = () => {
             Shopping Cart
           </Typography>
           {allCarts?.map((item: CartCardInterface, index: number) => (
-              <CartCard item={item} key={index} />
+            <CartCard item={item} key={index} />
           ))}
         </Box>
         <Paper

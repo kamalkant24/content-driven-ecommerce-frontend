@@ -52,26 +52,25 @@ const setItemCount = async (id: string, count: number) => {
 
 const setCheckoutDetails = async (data: any | object) => {
   try {
-    // const response = await axiosAPI.post(`/user/add-to-cart`, data);
-    // getToast("success", response?.data?.message);
-    // return response.data;
-    return data;
+    const response = await axiosAPI.post(`/user/checkout`, data);
+    if (response?.status === 200) {
+      return response;
+    }
   } catch (err) {
-    // getToast("error", err.response.data.message);
     console.log(err);
 
     return err;
   }
 };
 
-const createPaymentIntent = async (payment: number) => {
+const getCheckoutDetails = async (userId) => {
   try {
-    const data = { amount: Math.round(payment * 100) };
-    const response = await axiosAPI.post(`/user/create-payment-intent`, data);
-    return { clientSecret: response.data.clientSecret };
+    const response = await axiosAPI.get(`/user/checkout/${userId}`);
+    if (response?.status === 200) {
+      return response.data;
+    }
   } catch (err) {
-    console.log(err);
-    return err;
+    return;
   }
 };
 
@@ -80,6 +79,6 @@ export const cartServices = {
   getAllCarts,
   removeCartItem,
   setCheckoutDetails,
-  createPaymentIntent,
   setItemCount,
+  getCheckoutDetails,
 };

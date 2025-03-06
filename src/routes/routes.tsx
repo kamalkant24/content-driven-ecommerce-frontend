@@ -5,6 +5,7 @@ import Cart from "../pages/cart/Cart";
 import { Checkout } from "../pages/checkout/Checkout";
 import { CreateBlog } from "../pages/createBlog/CreateBlog";
 import { Orders } from "../pages/orders/Orders";
+import { PaymentStatus } from "../pages/paymentStatus/PaymentStatus";
 import { ProductDetails } from "../pages/productDetails/ProductDetails";
 import Products from "../pages/products/Products";
 import UserProfile from "../pages/profile/UserProfile";
@@ -26,4 +27,5 @@ export const routes = [
   { path: "/blogs/:id", element: <BlogDetails /> },
   { path: "/blogs/edit/:id", element: <CreateBlog /> },
   { path: "/wishlist", element: <Wishlist /> },
+  { path: "/payment/:type", element: <PaymentStatus /> },
 ];
