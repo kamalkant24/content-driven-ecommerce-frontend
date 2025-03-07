@@ -26,6 +26,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../store/store";
 import { productCategories } from "../products/productContent";
+import { getFileNameFromUrl } from "../../utils/helpers";
 
 export const AddProduct: React.FC = () => {
   const [product, setProduct] = useState<Product>({
@@ -121,9 +122,8 @@ export const AddProduct: React.FC = () => {
     }));
     //deleted images of string type are images present in database that we need to delete
     if (typeof image === "string") {
-      const arr = image.split("/");
-      const imageFileName = arr[arr.length - 1];
-      setRemovedImages([...removedImages, imageFileName]);
+      const fileName = getFileNameFromUrl(image);
+      setRemovedImages([...removedImages, fileName]);
     }
   };
 

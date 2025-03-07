@@ -68,14 +68,14 @@ const addProduct = async (product: Product) => {
     formData.append("availability", product.availability);
     formData.append("discount", product?.discount);
     product.images.forEach((image, index) => {
-      formData.append("image", image, image.name);
+      formData.append("images", image, image.name);
     });
     const response = await axiosAPI.post(`/user/create-products`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (response.status === 200) {
+    if (response.status === 201) {
       getToast("success", response?.data?.message);
     }
     return response;
@@ -87,8 +87,6 @@ const addProduct = async (product: Product) => {
 };
 
 const editProduct = async (product: Product) => {
-  console.log(product);
-
   try {
     const formData = new FormData();
     formData.append("title", product.title);
@@ -102,7 +100,7 @@ const editProduct = async (product: Product) => {
 
     if (product?.addedImages?.length) {
       product.addedImages.forEach((image: File) => {
-        formData.append("image", image); 
+        formData.append("images", image);
       });
     }
 

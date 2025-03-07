@@ -30,9 +30,9 @@ export const Wishlist: React.FC = () => {
         Wishlist
       </Typography>
       <div className="flex flex-wrap justify-center gap-8 my-8">
-        {wishlist?.products ? (
+        {wishlist?.products?.length ? (
           wishlist?.products?.map(({ product }, index: number) => (
-              <ProductCard key={index} item={product} showCartButton={true} />
+            <ProductCard key={index} item={product} showCartButton={true} />
           ))
         ) : (
           <Typography variant="h5">No Items in your wishlist!</Typography>

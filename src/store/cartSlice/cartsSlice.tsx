@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { cartServices } from "./cartServices";
-import { act } from "react";
 
 interface UsersState {
   error: string;
@@ -36,17 +35,14 @@ export const addToCart = createAsyncThunk(
   }
 );
 
-export const getAllCart = createAsyncThunk(
-  "get/getCarts",
-  async () => {
-    try {
-      const response = await cartServices.getAllCarts();
-      return response.data;
-    } catch (err) {
-      return err;
-    }
+export const getAllCart = createAsyncThunk("get/getCarts", async () => {
+  try {
+    const response = await cartServices.getAllCarts();
+    return response.data;
+  } catch (err) {
+    return err;
   }
-);
+});
 
 export const removeItemFromCartSlice = createAsyncThunk(
   "get/removecart",
@@ -84,12 +80,12 @@ export const setCheckoutDetails = createAsyncThunk(
   }
 );
 
-export const createPaymentIntent = createAsyncThunk(
-  "set/createPaymentIntent",
-  async (payment: number) => {
+export const getCheckoutDetails = createAsyncThunk(
+  "get/getCheckoutDetails",
+  async (userId) => {
     try {
-      const response = await cartServices.createPaymentIntent(payment);
-      return response;
+      const response = await cartServices.getCheckoutDetails(userId);      
+      return response[0];
     } catch (err) {
       return err;
     }
@@ -159,32 +155,31 @@ export const cartReducer = createSlice({
         state.error = "some thing went wrong";
       })
       .addCase(setCheckoutDetails.pending, (state) => {
-        // state.cartsLoading = "pending";
-        // state.status = 'idle'
+        state.cartsLoading = "pending";
+        state.status = "idle";
       })
       .addCase(setCheckoutDetails.fulfilled, (state, action) => {
-        // state.cartsLoading = "succeeded";
-        // state.status = '200';
-        state.checkoutDetails = action.payload.cart;
+        state.cartsLoading = "succeeded";
+        state.status = "200";
       })
       .addCase(setCheckoutDetails.rejected, (state) => {
-        // state.cartsLoading = "failed";
-        // state.status = '500'
-        // state.error = "some thing went wrong"
+        state.cartsLoading = "failed";
+        state.status = "500";
+        state.error = "some thing went wrong";
       })
-      .addCase(createPaymentIntent.pending, (state) => {
-        // state.cartsLoading = "pending";
-        // state.status = 'idle'
+      .addCase(getCheckoutDetails.pending, (state) => {
+        state.cartsLoading = "pending";
+        state.status = "idle";
       })
-      .addCase(createPaymentIntent.fulfilled, (state, action) => {
-        // state.cartsLoading = "succeeded";
-        // state.status = '200';
-        // state.checkoutDetails = action.payload;
+      .addCase(getCheckoutDetails.fulfilled, (state, action) => {
+        state.cartsLoading = "succeeded";
+        state.status = "200";        
+        state.checkoutDetails = action.payload;
       })
-      .addCase(createPaymentIntent.rejected, (state) => {
-        // state.cartsLoading = "failed";
-        // state.status = '500'
-        // state.error = "some thing went wrong"
+      .addCase(getCheckoutDetails.rejected, (state) => {
+        state.cartsLoading = "failed";
+        state.status = "500";
+        state.error = "some thing went wrong";
       });
   },
 });

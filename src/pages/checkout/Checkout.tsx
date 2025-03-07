@@ -1,34 +1,32 @@
 import { Box, Button, Container, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { useEffect, useState } from "react";
-import { getAllCart } from "../../store/cartSlice/cartsSlice";
+import { AppDispatch, RootState } from "../../store/store";
+import { useEffect } from "react";
+import { getCheckoutDetails } from "../../store/cartSlice/cartsSlice";
 import { CartCard } from "../../components/CartCard";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { CheckoutForm } from "../../components/CheckoutForm.tsx";
-const VITE_APP_KEY = import.meta.env.VITE_APP_KEY;
 
 export const Checkout = () => {
-  const { checkoutDetails, allCarts } = useSelector(
-    (state: RootState) => state.cart
-  );
+  const { checkoutDetails } = useSelector((state: RootState) => state.cart);
   const { userProfile } = useSelector((state: RootState) => state.profile);
-  const dispatch = useDispatch();
-  const fetchCarts = async () =>
-    await dispatch(getAllCart({ search: "", page: 1, limit: 5 }));
-  const stripePromise = loadStripe(VITE_APP_KEY);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
-    if (!allCarts) {
-      fetchCarts();
-    }
-  }, []);
+    (async () => {
+      if (userProfile?._id) {
+        const res = await dispatch(getCheckoutDetails(userProfile?._id));
+      }
+    })();
+  }, [userProfile]);
 
   const getDiscountAmount = () => {
     const offerDiscount = checkoutDetails?.offer?.discount;
     return (checkoutDetails?.totalPrice * (offerDiscount || 0)) / 100;
   };
+
+  const goToStripeCheckout = () => {
+    window.open(checkoutDetails?.stripeSessionUrl, "_blank");
+  };
+
   if (!checkoutDetails) {
     return (
       <Box className="flex items-center justify-center">
@@ -58,7 +56,7 @@ export const Checkout = () => {
             <Box className="flex justify-between gap-10">
               <Typography>Address </Typography>
               <Typography className="capitalize break-all">
-                123 Main Street, City, Country
+                {userProfile?.address}
               </Typography>
             </Box>
             <Box className="flex justify-between gap-10">
@@ -74,47 +72,40 @@ export const Checkout = () => {
             </Typography>
             <Box className="py-2 flex justify-between gap-10">
               <Typography>Items ({checkoutDetails.noOfItems})</Typography>
-              <Typography>${checkoutDetails.totalPrice}</Typography>
+              <Typography>${checkoutDetails.totalPrice.toFixed(2)}</Typography>
             </Box>
             <Box className="py-2 flex justify-between gap-10">
               <Typography>{checkoutDetails.offer?.label}</Typography>
-              <Typography>-${getDiscountAmount()}</Typography>
+              <Typography>-${getDiscountAmount().toFixed(2)}</Typography>
             </Box>
             <Box className="py-2 flex justify-between gap-10">
               <Typography>
                 Shipping ({checkoutDetails.shipping?.label})
               </Typography>
-              <Typography>${checkoutDetails.shipping?.price}</Typography>
+              <Typography>
+                ${checkoutDetails.shipping?.price.toFixed(2)}
+              </Typography>
             </Box>
             <Box className="py-2 flex justify-between gap-10 font-bold border-t pt-4">
               <Typography>Total Payable</Typography>
               <Typography color="secondary">
-                ${checkoutDetails.netPrice}
+                ${checkoutDetails.netPrice.toFixed(2)}
               </Typography>
             </Box>
             <Button
               sx={{ marginTop: "1rem" }}
               variant="contained"
-              onClick={() => setShowPaymentForm(true)}
+              onClick={goToStripeCheckout}
             >
               Proceed to Pay
             </Button>
-            {showPaymentForm && (
-              <Elements stripe={stripePromise}>
-                <CheckoutForm
-                  amount={checkoutDetails.netPrice}
-                  closeForm={() => setShowPaymentForm(false)}
-                  showPaymentForm={showPaymentForm}
-                />
-              </Elements>
-            )}
           </Paper>
         </Box>
         <Box className="w-full md:w-[50%] max-w-[30rem] mx-auto">
           <Typography variant="h5" className="pb-4">
             Your Items
           </Typography>
-          {allCarts?.map((item: any, index: number) => (
+          {checkoutDetails?.products?.map((item: any, index: number) => (
             <CartCard item={item} key={index} checkoutCards={true} />
           ))}
         </Box>

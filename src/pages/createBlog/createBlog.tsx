@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import {
   Box,
   Button,
@@ -14,21 +14,38 @@ import {
 } from "@mui/material";
 import JoditEditor from "jodit-react";
 import { BlogDetails } from "../blogDetails/BlogDetails";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import {
+  createBlogSlice,
+  editBlogSlice,
+  getBlog,
+} from "../../store/blog/blogSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { getToast } from "../../utils/InterceptorApi";
+import { productCategories } from "../products/productContent";
+import { getFileNameFromUrl } from "../../utils/helpers";
 
 export const CreateBlog = () => {
   const editor = useRef(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const [uploadedImageFile, setUploadedImagefile] = useState<File | null>(null);
   const [tags, setTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [category, setCategory] = useState<string>("");
   const [previewBlog, setPreviewBlog] = useState(null);
+  const [isPreview, setIsPreview] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [imagesToDelete, setImageToDelete] = useState<string>("");
 
   const config = useMemo(
     () => ({
       readonly: false,
-      placeholder: "Your Blog Content...",
+      placeholder: id ? "" : "Your Blog Content...",
       height: 400,
     }),
     []
@@ -36,8 +53,12 @@ export const CreateBlog = () => {
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
+    if (id) {
+      setImageToDelete(getFileNameFromUrl(selectedImageUrl));
+    }
     if (file) {
-      setSelectedImage(URL.createObjectURL(file));
+      setUploadedImagefile(file);
+      setSelectedImageUrl(URL.createObjectURL(file));
     }
   };
 
@@ -52,32 +73,57 @@ export const CreateBlog = () => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!content) {
+      getToast("warning", "Please write some blog content.");
+      return;
+    }
+    if (!selectedImageUrl) {
+      getToast("warning", "Please upload blog image.");
+      return;
+    }
+
     const blogData = {
+      id: isPreview ? "demo" : id,
       title,
       content,
-      image: selectedImage,
+      image: isPreview ? selectedImageUrl : uploadedImageFile,
       tags,
+      category,
+      imagesToDelete,
     };
-    console.log("Blog Data:", blogData);
-    alert("Blog submitted successfully!");
+    if (isPreview) {
+      setPreviewBlog(blogData);
+    } else {
+      if (id) {
+        const res = await dispatch(editBlogSlice(blogData));
+        if (res?.type === "edit/Blog/fulfilled") {
+          navigate("/blogs");
+        }
+      } else {
+        const res = await dispatch(createBlogSlice(blogData));
+        if (res?.type === "create/Blog/fulfilled") {
+          navigate("/blogs");
+        }
+      }
+    }
   };
 
-  const showPreview = () => {
-    const blogData = {
-      id: "demo",
-      likes: [],
-      comments: [],
-      title,
-      content,
-      image: selectedImage,
-      category,
-      tags,
-    };
-    setPreviewBlog(blogData);
-    console.log("Blog Data:", blogData);
+  const getBlogAndSetData = async () => {
+    const res = await dispatch(getBlog(id ?? ""));
+    const blog = res?.payload?.data;
+    const { title, content, image, categories, tags } = blog;
+    setTitle(title);
+    setSelectedImageUrl(image[0]);
+    setContent(content);
+    setTags(tags);
+    setCategory(categories);
   };
+
+  useEffect(() => {
+    if (id) getBlogAndSetData();
+  }, []);
 
   if (previewBlog) {
     return (
@@ -96,7 +142,7 @@ export const CreateBlog = () => {
   return (
     <Container maxWidth={"md"} className="mb-4">
       <Typography variant="h4" paddingY={3}>
-        Create Blog
+        {id ? "Edit" : "Create"} Blog
       </Typography>
       <form onSubmit={handleSubmit}>
         <Stack spacing={3}>
@@ -108,17 +154,18 @@ export const CreateBlog = () => {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-
           <JoditEditor
             ref={editor}
             value={content}
             config={config}
             onBlur={(newContent) => setContent(newContent)}
-            // onChange={(newContent) => {}}
           />
-
           <Stack spacing={2}>
-            <Button variant="outlined" component="label" sx={{width:'10rem'}}>
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{ width: "10rem" }}
+            >
               Upload Image
               <input
                 type="file"
@@ -127,9 +174,9 @@ export const CreateBlog = () => {
                 onChange={handleImageUpload}
               />
             </Button>
-            {selectedImage && (
+            {selectedImageUrl && (
               <img
-                src={selectedImage}
+                src={selectedImageUrl}
                 alt="Preview"
                 style={{
                   width: "100%",
@@ -164,19 +211,14 @@ export const CreateBlog = () => {
                 onChange={(e) => setCategory(e.target.value)}
                 required
               >
-                <MenuItem value={"Electronics"}>Electronics</MenuItem>
-                <MenuItem value={"Clothing & Accessories"}>
-                  Clothing & Accessories
-                </MenuItem>
-                <MenuItem value={"Home & Living"}>Home & Living</MenuItem>
-                <MenuItem value={"Beauty & Health"}>Beauty & Health</MenuItem>
-                <MenuItem value={"Sports & Outdoors"}>
-                  Sports & Outdoors
-                </MenuItem>
+                {productCategories?.map((product, index) => (
+                  <MenuItem key={index} value={product?.name}>
+                    {product?.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Stack>
-
           <Stack direction="row" spacing={1} flexWrap="wrap">
             {tags.map((tag, index) => (
               <Chip
@@ -187,13 +229,21 @@ export const CreateBlog = () => {
               />
             ))}
           </Stack>
-
           <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <Button variant="outlined" onClick={showPreview}>
+            <Button
+              type="submit"
+              variant="outlined"
+              onClick={() => setIsPreview(true)}
+            >
               Show Preview
             </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Create Blog
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              onClick={() => setIsPreview(false)}
+            >
+              {id ? "Edit" : "Create"} Blog
             </Button>
           </Stack>
         </Stack>

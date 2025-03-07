@@ -56,7 +56,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>
             ${Number(item?.discount_price).toFixed(2)}
           </Typography>
-          {item?.discount !== 0 && (
+          {item?.discount  && (
             <>
               <Typography
                 variant="small"
@@ -80,7 +80,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           />
         )}
 
-        {userProfile?.data?.role === "vendor" && item?.quantity !== 0 ? (
+        {userProfile?.role === "vendor" && item?.quantity !== 0 ? (
           <Typography variant="body2">{item.quantity} items left</Typography>
         ) : (
           !showCartButton &&
@@ -101,7 +101,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           Out of Stock
         </Typography>
       )}
-      {userProfile?.data?.role === "customer" && (
+      {userProfile?.role === "customer" && (
         <WishlistButton productId={item?._id} />
       )}
     </Card>

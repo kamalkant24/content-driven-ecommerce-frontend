@@ -8,7 +8,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +20,7 @@ import {
 import { CartCard } from "../../components/CartCard";
 import { useNavigate } from "react-router-dom";
 import { CartCardInterface } from "../../interface";
+import { Loader } from "../../components/loader/Loader";
 
 const Cart = () => {
   const { allCarts, cartsLoading } = useSelector(
@@ -63,13 +63,10 @@ const Cart = () => {
 
   const doCheckout = async () => {
     const checkoutDetails = {
-      noOfItems: totalItems,
-      totalPrice,
       shipping: shippingCharges?.find(
         (charge) => charge?.id === shippingChargeId
       ),
       offer: offers?.find((offer) => offer?.id === offerId),
-      netPrice: getNetPrice(),
     };
     const response = await dispatch(setCheckoutDetails(checkoutDetails));
     if (response.type === "set/setCheckoutDetails/fulfilled") {
@@ -109,18 +106,13 @@ const Cart = () => {
       </Container>
     );
   }
-  if (cartsLoading === "pending")
-    return (
-      <div className="absolute inset-0 flex justify-center items-center">
-        <CircularProgress />
-      </div>
-    );
+  if (cartsLoading === "pending") return <Loader />;
 
   return (
     <Container maxWidth="lg" sx={{ mb: 4 }}>
       <Box className="flex justify-between flex-col md:flex-row">
         <Box
-          className="w-[100%] md:w-[55%] max-w-[30rem] m-auto"
+          className="w-[100%] md:w-[55%] max-w-[30rem] m-auto mt-0"
           display="flex"
           flexDirection="column"
         >
@@ -128,7 +120,7 @@ const Cart = () => {
             Shopping Cart
           </Typography>
           {allCarts?.map((item: CartCardInterface, index: number) => (
-              <CartCard item={item} key={index} />
+            <CartCard item={item} key={index} />
           ))}
         </Box>
         <Paper

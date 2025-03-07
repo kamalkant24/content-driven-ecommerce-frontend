@@ -17,15 +17,14 @@ export const WishlistButton: React.FC<WishlistButtonProps> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isItemWishlisted, setIsItemWishlisted] = useState<boolean>(false);
-  const { wishlist } = useSelector((state: RootState) => state.wishlist);
-
+  const { wishlist } = useSelector((state: RootState) => state.wishlist);  
   useEffect(() => {
     const wishlistItems = wishlist?.products;
     const isPresent = wishlistItems?.find(
       (wishlistItem) => wishlistItem?.product?._id === productId
     );
     return isPresent ? setIsItemWishlisted(true) : setIsItemWishlisted(false);
-  }, []);
+  }, [wishlist]);
 
   const manageWishlist = async (e: any) => {
     e.stopPropagation();
