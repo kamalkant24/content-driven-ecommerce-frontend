@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
   Container,
   IconButton,
   Stack,
@@ -28,6 +27,7 @@ import { Blog } from "../../interface";
 import AddCommentDialog from "../../components/AddCommentDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { handlePlural } from "../../utils/helpers";
+import { Loader } from "../../components/loader/Loader";
 
 interface BlogDetailsProps {
   previewBlog?: Blog;
@@ -53,7 +53,7 @@ export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
   //showLike
   useEffect(() => {
     const blogLikeIds = blog?.likes.map((like) => like?._id);
-    const userId = userProfile?.data?._id;
+    const userId = userProfile?._id;
     const isLikedByUser = blogLikeIds?.includes(userId);
     setIsLiked(() => (isLikedByUser ? true : false));
   }, [blog]);
@@ -91,11 +91,7 @@ export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
   };
 
   if (loading) {
-    return (
-      <Box className="flex justify-center items-center absolute inset-0">
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return (
@@ -116,14 +112,17 @@ export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
           <Typography
             dangerouslySetInnerHTML={{ __html: blogData?.content ?? "" }}
           />
-          <Stack gap={1}>
-            <Typography variant="subtitle1">Tags</Typography>
-            <Stack direction={"row"} gap={2}>
-              {blogData?.tags.map((tag, id) => (
-                <Chip key={id} label={tag} />
-              ))}
+          {blogData?.tags?.length !== 0 && (
+            <Stack gap={1}>
+              <Typography variant="subtitle1">Tags</Typography>
+              <Stack direction={"row"} gap={2}>
+                {blogData?.tags.map((tag, id) => (
+                  <Chip key={id} label={tag} />
+                ))}
+              </Stack>
             </Stack>
-          </Stack>
+          )}
+
           {!previewBlog && (
             <>
               <Stack direction={"row"} gap={4}>
@@ -175,15 +174,19 @@ export const BlogDetails: React.FC<BlogDetailsProps> = ({ previewBlog }) => {
                         <Person2Icon />
                       </Avatar>
                       <Box>
-                        <Typography variant="subtitle2" fontWeight="bold">
+                        <Typography
+                          variant="subtitle2"
+                          fontWeight="bold"
+                          fontSize={"0.9rem"}
+                        >
                           {comment?.user?.name}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" fontSize={"1rem"}>
                           {comment?.comment}
                         </Typography>
                       </Box>
                     </Box>
-                    {userProfile?.data?._id === comment?.user?._id && (
+                    {userProfile?._id === comment?.user?._id && (
                       <Box>
                         <IconButton
                           aria-label="edit"

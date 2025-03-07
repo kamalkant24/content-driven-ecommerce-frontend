@@ -9,7 +9,7 @@ interface UsersState {
   userConfirmed: string;
   loading: string;
   vendorList:
-     {
+    | {
         id: string;
         name: string;
       }[]
@@ -86,7 +86,7 @@ export const userProfileReducer = createSlice({
       .addCase(getProfile.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.isLoginSuccess = true;
-        state.userProfile = action.payload;
+        state.userProfile = action.payload?.data;
       })
       .addCase(getProfile.rejected, (state) => {
         state.loading = "failed";

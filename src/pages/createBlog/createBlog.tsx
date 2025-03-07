@@ -45,7 +45,7 @@ export const CreateBlog = () => {
   const config = useMemo(
     () => ({
       readonly: false,
-      placeholder: "Your Blog Content...",
+      placeholder: id ? "" : "Your Blog Content...",
       height: 400,
     }),
     []
@@ -75,6 +75,10 @@ export const CreateBlog = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (!content) {
+      getToast("warning", "Please write some blog content.");
+      return;
+    }
     if (!selectedImageUrl) {
       getToast("warning", "Please upload blog image.");
       return;
@@ -118,7 +122,6 @@ export const CreateBlog = () => {
   };
 
   useEffect(() => {
-    console.log(id);
     if (id) getBlogAndSetData();
   }, []);
 

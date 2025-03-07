@@ -50,8 +50,8 @@ const Products = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (userProfile?.data?.isReadDocumentation) {
-        if (userProfile?.data?.role === "customer") {
+      if (userProfile?.isReadDocumentation) {
+        if (userProfile?.role === "customer") {
           await dispatch(
             getAllProductSlice({
               vendorId: sortbyVendor === "all" ? "" : sortbyVendor,
@@ -67,7 +67,7 @@ const Products = () => {
         } else {
           await dispatch(
             getAllProductSlice({
-              vendorId: userProfile?.data?._id,
+              vendorId: userProfile?._id,
               page: page,
               pageSize: 9,
               search: search,
@@ -95,7 +95,7 @@ const Products = () => {
   ]);
 
   useEffect(() => {
-    if (userProfile?.data?.role === "customer") {
+    if (userProfile?.role === "customer") {
       (async () => {
         await dispatch(getVendorListSlice());
         await dispatch(getWishlistSlice());
@@ -125,7 +125,7 @@ const Products = () => {
                 ),
               }}
             />
-            {userProfile?.data?.role === "customer" && (
+            {userProfile?.role === "customer" && (
               <FormControl sx={{ width: "100%" }}>
                 <InputLabel className="bg-white">Vendor</InputLabel>
                 <Select
@@ -207,7 +207,7 @@ const Products = () => {
             </Box>
           </Box>
         </Paper>
-        {userProfile?.data?.role === "vendor" && (
+        {userProfile?.role === "vendor" && (
           <Box className="flex justify-end mt-[32px]">
             <Button
               variant="contained"

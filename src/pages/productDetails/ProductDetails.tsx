@@ -25,10 +25,10 @@ import { AppDispatch, RootState } from "../../store/store";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CircularProgress from "@mui/material/CircularProgress";
 import { getAllCart } from "../../store/cartSlice/cartsSlice";
 import { WishlistButton } from "../../components/wishlistButton/WishlistButton";
 import { AddToCartButton } from "../../components/addToCartButton/AddToCartButton";
+import { Loader } from "../../components/loader/Loader";
 
 export const ProductDetails: React.FC = () => {
   const { id } = useParams();
@@ -55,7 +55,7 @@ export const ProductDetails: React.FC = () => {
   }, [id, allProducts]);
 
   useEffect(() => {
-    if (userProfile?.data?.role === "customer") {
+    if (userProfile?.role === "customer") {
       (async () => {
         await dispatch(getAllCart());
       })();
@@ -96,11 +96,7 @@ export const ProductDetails: React.FC = () => {
   };
 
   if (productLoading === "pending") {
-    return (
-      <div className="absolute inset-0 flex justify-center items-center">
-        <CircularProgress />
-      </div>
-    );
+    return <Loader />;
   } else if (!productDetails) {
     return <div className="p-4 font-bold text-2xl">Product Not Found!</div>;
   }
@@ -264,7 +260,7 @@ export const ProductDetails: React.FC = () => {
           className="w-full flex justify-center items gap-4 flex-wrap"
           sx={{ padding: 2 }}
         >
-          {userProfile?.data?.role === "vendor" ? (
+          {userProfile?.role === "vendor" ? (
             <Stack
               direction={{ xs: "column", sm: "row" }}
               spacing={2}
@@ -319,7 +315,7 @@ export const ProductDetails: React.FC = () => {
             </Stack>
           )}
         </CardActions>
-        {userProfile?.data?.role === "customer" && (
+        {userProfile?.role === "customer" && (
           <WishlistButton productId={productDetails?._id} />
         )}
       </Card>

@@ -50,7 +50,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
           By: {blog?.vendor?.name}
         </Typography>
       </Stack>
-      {userProfile?.data?._id === blog?.vendor?._id && (
+      {userProfile?._id === blog?.vendor?._id && (
         <Box className="absolute top-2 right-2">
           <IconButton
             aria-label="edit"

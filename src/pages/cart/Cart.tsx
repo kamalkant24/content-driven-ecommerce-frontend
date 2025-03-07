@@ -8,7 +8,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +20,7 @@ import {
 import { CartCard } from "../../components/CartCard";
 import { useNavigate } from "react-router-dom";
 import { CartCardInterface } from "../../interface";
+import { Loader } from "../../components/loader/Loader";
 
 const Cart = () => {
   const { allCarts, cartsLoading } = useSelector(
@@ -106,18 +106,13 @@ const Cart = () => {
       </Container>
     );
   }
-  if (cartsLoading === "pending")
-    return (
-      <div className="absolute inset-0 flex justify-center items-center">
-        <CircularProgress />
-      </div>
-    );
+  if (cartsLoading === "pending") return <Loader />;
 
   return (
     <Container maxWidth="lg" sx={{ mb: 4 }}>
       <Box className="flex justify-between flex-col md:flex-row">
         <Box
-          className="w-[100%] md:w-[55%] max-w-[30rem] m-auto"
+          className="w-[100%] md:w-[55%] max-w-[30rem] m-auto mt-0"
           display="flex"
           flexDirection="column"
         >

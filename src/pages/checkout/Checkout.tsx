@@ -12,9 +12,8 @@ export const Checkout = () => {
 
   useEffect(() => {
     (async () => {
-      if (userProfile?.data?._id) {
-        const res = await dispatch(getCheckoutDetails(userProfile?.data?._id));
-        console.log({ res });
+      if (userProfile?._id) {
+        const res = await dispatch(getCheckoutDetails(userProfile?._id));
       }
     })();
   }, [userProfile]);
@@ -35,7 +34,6 @@ export const Checkout = () => {
       </Box>
     );
   }
-  console.log({ checkoutDetails, userProfile });
 
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
@@ -52,19 +50,19 @@ export const Checkout = () => {
             <Box className="flex justify-between gap-10">
               <Typography>Name </Typography>
               <Typography className="capitalize">
-                {userProfile?.data?.name}
+                {userProfile?.name}
               </Typography>
             </Box>
             <Box className="flex justify-between gap-10">
               <Typography>Address </Typography>
               <Typography className="capitalize break-all">
-                {userProfile?.data?.address}
+                {userProfile?.address}
               </Typography>
             </Box>
             <Box className="flex justify-between gap-10">
               <Typography>Phone </Typography>
               <Typography className="capitalize">
-                {userProfile?.data?.phone}
+                {userProfile?.phone}
               </Typography>
             </Box>
           </Paper>
@@ -74,22 +72,24 @@ export const Checkout = () => {
             </Typography>
             <Box className="py-2 flex justify-between gap-10">
               <Typography>Items ({checkoutDetails.noOfItems})</Typography>
-              <Typography>${checkoutDetails.totalPrice}</Typography>
+              <Typography>${checkoutDetails.totalPrice.toFixed(2)}</Typography>
             </Box>
             <Box className="py-2 flex justify-between gap-10">
               <Typography>{checkoutDetails.offer?.label}</Typography>
-              <Typography>-${getDiscountAmount()}</Typography>
+              <Typography>-${getDiscountAmount().toFixed(2)}</Typography>
             </Box>
             <Box className="py-2 flex justify-between gap-10">
               <Typography>
                 Shipping ({checkoutDetails.shipping?.label})
               </Typography>
-              <Typography>${checkoutDetails.shipping?.price}</Typography>
+              <Typography>
+                ${checkoutDetails.shipping?.price.toFixed(2)}
+              </Typography>
             </Box>
             <Box className="py-2 flex justify-between gap-10 font-bold border-t pt-4">
               <Typography>Total Payable</Typography>
               <Typography color="secondary">
-                ${checkoutDetails.netPrice}
+                ${checkoutDetails.netPrice.toFixed(2)}
               </Typography>
             </Box>
             <Button

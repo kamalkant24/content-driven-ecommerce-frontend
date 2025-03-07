@@ -1,8 +1,16 @@
-import { Button, Container, Typography, CircularProgress, Box, P, Paper } from "@mui/material";
+import {
+  Button,
+  Container,
+  Typography,
+  Box,
+  P,
+  Paper,
+} from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { verifyAsync } from "../store/authSlice/loginSlice";
+import { Loader } from "./loader/Loader";
 
 const VerifyEmail = () => {
   const { id } = useParams();
@@ -39,12 +47,14 @@ const VerifyEmail = () => {
         </Typography>
 
         {loading ? (
-          <CircularProgress />
+          <Loader />
         ) : message ? (
           <>
             <Typography
               variant="h5"
-              className={`capitalize ${error ? "text-red-600" : "text-green-600"}`}
+              className={`capitalize ${
+                error ? "text-red-600" : "text-green-600"
+              }`}
               gutterBottom
             >
               {message}
@@ -76,7 +86,6 @@ const VerifyEmail = () => {
               Verify Email
             </Button>
           </Box>
-
         )}
       </Paper>
     </Container>

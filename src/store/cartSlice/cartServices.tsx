@@ -57,8 +57,6 @@ const setCheckoutDetails = async (data: any | object) => {
       return response;
     }
   } catch (err) {
-    console.log(err);
-
     return err;
   }
 };

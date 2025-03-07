@@ -37,8 +37,8 @@ function Header() {
   const token = localStorage.getItem("access_token");
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
-    const isApproved = userProfile?.data?.isApproved;
-    if (userProfile?.data?.isReadDocumentation == false || !isApproved) {
+    const isApproved = userProfile?.isApproved;
+    if (userProfile?.isReadDocumentation == false || !isApproved) {
       setOpen(true);
     } else {
       setOpen(false);
@@ -146,7 +146,7 @@ function Header() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages[userProfile?.data?.role]?.map((page) => (
+              {pages[userProfile?.role]?.map((page) => (
                 <MenuItem
                   key={page}
                   onClick={(e: any) => {
@@ -162,7 +162,7 @@ function Header() {
           {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
           {auth && (
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages[userProfile?.data?.role]?.map((page) => (
+              {pages[userProfile?.role]?.map((page) => (
                 <Button
                   key={page}
                   id={page}
@@ -204,7 +204,7 @@ function Header() {
                       className={"border-2 border-gray-200"}
                       sx={{ width: "2.5rem", height: "2.5rem" }}
                       alt="Remy Sharp"
-                      src={userProfile?.data?.profile_img}
+                      src={userProfile?.profile_img}
                     />
                   </IconButton>
                 </Tooltip>
@@ -245,38 +245,45 @@ function Header() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    sx={{
-                      borderBottom: "1px solid #80808030",
-                      display: "flex",
-                      alignItems: "center",
-                      paddingY: "0.5rem",
-                    }}
-                    key={setting.label}
-                    onClick={handleCloseUserMenu}
-                  >
-                    {setting.icon}
-                    <Typography
-                      textAlign="center"
-                      id={setting.label}
-                      sx={{ width: "5rem" }}
-                      onClick={(e: any) => {
-                        if (e.target.id == "Logout") {
-                          logout();
-                        } else if (e.target.id == "Profile") {
-                          navigate("/profile");
-                        } else if (e.target.id == "Setting") {
-                          navigate("/setting");
-                        } else if (e.target.id == "Orders") {
-                          navigate("/orders");
-                        }
+                {settings
+                  .filter(
+                    (setting) =>
+                      !setting.customerOnly ||
+                      (setting.customerOnly && userProfile?.role === "customer")
+                  )
+                  .map((setting) => (
+                    <MenuItem
+                      sx={{
+                        borderBottom: "1px solid #80808030",
+                        display: "flex",
+                        alignItems: "center",
+                        paddingY: "0.5rem",
                       }}
+                      key={setting.label}
+                      onClick={handleCloseUserMenu}
                     >
-                      {setting.label}
-                    </Typography>
-                  </MenuItem>
-                ))}
+                      {setting.icon}
+                      <Typography
+                        textAlign="center"
+                        id={setting.label}
+                        sx={{ width: "5rem" }}
+                        onClick={(e: any) => {
+                          if (e.target.id == "Logout") {  
+                            localStorage.removeItem("access_token");
+                            navigate("/");
+                          } else if (e.target.id == "Profile") {
+                            navigate("/profile");
+                          } else if (e.target.id == "Setting") {
+                            navigate("/setting");
+                          } else if (e.target.id == "Orders") {
+                            navigate("/orders");
+                          }
+                        }}
+                      >
+                        {setting.label}
+                      </Typography>
+                    </MenuItem>
+                  ))}
               </Menu>
             </div>
           )}

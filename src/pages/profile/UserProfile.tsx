@@ -13,11 +13,11 @@ import {
   Typography,
   Box,
   Avatar,
-  CircularProgress,
   Container,
 } from "@mui/material";
 import { AppDispatch, RootState } from "../../store/store";
 import { editUserSlice, getProfile } from "../../store/user/userSlice";
+import { Loader } from "../../components/loader/Loader";
 
 interface EditDetails {
   name: string;
@@ -61,16 +61,16 @@ const UserProfile = () => {
 
   useEffect(() => {
     setEditDetails({
-      name: userProfile?.data?.name,
-      email: userProfile?.data?.email,
-      org_Name: userProfile?.data?.org_Name,
-      industry: userProfile?.data?.industry || "",
-      org_Size: userProfile?.data?.org_Size,
-      phone: userProfile?.data?.phone,
-      description: userProfile?.data?.description,
-      address: userProfile?.data?.address,
-      profile_img: userProfile?.data?.profile_img,
-      banner: userProfile?.data?.banner,
+      name: userProfile?.name,
+      email: userProfile?.email,
+      org_Name: userProfile?.org_Name,
+      industry: userProfile?.industry || "",
+      org_Size: userProfile?.org_Size,
+      phone: userProfile?.phone,
+      description: userProfile?.description,
+      address: userProfile?.address,
+      profile_img: userProfile?.profile_img,
+      banner: userProfile?.banner,
     });
   }, [editMode, userProfile]);
 
@@ -117,7 +117,7 @@ const UserProfile = () => {
     };
     for (const field in editDetails) {
       if (!editDetails[field as keyof EditDetails]) {
-        const role = userProfile?.data?.role as keyof typeof roleFields;
+        const role = userProfile?.role as keyof typeof roleFields;
         if (roleFields[role]?.includes(field)) {
           toast.warning(`${fieldMessageName[field]} is required.`);
           return false;
@@ -134,7 +134,7 @@ const UserProfile = () => {
       for (const field in editDetails) {
         if (
           editDetails[field as keyof EditDetails] !==
-          userProfile?.data?.[field as keyof EditDetails]
+          userProfile?.[field as keyof EditDetails]
         ) {
           updatedDetails[field] = editDetails[field as keyof EditDetails];
         }
@@ -147,7 +147,7 @@ const UserProfile = () => {
       }
       if (Object.keys(updatedDetails).length > 0) {
         const res = await dispatch(
-          editUserSlice({ ...updatedDetails, email: userProfile?.data?.email })
+          editUserSlice({ ...updatedDetails, email: userProfile?.email })
         );
         if (res.type === "put/editUserProfile/fulfilled") {
           await dispatch(getProfile());
@@ -158,11 +158,7 @@ const UserProfile = () => {
   };
 
   if (loading === "pending") {
-    return (
-      <div className="absolute inset-0 flex justify-center items-center">
-        <CircularProgress />
-      </div>
-    );
+    return <Loader />;
   }
   return (
     <Container maxWidth="md" className="my-4">
@@ -174,21 +170,21 @@ const UserProfile = () => {
           <Box display="flex" alignItems="center" gap={2}>
             <Avatar
               alt="Profile Image"
-              src={userProfile?.data?.profile_img}
+              src={userProfile?.profile_img}
               className="border-2 border-gray-300 shadow-md"
               sx={{ width: 60, height: 60 }}
             />
             <Box className="capitalize">
-              <Typography variant="h6">{userProfile?.data?.name}</Typography>
+              <Typography variant="h6">{userProfile?.name}</Typography>
               <Typography variant="subtitle1" color="text.secondary">
-                {userProfile?.data?.org_Name}
+                {userProfile?.org_Name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {userProfile?.data?.role}
+                {userProfile?.role}
               </Typography>
             </Box>
           </Box>
-          {userProfile?.data?.role === "vendor" && (
+          {userProfile?.role === "vendor" && (
             <Box mt={2}>
               <img
                 src={editDetails?.banner}
@@ -249,7 +245,7 @@ const UserProfile = () => {
             />
           </Box>
         </Box>
-        {userProfile?.data?.role === "vendor" && (
+        {userProfile?.role === "vendor" && (
           <>
             <hr style={{ margin: "1rem 0" }} />
             <Typography variant="subtitle1" marginBottom={2}>
@@ -259,7 +255,7 @@ const UserProfile = () => {
         )}
 
         <Box marginTop={2} display="flex" flexWrap="wrap" gap={2}>
-          {userProfile?.data?.role === "vendor" && (
+          {userProfile?.role === "vendor" && (
             <>
               <Box flex="1 1 48%">
                 <TextField
@@ -323,7 +319,7 @@ const UserProfile = () => {
               disabled={!editMode}
             />
           </Box>
-          {userProfile?.data?.role === "vendor" && (
+          {userProfile?.role === "vendor" && (
             <Box flex="1 1 100%">
               <TextField
                 label="Description"
@@ -356,7 +352,7 @@ const UserProfile = () => {
         {editMode && (
           <div className="my-4">
             <Typography variant="subtitle1" gutterBottom>
-              Upload {userProfile?.data?.role === "vendor" ? "Logo" : "Avatar"}
+              Upload {userProfile?.role === "vendor" ? "Logo" : "Avatar"}
             </Typography>
             <Box className="flex gap-2">
               {editProfileInput ? (
@@ -384,7 +380,7 @@ const UserProfile = () => {
             </Box>
           </div>
         )}
-        {(editMode && userProfile?.data?.role) === "vendor" && (
+        {(editMode && userProfile?.role) === "vendor" && (
           <>
             <Typography variant="subtitle1" gutterBottom>
               Upload Organization Banner

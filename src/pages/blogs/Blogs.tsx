@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Checkbox,
-  CircularProgress,
   Container,
   FormControl,
   FormControlLabel,
@@ -17,7 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getBlogsSlice } from "../../store/blog/blogSlice";
@@ -26,6 +25,8 @@ import { BlogCard } from "../../components/BlogCard";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { productCategories } from "../products/productContent";
 import { getVendorListSlice } from "../../store/user/userSlice";
+import { Loader } from "../../components/loader/Loader";
+
 const Blogs = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,18 +43,30 @@ const Blogs = () => {
   const [searchText, setSearchText] = useState("");
   const [vendorId, setVendorId] = useState("All");
   const [isMyBlogsChecked, setIsMyBlogsChecked] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const searchInputRef = useRef(null);
   const pageSize = 5;
 
   useEffect(() => {
     const filters = {
       page,
       pageSize,
-      search: searchText,
+      search: debouncedSearch,
       category: category === "All" ? "" : category,
       vendorId: vendorId === "All" ? "" : vendorId,
     };
     dispatch(getBlogsSlice(filters));
-  }, [page, pageSize, searchText, category, vendorId]);
+  }, [page, pageSize, debouncedSearch, category, vendorId]);
+
+  useEffect(() => {
+    const handleDebounce = setTimeout(() => {
+      setDebouncedSearch(searchText);
+    }, 1000);
+
+    return () => {
+      clearTimeout(handleDebounce);
+    };
+  }, [searchText]);
 
   //get vendor list to show in filter
   useEffect(() => {
@@ -66,7 +79,7 @@ const Blogs = () => {
   };
   const getmyBlogs = (e) => {
     if (e.target.checked) {
-      setVendorId(userProfile?.data?._id);
+      setVendorId(userProfile?._id);
       setIsMyBlogsChecked(true);
     } else {
       setVendorId("All");
@@ -74,12 +87,16 @@ const Blogs = () => {
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 300); 
+  }, [debouncedSearch]);
+
   if (loading) {
-    return (
-      <Box className="flex justify-center items-center absolute inset-0">
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   return (
@@ -92,6 +109,7 @@ const Blogs = () => {
             onChange={(e) => setSearchText(e.target.value)}
             sx={{ width: { xs: "100%", sm: "30%" } }}
             value={searchText}
+            inputRef={searchInputRef}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -101,10 +119,10 @@ const Blogs = () => {
             }}
           />
           <FormControl sx={{ width: { xs: "100%", sm: "30%" } }}>
-            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+            <InputLabel id="category">Category</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="category"
+              // id="demo-simple-select"
               value={category}
               label="Category"
               onChange={(e) => setCategory(e.target.value)}
@@ -118,10 +136,10 @@ const Blogs = () => {
             </Select>
           </FormControl>
           <FormControl sx={{ width: { xs: "100%", sm: "30%" } }}>
-            <InputLabel id="demo-simple-select-label">Vendor</InputLabel>
+            <InputLabel id="vendor">Vendor</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="vendor"
+              // id="demo-simple-select"
               value={vendorId}
               label="Category"
               onChange={(e) => setVendorId(e.target.value)}
@@ -134,7 +152,7 @@ const Blogs = () => {
               ))}
             </Select>
           </FormControl>
-          {userProfile?.data?.role === "vendor" && (
+          {userProfile?.role === "vendor" && (
             <>
               <Button
                 variant="contained"

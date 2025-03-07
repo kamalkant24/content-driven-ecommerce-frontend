@@ -4,6 +4,7 @@ import Blogs from "../pages/blogs/Blogs";
 import Cart from "../pages/cart/Cart";
 import { Checkout } from "../pages/checkout/Checkout";
 import { CreateBlog } from "../pages/createBlog/CreateBlog";
+import { OrderDetails } from "../pages/orderDetails/OrderDetails";
 import { Orders } from "../pages/orders/Orders";
 import { PaymentStatus } from "../pages/paymentStatus/PaymentStatus";
 import { ProductDetails } from "../pages/productDetails/ProductDetails";
@@ -23,6 +24,7 @@ export const routes = [
   { path: "/products/edit/:id", element: <AddProduct /> },
   { path: "/checkout", element: <Checkout /> },
   { path: "/orders", element: <Orders /> },
+  { path: "/orders/:id", element: <OrderDetails /> },
   { path: "/blogs/create", element: <CreateBlog /> },
   { path: "/blogs/:id", element: <BlogDetails /> },
   { path: "/blogs/edit/:id", element: <CreateBlog /> },
